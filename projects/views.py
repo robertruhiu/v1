@@ -163,9 +163,13 @@ class DeveloperProjects(generics.ListAPIView):
 def developerprojectreport(request, candidate_id, project_id):
     candidate = Profile.objects.get(id=candidate_id)
     project = Project.objects.get(id=project_id)
+    candidate.verified_skills = project.tags
+    candidate.save()
     report = AssessmentReport.objects.filter(candidate=candidate.user).filter(project=project).get()
     serializer = AssesmentReportSerializer(report)
     return Response(serializer.data)
+
+
 
 
 
