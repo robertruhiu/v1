@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -16,6 +18,14 @@ class Language(models.Model):
 
 
 class Framework(models.Model):
+    STACK_CHOICES = (
+        ('node-js', 'NodeJS'),
+        ('python', 'Python'),
+        ('android', 'Android'),
+        ('angular', 'Angular'),
+        ('php', 'PHP'),
+    )
+    ide_stack = models.CharField(max_length=140, default='node-js', choices=STACK_CHOICES)
     name = models.CharField(max_length=140)
     language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)
 
@@ -74,6 +84,9 @@ class Project(models.Model):
     devtype = models.ForeignKey(Devtype, on_delete=False, null=True)
     projecttype = models.ForeignKey(Projecttype, on_delete=False, null=True)
     hasvideo=models.BooleanField(default=False)
+    duration = models.DurationField(default=timedelta(hours=2))
+    project_template = models.URLField(blank=True, null=True)
+
 
 
     def __str__(self):

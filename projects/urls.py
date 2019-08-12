@@ -15,7 +15,9 @@ Including another URLconf
 """
 
 from django.urls import path
-from projects.views import project_list, project,categories,devtypes,Projects,ProjectDetails,Allprojects,RecentProjects,MyRecentProjects,RecommendedProjects
+from projects.views import project_list, project,categories,devtypes,Projects\
+    ,ProjectDetails,Allprojects,RecentProjects,MyRecentProjects,RecommendedProjects,\
+    DeveloperProjects, developerprojectreport
 
 app_name = 'projects'
 urlpatterns = [
@@ -31,4 +33,11 @@ urlpatterns = [
     path('recentprojects/<int:id>', RecentProjects.as_view()),
     path('myrecentprojects/<int:id>', MyRecentProjects.as_view()),
 
+]
+
+# developer api views
+urlpatterns += [
+    path('developerprojects/<str:framework>', DeveloperProjects.as_view()),
+    path('developerprojectreport/<int:candidate_id>/<int:project_id>/',
+         developerprojectreport, name='developerprojectreport'),
 ]

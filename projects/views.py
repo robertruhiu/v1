@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+
 from marketplace.models import Job
 from projects.forms import FrameworkForm
 from projects.models import Project,Projecttype,Devtype,Framework
@@ -11,6 +12,9 @@ import random
 from django.contrib.auth.models import User
 from marketplace.models import JobApplication,DevRequest
 from accounts.models import Profile
+
+
+
 class Projects(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = Projectserializer
@@ -75,6 +79,7 @@ class RecentProjects(generics.ListAPIView):
         for oneproject in recentprojects:
             project_ids.append(oneproject.project.id)
         return Project.objects.filter(pk__in=project_ids)
+
 class MyRecentProjects(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = Projectserializer
@@ -87,10 +92,35 @@ class MyRecentProjects(generics.ListAPIView):
             project_ids.append(oneproject.project)
         return project_ids
 
+# developer api views
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
 
+from frontend.models import AssessmentReport
+from  frontend.serializers import AssesmentReportSerializer
 
+class DeveloperProjects(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = Projectserializer
+    def get_queryset(self):
+        framework = self.kwargs['framework']
+        # user = User.objects.get(pk=user_id)
+        developerprojects = Project.objects.filter(framework__name=framework)
+        return developerprojects
 
-
+# class DeveloperProjectReport(APIView):
+#     permission_classes = (IsAuthenticated,)
+#
+#     def get_object(self, candidate_id, project_id):
+#         queryset = AssessmentReport.objects.filter(candidate=candidate_id).filter(project=project_id).get()
+#         return queryset
+#
+#     def get(self, request, format=None):
+#         candidate_id = request.GET.get('candidate_id')
+#         project_id = request.GET.get('project_id')
+#         report =  self.get_object(candidate_id, project_id)
+#         serializer = AssesmentReportSerializer(report)
+#         return Response(serializer.data)
 
 
 # Create your views here.
@@ -106,6 +136,38 @@ class MyRecentProjects(generics.ListAPIView):
 #     # list all project from above category
 #     # filter projects by framework, language
 #     pass
+
+# class MultipleFieldLookupMixin(object):
+#     """
+#     Apply this mixin to any view or viewset to get multiple field filtering
+#     based on a `lookup_fields` attribute, instead of the default single field filtering.
+#     """
+#     def get_object(self):
+#         queryset = self.get_queryset()             # Get the base queryset
+#         queryset = self.filter_queryset(queryset)  # Apply any filter backends
+#         filter = {}
+#         for field in self.lookup_fields:
+#             if self.kwargs[field]: # Ignore empty fields.
+#                 filter[field] = self.kwargs[field]
+#         obj = get_object_or_404(queryset, **filter)  # Lookup the object
+#         self.check_object_permissions(self.request, obj)
+#         return obj
+#
+# class DeveloperProjectReport(MultipleFieldLookupMixin, generics.RetrieveAPIView):
+#     queryset = AssessmentReport.objects.all()
+#     serializer_class = AssesmentReportSerializer
+#     lookup_fields = ['candidate__id', 'project.id']
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def developerprojectreport(request, candidate_id, project_id):
+    candidate = Profile.objects.get(id=candidate_id)
+    project = Project.objects.get(id=project_id)
+    report = AssessmentReport.objects.filter(candidate=candidate.user).filter(project=project).get()
+    serializer = AssesmentReportSerializer(report)
+    return Response(serializer.data)
+
+
 
 @login_required
 def project_list(request,type_id):
