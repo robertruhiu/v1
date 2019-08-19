@@ -12,9 +12,6 @@ from django.core.cache import cache
 from separatedvaluesfield.models import SeparatedValuesField
 from cloudinary.models import CloudinaryField
 
-from projects.models import Language, Framework
-
-
 class Profile(models.Model):
     USER_TYPE_CHOICES = (
         ('recruiter', 'RECRUITER'),
@@ -56,11 +53,11 @@ class Profile(models.Model):
     linkedin_url = models.CharField(max_length=500, null=True, )
     portfolio = models.CharField(max_length=500, blank=True, null=True)
     github_repo = models.CharField(max_length=500, null=True, )
-    language = models.ForeignKey(Language, on_delete=models.CASCADE, blank=True, null=True)
-    framework = models.ForeignKey(Framework, on_delete=models.CASCADE, blank=True, null=True)
+    language = models.CharField(max_length=140, null=True, blank=True)
+    framework = models.CharField(max_length=140, null=True, blank=True)
     years = models.CharField(choices=YEARS_ACTIVE_CHOICES, null=True, max_length=30)
     about = models.CharField(null=True, max_length=300)
-    profile_tags = SeparatedValuesField(null=True, max_length=150, token=',', blank=True)
+    profile_tags = SeparatedValuesField(null=True, max_length=150, token=',')
     skills = models.CharField(max_length=900, null=True, blank=True)
     verified_skills = models.CharField(max_length=900, null=True, blank=True)
     country = CountryField(null=True, max_length=30)

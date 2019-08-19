@@ -137,6 +137,13 @@ class CandidateJobs(generics.ListAPIView):
         candidate_id = self.kwargs['candidate']
         user = User.objects.get(id=candidate_id)
         return JobApplication.objects.filter(candidate=user)
+class TalentPoolapplications(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = DevRequestSerializer
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate']
+        user = User.objects.get(id=candidate_id)
+        return DevRequest.objects.filter(developer=user)
 
 
 

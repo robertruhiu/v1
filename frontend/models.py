@@ -72,6 +72,7 @@ class AssessmentReport(models.Model):
     candidate = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     score = models.IntegerField(null=True)
+    skill = models.CharField(blank=True,null=True,max_length=100)
 
     def __str__(self):
         return f'{self.candidate.first_name}: {self.project.name}'

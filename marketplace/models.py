@@ -75,6 +75,7 @@ class JobApplication(models.Model):
     report = models.CharField(max_length=500, null=True)
     interviewstatus = models.CharField(max_length=500, null=True)
     eventcolor = models.CharField(max_length=100, null=True,default='blue')
+    company = models.CharField(max_length=100, null=True)
 
 
 class DevRequest(models.Model):
@@ -92,6 +93,7 @@ class DevRequest(models.Model):
     report = models.CharField(max_length=500, null=True)
     interviewstatus = models.CharField(max_length=500, null=True)
     eventcolor = models.CharField(max_length=100, null=True, default='blue')
+    company = models.CharField(max_length=100, null=True)
 
 
 

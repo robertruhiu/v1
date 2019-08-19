@@ -46,11 +46,16 @@ class RecommendedProjects(generics.ListAPIView):
         userprofile = Profile.objects.get(user=user)
         projects = Project.objects.all()
         tags = userprofile.skills.split(",")
-        randomlist =[]
+
+
+        randomlists =[]
         for oneproject  in projects :
             for onetag in tags:
-                if oneproject.tags.find(onetag.lower()):
-                    randomlist.append(oneproject.id)
+
+                if onetag.lower() in oneproject.tags.lower():
+                    randomlists.append(oneproject.id)
+        randomlist = list(set(randomlists))
+
         if len(randomlist) > 0:
             projectid = random.choice(randomlist)
         else:

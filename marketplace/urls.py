@@ -4,7 +4,7 @@ from marketplace.views import job_list, job_details, apply_for_job, manage_poste
     select_candidate, dev_pool, dev_details, process_payment, payment_canceled, payment_done, add_dev_to_wish_list,\
     mydevs,paid_dev_details,create_or_edit_job,dev_data,Myjobsrequests,Jobsapplicants,\
     Specificjob,SpecificJobsapplicants,Myjobapplication,JobUpdate,JobCreate,JobsList,PickReject,PickRecommended,JobUnpublish,\
-    DevRequestpick,DevRequests,CandidateManager,MyApplicants,Jobdetails,JobApply,CandidateJobs
+    DevRequestpick,DevRequests,CandidateManager,MyApplicants,Jobdetails,JobApply,CandidateJobs,TalentPoolapplications
 
 app_name = 'marketplace'
 
@@ -46,5 +46,6 @@ urlpatterns = [
     path('jobdetails/<int:pk>', Jobdetails.as_view()),
     path('applyjob', JobApply.as_view()),
     path('candidatejobs/<int:candidate>', CandidateJobs.as_view()),
+    path('pickedapplications/<int:candidate>', TalentPoolapplications.as_view()),
 
 ]
