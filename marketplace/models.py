@@ -1,5 +1,5 @@
 import json
-
+from accounts.models import Profile
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
@@ -61,26 +61,25 @@ class Job(models.Model):
 
 class JobApplication(models.Model):
     job = models.ForeignKey(Job, related_name='job_applications', on_delete=models.CASCADE)
-    candidate = models.ForeignKey(User, on_delete=models.CASCADE, related_name='devs')
+    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='devs')
     selected = models.BooleanField(default=False)
     stage =models.CharField(max_length=500, null=True)
     interviewstarttime = models.DateTimeField(null=True,blank=True)
     interviewendtime = models.DateTimeField(null=True, blank=True)
     notes = models.CharField(max_length=1500,null=True)
-    recruiter = models.ForeignKey(User, related_name='jobrecruiter', on_delete=models.CASCADE,null=True,blank=True)
+    recruiter = models.ForeignKey(Profile, related_name='jobrecruiter', on_delete=models.CASCADE,null=True,blank=True)
     test_stage = models.CharField(max_length=500, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE,null=True)
-    name = models.CharField(max_length=100, null=True)
-    candidatename = models.CharField(max_length=100, null=True)
     report = models.CharField(max_length=500, null=True)
     interviewstatus = models.CharField(max_length=500, null=True)
     eventcolor = models.CharField(max_length=100, null=True,default='blue')
-    company = models.CharField(max_length=100, null=True)
+    projectstarttime = models.DateTimeField(null=True, blank=True)
+
 
 
 class DevRequest(models.Model):
-    owner = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE)
-    developer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='devaccount',null=True,)
+    owner = models.ForeignKey(Profile, related_name='owner', on_delete=models.CASCADE)
+    developer = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='devaccount',null=True,)
     paid = models.BooleanField(default=False)
     stage = models.CharField(max_length=500, null=True)
     interviewstarttime = models.DateTimeField(null=True, blank=True)
@@ -88,12 +87,11 @@ class DevRequest(models.Model):
     notes = models.CharField(max_length=1500, null=True)
     test_stage = models.CharField(max_length=500, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE,null=True)
-    name = models.CharField(max_length=100, null=True)
-    candidatename = models.CharField(max_length=100, null=True)
     report = models.CharField(max_length=500, null=True)
     interviewstatus = models.CharField(max_length=500, null=True)
     eventcolor = models.CharField(max_length=100, null=True, default='blue')
-    company = models.CharField(max_length=100, null=True)
+    projectstarttime = models.DateTimeField(null=True, blank=True)
+
 
 
 

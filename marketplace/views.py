@@ -17,23 +17,24 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from classroom.models import Student, TakenQuiz
+from classroom.models import  TakenQuiz
 from frontend.form import Portfolio_form, Experience_Form,CvForm
 from frontend.models import Experience, Portfolio
-from marketplace.filters import UserFilter
+
 from .models import Job, JobApplication, DevRequest
 from .forms import JobForm
 from accounts.models import Profile
 from django.utils.safestring import mark_safe
 import json
 from rest_framework.permissions import IsAuthenticated
-from .serializers import DevRequestSerializer,JobRequestSerializer,JobApplicationsRequestSerializer
+from .serializers import DevRequestSerializer,JobRequestSerializer,JobApplicationsRequestSerializer,JobApplicationsUpdaterSerializer,DevRequestUpdaterSerializer
+from frontend.serializers import ProfileSerializer
 from rest_framework import generics
 
 class DevRequestpick(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = DevRequest.objects.all()
-    serializer_class = DevRequestSerializer
+    serializer_class = DevRequestUpdaterSerializer
 
 
 class DevRequests(generics.ListAPIView):
@@ -55,7 +56,7 @@ class Myjobapplication(generics.ListAPIView):
         job_id = self.kwargs['job']
         candidate_id = self.kwargs['candidate']
         job = Job.objects.get(id=job_id)
-        user = User.objects.get(id=candidate_id)
+        user = Profile.objects.get(id=candidate_id)
         return JobApplication.objects.filter(job=job).filter(candidate=user)
 
 
@@ -110,39 +111,59 @@ class JobCreate(generics.CreateAPIView):
     queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
 
-class PickReject(generics.RetrieveUpdateDestroyAPIView):
+class Applicationprofile(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsRequestSerializer
+class PickReject(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = JobApplication.objects.all()
+    serializer_class = JobApplicationsUpdaterSerializer
 
 class PickRecommended(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
-    serializer_class = JobApplicationsRequestSerializer
+    serializer_class = JobApplicationsUpdaterSerializer
 
 class CandidateManager(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = DevRequest.objects.all()
+    serializer_class = DevRequestUpdaterSerializer
+
+class CandidateManagerInfo(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = DevRequest.objects.all()
     serializer_class = DevRequestSerializer
 
-class JobApply(generics.CreateAPIView):
+class JobManagerView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsRequestSerializer
+class TalentPickedManagerView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = DevRequest.objects.all()
+    serializer_class = DevRequestSerializer
+class JobApply(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = JobApplication.objects.all()
+    serializer_class = JobApplicationsUpdaterSerializer
 
 class CandidateJobs(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = JobApplicationsRequestSerializer
     def get_queryset(self):
         candidate_id = self.kwargs['candidate']
-        user = User.objects.get(id=candidate_id)
+
+
+        user = Profile.objects.get(id=candidate_id)
         return JobApplication.objects.filter(candidate=user)
+
 class TalentPoolapplications(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = DevRequestSerializer
     def get_queryset(self):
         candidate_id = self.kwargs['candidate']
-        user = User.objects.get(id=candidate_id)
+        user = Profile.objects.get(id=candidate_id)
         return DevRequest.objects.filter(developer=user)
 
 
@@ -385,10 +406,8 @@ def dev_details(request, dev_id):
 
 
     requested_dev = User.objects.get(id=dev_id)
-    try:
-        student = Student.objects.get(user_id=dev_id)
-    except Student.DoesNotExist:
-        student = None
+    student = Profile.objects.get(id=dev_id)
+
 
 
     verified_skills = TakenQuiz.objects.filter(student=student).filter(score__gte=50).all()
@@ -495,10 +514,8 @@ def mydevs(request):
 
 @login_required
 def paid_dev_details(request, dev_id):
-    try:
-        student = Student.objects.get(user_id=dev_id)
-    except Student.DoesNotExist:
-        student = None
+    student = Profile.objects.get(id=dev_id)
+
 
 
     requested_dev = User.objects.get(id=dev_id)

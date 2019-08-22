@@ -4,7 +4,7 @@ from django.db import transaction
 from django.contrib.auth.models import User
 from django.forms.utils import ValidationError
 
-from classroom.models import (Answer, Question, Student, StudentAnswer,
+from classroom.models import (Answer, Question, StudentAnswer,
                               Subject, User,Quiz)
 
 

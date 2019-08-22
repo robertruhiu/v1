@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.contrib.auth.models import User
 from django.db import models
-
+from accounts.models import Profile
 
 # Create your models here.
 
@@ -28,6 +28,7 @@ class Framework(models.Model):
     ide_stack = models.CharField(max_length=140, default='node-js', choices=STACK_CHOICES)
     name = models.CharField(max_length=140)
     language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)
+    image =models.CharField(max_length=140,blank=True)
 
     def __str__(self):
         return self.name
@@ -54,7 +55,7 @@ class Projecttype(models.Model):
 
 class Project(models.Model):
     name = models.CharField(max_length=140,blank=True,null=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE,blank=True,null=True,default=1)
     brief = models.CharField(max_length=500, blank=True, null=True, )
     description = models.CharField(max_length=2000, blank=True, null=True, )
     level = models.CharField(max_length=200, blank=True, null=True, )

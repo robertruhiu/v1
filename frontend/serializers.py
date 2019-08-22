@@ -7,6 +7,14 @@ from frontend.models import Experience, Portfolio, candidatesprojects, Assessmen
 from projects.serializers import Projectserializer as MainProjectSerializer
 
 
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'email',
+                  'password', 'username')
+
 class SerializableCountryField(serializers.ChoiceField):
     def __init__(self, **kwargs):
         super(SerializableCountryField, self).__init__(choices=Countries())
@@ -16,20 +24,15 @@ class SerializableCountryField(serializers.ChoiceField):
             return ''  # normally here it would return value. which is Country(u'') and not serialiable
         return super(SerializableCountryField, self).to_representation(value)
 
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'first_name', 'last_name', 'email',
-                  'password', 'username')
-
-
 class ProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
     country = SerializableCountryField(allow_blank=True)
 
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = ('id','user','user_type','stage','csa','gender','linkedin_url','github_repo',
+                  'language','framework','years','about','skills','verified_skills',
+                  'country','availabilty','company','job_role','industry','company_url','file')
 
 
 class ExperienceSerializer(serializers.ModelSerializer):

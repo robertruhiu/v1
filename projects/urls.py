@@ -17,7 +17,7 @@ Including another URLconf
 from django.urls import path
 from projects.views import project_list, project,categories,devtypes,Projects\
     ,ProjectDetails,Allprojects,RecentProjects,MyRecentProjects,RecommendedProjects,\
-    DeveloperProjects, developerprojectreport
+    DeveloperProjects, developerprojectreport,Frameworks
 
 app_name = 'projects'
 urlpatterns = [
@@ -40,4 +40,5 @@ urlpatterns += [
     path('developerprojects/<str:framework>', DeveloperProjects.as_view()),
     path('developerprojectreport/<int:candidate_id>/<int:project_id>/',
          developerprojectreport, name='developerprojectreport'),
+    path('frameworks', Frameworks.as_view()),
 ]

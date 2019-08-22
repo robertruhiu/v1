@@ -11,11 +11,9 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 
 class FrameworkSerializer(serializers.ModelSerializer):
-    language = LanguageSerializer()
-
     class Meta:
         model = Framework
-        fields = ('ide_stack', 'name', 'language')
+        fields = '__all__'
 
 
 class DevtypeSerializer(serializers.ModelSerializer):
@@ -31,8 +29,6 @@ class ProjecttypeSerializer(serializers.ModelSerializer):
 
 
 class Projectserializer(serializers.ModelSerializer):
-
-
     class Meta:
         model = Project
         fields = '__all__'

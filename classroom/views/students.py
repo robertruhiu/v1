@@ -12,9 +12,101 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 from ..decorators import student_required
 from ..forms import TakeQuizForm
-from ..models import Quiz, Student, TakenQuiz, User,StudentAnswer,Answer,Subject,RandomQuiz,Question
+from ..models import Quiz, TakenQuiz, User,StudentAnswer,Answer,Subject,RandomQuiz,Question
 import random
 from transactions.models import OpenCall
+from rest_framework import generics
+from ..serializers import QuizSerializer,TakenQuizSerializer,RandomQuizSerializer,QuestionSerializer,StudentAnswerSerializer
+from accounts.models import Profile
+from rest_framework.permissions import IsAuthenticated
+class AllQuizzes(generics.ListAPIView):
+
+    serializer_class = QuizSerializer
+    def get_queryset(self):
+
+
+        return Quiz.objects.all() \
+            .annotate(questions_count=Count('questions')) \
+            .filter(questions_count__gt=0)
+
+class TakenQuizzes(generics.ListAPIView):
+    serializer_class = TakenQuizSerializer
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate']
+        user = Profile.objects.get(pk=candidate_id)
+        return TakenQuiz.objects.filter(user=user)
+
+class QuizQuestions(generics.ListAPIView):
+    serializer_class = QuestionSerializer
+    def get_queryset(self):
+        quiz_id = self.kwargs['quiz']
+        return Question.objects.filter(quiz_id=quiz_id)
+
+class TakeQuiz(generics.ListAPIView):
+    serializer_class = RandomQuizSerializer
+    def get_queryset(self):
+
+        candidate_id = self.kwargs['candidate']
+        quiz_id = self.kwargs['quiz']
+
+        quiz = get_object_or_404(Quiz, pk=quiz_id)
+        student = Profile.objects.get(id=candidate_id)
+
+
+        questionlist = []
+        quizzes = RandomQuiz.objects.filter(student_id=student.id).filter(quiz_id=quiz_id)
+        if len(quizzes) >0:
+            return quizzes
+        else:
+            currentquiz = Question.objects.filter(quiz_id=quiz_id)
+            for onequestion in currentquiz:
+                questionlist.append(onequestion.id)
+
+            questionrandomlist = random.sample(questionlist, 4)
+            questions= ','.join(map(str, questionrandomlist))
+
+
+            obj = RandomQuiz(quiz=quiz, student=student, questions=questions)
+            obj.save()
+            return RandomQuiz.objects.filter(student_id=student.id).filter(quiz_id=quiz_id)
+
+class PostAnswer(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = StudentAnswer.objects.all()
+    serializer_class = StudentAnswerSerializer
+
+
+class UpdateRandomquiz(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = RandomQuiz.objects.all()
+    serializer_class = RandomQuizSerializer
+
+class CalculateScore(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = TakenQuizSerializer
+
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate']
+        quiz_id = self.kwargs['quiz']
+        student = Profile.objects.get(id=candidate_id)
+        quiz = Quiz.objects.get(id=quiz_id)
+
+        correctanswercounter = StudentAnswer.objects.filter(quiz=quiz, student=student, answer__is_correct=True).count()
+        score = (correctanswercounter / 4) * 100
+        TakenQuiz.objects.create(student=student, quiz=quiz, score=score)
+        return TakenQuiz.objects.filter(student=student)
+
+class Taken(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = TakenQuizSerializer
+
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate']
+        student = Profile.objects.get(id=candidate_id)
+        return TakenQuiz.objects.filter(student=student)
+
+
+
 
 @method_decorator([login_required, student_required], name='dispatch')
 class QuizListView(ListView):
@@ -51,26 +143,15 @@ class TakenQuizListView(ListView):
             .order_by('quiz__name')
         return queryset
 
-# def taken_quizlist(request):
-#     taken_quizzes =TakenQuiz.objects.filter(student_id=request.user.id)
-#
-#     return render(request, 'classroom/students/taken_quiz_list.html',{'taken_quizzes':taken_quizzes})
 
 
-def student_registration(request):
-    if Student.objects.filter(user_id=request.user.id).exists():
-        return redirect('students:quiz_list')
-    else:
-        registration = Student(user=request.user)
-        registration.save()
-        return redirect('students:quiz_list')
 
 @login_required
 def take(request, pk):
     global tempquiz
     quiz = get_object_or_404(Quiz, pk=pk)
 
-    student = Student.objects.get(user_id=request.user.id)
+    student = Profile.objects.get(id=request.user.id)
     takenquizlist = []
     quizzes = TakenQuiz.objects.filter(student_id=student.id)
     for onequiz in quizzes:
@@ -148,7 +229,7 @@ def take(request, pk):
 
         else:
             correctanswercounter = StudentAnswer.objects.filter(quiz=quiz,student=student,answer__is_correct=True).count()
-            print(correctanswercounter)
+
             score = (correctanswercounter / 30) * 100
             TakenQuiz.objects.create(student=student, quiz=quiz, score=score)
             return redirect('students:taken_quiz_list')

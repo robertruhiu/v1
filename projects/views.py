@@ -6,7 +6,7 @@ from marketplace.models import Job
 from projects.forms import FrameworkForm
 from projects.models import Project,Projecttype,Devtype,Framework
 from rest_framework.permissions import IsAuthenticated
-from .serializers import Projectserializer
+from .serializers import Projectserializer,FrameworkSerializer
 from rest_framework import generics
 import random
 from django.contrib.auth.models import User
@@ -28,7 +28,7 @@ class Projects(generics.ListAPIView):
             for onetag in tags:
                 if oneproject.tags.find(onetag.lower()):
                     randomlist.append(oneproject.id)
-        print(randomlist)
+
         if len(randomlist) > 0:
             projectid = random.choice(randomlist)
         else:
@@ -78,24 +78,30 @@ class RecentProjects(generics.ListAPIView):
     serializer_class = Projectserializer
     def get_queryset(self):
         user_id = self.kwargs['id']
-        user = User.objects.get(pk=user_id)
+        user = Profile.objects.get(pk=user_id)
         recentprojects = JobApplication.objects.filter(recruiter=user)
         project_ids = []
         for oneproject in recentprojects:
-            project_ids.append(oneproject.project.id)
-        return Project.objects.filter(pk__in=project_ids)
+            if oneproject.project:
+                project_ids.append(oneproject.project.id)
+                return Project.objects.filter(pk__in=project_ids)
 
 class MyRecentProjects(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = Projectserializer
     def get_queryset(self):
         user_id = self.kwargs['id']
-        user = User.objects.get(pk=user_id)
+        user = Profile.objects.get(pk=user_id)
         recentprojects = DevRequest.objects.filter(owner=user)[:2]
         project_ids = []
         for oneproject in recentprojects:
             project_ids.append(oneproject.project)
         return project_ids
+
+class Frameworks(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = FrameworkSerializer
+    queryset = Framework.objects.all()
 
 # developer api views
 from rest_framework.response import Response

@@ -27,7 +27,7 @@ from invitations.models import Invitation
 from projects.models import Project, Framework
 from frontend.form import Projectinvite, EditProjectForm,Submissions,Portfolio_form,Experience_Form,About,GradingForm
 from frontend.models import candidatesprojects,submissions,Portfolio,Experience,Report
-from classroom.models import TakenQuiz,Student,Quiz
+from classroom.models import TakenQuiz,Quiz
 from marketplace.models import Job
 from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,ProjectAsign
 from rest_framework import generics, permissions
@@ -184,78 +184,11 @@ def index(request):
             return recruiter_filling_details(request, current_profile)
         elif request.user.profile.stage == 'complete':
             if request.user.profile.user_type == 'developer':
-                try:
-                    student = Student.objects.get(user_id=request.user.id)
-                    passedquizz = TakenQuiz.objects.filter(score__gt=50).filter(student_id=student)
-                    # if request.user.profile.profile_tags == None:
-                    #     tags = []
-                    #     frameworks = Profile.objects.get(user_id=request.user.id)
-                    #     tags = []
-                    #     if frameworks:
-                    #         if 'react' in frameworks.framework.lower():
-                    #             tags.insert(0, True)
-                    #         else:
-                    #             tags.insert(0, False)
-                    #         if 'vue' in frameworks.framework.lower():
-                    #             tags.insert(1, True)
-                    #         else:
-                    #             tags.insert(1, False)
-                    #         if 'angular' in frameworks.framework.lower():
-                    #             tags.insert(2, True)
-                    #         else:
-                    #             tags.insert(2, False)
-                    #         if 'express' in frameworks.framework.lower():
-                    #             tags.insert(3, True)
-                    #         else:
-                    #             tags.insert(3, False)
-                    #         if 'laravel' in frameworks.framework.lower():
-                    #             tags.insert(4, True)
-                    #         else:
-                    #             tags.insert(4, False)
-                    #         if 'django' in frameworks.framework.lower():
-                    #             tags.insert(5, True)
-                    #         else:
-                    #             tags.insert(5, False)
-                    #         if 'net' in frameworks.framework.lower():
-                    #             tags.insert(6, True)
-                    #         else:
-                    #             tags.insert(6, False)
-                    #         if 'flutter' in frameworks.framework.lower():
-                    #             tags.insert(7, True)
-                    #         else:
-                    #             tags.insert(7, False)
-                    #         if 'android' in frameworks.framework.lower():
-                    #             tags.insert(8, True)
-                    #         else:
-                    #             tags.insert(8, False)
-                    #         if 'ionic' in frameworks.framework.lower():
-                    #             tags.insert(9, True)
-                    #         else:
-                    #             tags.insert(9, False)
-                    #         if 'java' in frameworks.language.lower():
-                    #             tags.insert(10, True)
-                    #         else:
-                    #             tags.insert(10, False)
-                    #         if 'c++' in frameworks.language.lower():
-                    #             tags.insert(11, True)
-                    #         else:
-                    #             tags.insert(11, False)
-                    #         if 'c#' in frameworks.language.lower():
-                    #             tags.insert(12, True)
-                    #         else:
-                    #             tags.insert(12, False)
-                    #     dev_tags = Profile.objects.get(user_id=request.user.id)
-                    #     dev_tags.profile_tags = tags
-                    #     dev_tags.save()
-                    #
-                    #     return render(request, 'frontend/developer/developer.html', {'passedquizz': passedquizz})
-                    # else:
-                    return render(request, 'frontend/developer/developer.html', {'passedquizz': passedquizz})
+                student = Profile.objects.get(id=request.user.id)
+                passedquizz = TakenQuiz.objects.filter(score__gt=50).filter(student_id=student)
 
-                except Student.DoesNotExist:
-                    obj = Student(user=request.user)
-                    obj.save()
-                    return render(request, 'frontend/developer/developer.html')
+                return render(request, 'frontend/developer/developer.html', {'passedquizz': passedquizz})
+
             elif request.user.profile.user_type == 'recruiter':
 
                 return render(request, 'frontend/recruiter/recruiter.html', {'transactions': transactions})
@@ -564,7 +497,7 @@ def calltoapply(request):
         applied.append(opencall.transaction)
     opportunities=list(set(payed)-set(applied))
 
-    student = Student.objects.get(user_id=request.user.id)
+    student = Profile.objects.get(id=request.user.id)
     takenquizzes = TakenQuiz.objects.filter(student_id=student)
     allquizid=[]
     for two in takenquizzes:
@@ -612,7 +545,7 @@ def calltoapply(request):
 @login_required
 def apply(request,opportunity_id):
     language =OpenCall.objects.get(transaction=opportunity_id)
-    student = Student.objects.get(user_id=request.user.id)
+    student = Profile.objects.get(id=request.user.id)
     passedquizz = TakenQuiz.objects.filter(score__gte=50).filter(student_id=student)
 
 
@@ -672,7 +605,7 @@ def portfolio(request):
     experience_form = Experience_Form()
     about_form = About()
 
-    student = Student.objects.get(user_id=request.user.id)
+    student = Profile.objects.get(id=request.user.id)
     verified_skills = TakenQuiz.objects.filter(student=student).filter(score__gte=50).all()
     skill = []
     for verified_skill in verified_skills:
@@ -753,7 +686,7 @@ def competitions(request):
     if request.user.is_authenticated:
 
         if request.user.profile.user_type=='developer':
-            student = Student.objects.get(user_id=request.user.id)
+            student = Profile.objects.get(id=request.user.id)
             try:
                 passedquizzes = TakenQuiz.objects.get(score__gte=50,student_id=student.id,quiz_id=12)
             except TakenQuiz.DoesNotExist:
@@ -764,7 +697,7 @@ def competitions(request):
 @login_required
 def placeapplication(request,transaction_id):
     language =OpenCall.objects.get(transaction=transaction_id)
-    student = Student.objects.get(user_id=request.user.id)
+    student = Profile.objects.get(id=request.user.id)
     passedquizz = TakenQuiz.objects.filter(score__gte=50).filter(student_id=student)
 
 

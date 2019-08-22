@@ -1,16 +1,25 @@
 from django.urls import include, path
 
 from .views import students, teachers
-
+from classroom.views.students import AllQuizzes,TakeQuiz,QuizQuestions,PostAnswer,UpdateRandomquiz,CalculateScore,Taken
 urlpatterns = [
+    path('allquizzes', AllQuizzes.as_view()),
+    path('takequiz/<int:candidate>/<int:quiz>', TakeQuiz.as_view()),
+    path('questions/<int:quiz>', QuizQuestions.as_view()),
+    path('updaterandquiz/<int:pk>', UpdateRandomquiz.as_view()),
+    path('postanswer', PostAnswer.as_view()),
+    path('score/<int:candidate>/<int:quiz>', CalculateScore.as_view()),
+    path('taken/<int:candidate>', Taken.as_view()),
+
+
 
 
     path('students/', include(([
         path('', students.QuizListView.as_view(), name='quiz_list'),
         path('taken/', students.TakenQuizListView.as_view(), name='taken_quiz_list'),
         path('quiz/<int:pk>/', students.take, name='take'),
-        path('tests/', students.student_registration, name='tests'),
-        path('retake/<int:quizid>/<int:studentid>',students.retake, name='retake')
+        path('retake/<int:quizid>/<int:studentid>',students.retake, name='retake'),
+
     ], 'classroom'), namespace='students')),
 
     path('teachers/', include(([

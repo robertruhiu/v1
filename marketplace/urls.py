@@ -4,7 +4,8 @@ from marketplace.views import job_list, job_details, apply_for_job, manage_poste
     select_candidate, dev_pool, dev_details, process_payment, payment_canceled, payment_done, add_dev_to_wish_list,\
     mydevs,paid_dev_details,create_or_edit_job,dev_data,Myjobsrequests,Jobsapplicants,\
     Specificjob,SpecificJobsapplicants,Myjobapplication,JobUpdate,JobCreate,JobsList,PickReject,PickRecommended,JobUnpublish,\
-    DevRequestpick,DevRequests,CandidateManager,MyApplicants,Jobdetails,JobApply,CandidateJobs,TalentPoolapplications
+    DevRequestpick,DevRequests,CandidateManager,MyApplicants,Jobdetails,JobApply,CandidateJobs,\
+    TalentPoolapplications,Applicationprofile,CandidateManagerInfo,JobManagerView,TalentPickedManagerView
 
 app_name = 'marketplace'
 
@@ -38,7 +39,9 @@ urlpatterns = [
     path('updatejob/<int:pk>', JobUpdate.as_view()),
     path('unpublishjob/<int:pk>', JobUnpublish.as_view()),
     path('pickreject/<int:pk>', PickReject.as_view()),
-    path('candidatemanager/<int:pk>', CandidateManager.as_view()),
+    path('applicationprofile/<int:pk>', Applicationprofile.as_view()),
+    path('candidateinfoupdater/<int:pk>', CandidateManager.as_view()),
+    path('candidateinfo/<int:pk>', CandidateManagerInfo.as_view()),
     path('pickrecommended', PickRecommended.as_view()),
     path('createjob', JobCreate.as_view()),
     path('alljobs', JobsList.as_view()),
@@ -47,5 +50,7 @@ urlpatterns = [
     path('applyjob', JobApply.as_view()),
     path('candidatejobs/<int:candidate>', CandidateJobs.as_view()),
     path('pickedapplications/<int:candidate>', TalentPoolapplications.as_view()),
+    path('jobmanagerview/<int:pk>', JobManagerView.as_view()),
+    path('talentpickedmanagerview/<int:pk>', TalentPickedManagerView.as_view()),
 
 ]
