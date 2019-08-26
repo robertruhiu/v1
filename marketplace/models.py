@@ -74,6 +74,8 @@ class JobApplication(models.Model):
     interviewstatus = models.CharField(max_length=500, null=True)
     eventcolor = models.CharField(max_length=100, null=True,default='blue')
     projectstarttime = models.DateTimeField(null=True, blank=True)
+    offerstatus = models.CharField(max_length=500, null=True)
+    offerletter = models.CharField(max_length=500, null=True)
 
 
 
@@ -91,6 +93,8 @@ class DevRequest(models.Model):
     interviewstatus = models.CharField(max_length=500, null=True)
     eventcolor = models.CharField(max_length=100, null=True, default='blue')
     projectstarttime = models.DateTimeField(null=True, blank=True)
+    offerstatus = models.CharField(max_length=500, null=True)
+    offerletter = models.CharField(max_length=500, null=True)
 
 
 

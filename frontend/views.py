@@ -26,10 +26,10 @@ from transactions.models import Transaction, Candidate,OpenCall,Applications
 from invitations.models import Invitation
 from projects.models import Project, Framework
 from frontend.form import Projectinvite, EditProjectForm,Submissions,Portfolio_form,Experience_Form,About,GradingForm
-from frontend.models import candidatesprojects,submissions,Portfolio,Experience,Report
+from frontend.models import candidatesprojects,submissions,Portfolio,Experience,Report,Assessment
 from classroom.models import TakenQuiz,Quiz
 from marketplace.models import Job
-from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,ProjectAsign
+from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater
 from rest_framework import generics, permissions
 
 class UserList(generics.ListAPIView):
@@ -107,6 +107,31 @@ class ProjectAssignment(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = candidatesprojects.objects.all()
     serializer_class = ProjectAsign
+
+class SelfAssesmentCreate(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Assessment.objects.all()
+    serializer_class = AssesmentSerializerUpdater
+
+class MySelfAssesments(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = AssesmentSerializer
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate_id']
+        user = Profile.objects.get(id=candidate_id)
+        return Assessment.objects.filter(candidate=user)
+
+class MySelfAssesmentsproject(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Assessment.objects.all()
+    serializer_class = AssesmentSerializer
+
+class MySelfAssesmentsprojectupdater(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Assessment.objects.all()
+    serializer_class = AssesmentSerializerUpdater
+
+
 
 @login_required
 def developer_filling_details(request, current_profile):

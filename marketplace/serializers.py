@@ -14,7 +14,7 @@ class DevRequestSerializer(serializers.ModelSerializer):
         model = DevRequest
         fields = ['id','developer', 'paid', 'stage', 'interviewstarttime', 'interviewendtime', 'notes',
                   'owner', 'test_stage', 'project',
-                  'report', 'interviewstatus', 'eventcolor','projectstarttime' ]
+                  'report', 'interviewstatus', 'eventcolor','projectstarttime','offerstatus','offerletter' ]
 
 class DevRequestUpdaterSerializer(serializers.ModelSerializer):
     developer = ProfileSerializer
@@ -24,7 +24,7 @@ class DevRequestUpdaterSerializer(serializers.ModelSerializer):
         model = DevRequest
         fields = ['id','developer', 'paid', 'stage', 'interviewstarttime', 'interviewendtime', 'notes',
                   'owner', 'test_stage', 'project',
-                  'report', 'interviewstatus', 'eventcolor','projectstarttime' ]
+                  'report', 'interviewstatus', 'eventcolor','projectstarttime','offerstatus','offerletter' ]
 
 class JobRequestSerializer(serializers.ModelSerializer):
 
@@ -42,7 +42,7 @@ class JobApplicationsRequestSerializer(serializers.ModelSerializer):
         model = JobApplication
         fields = ['id','job','candidate','selected','stage','interviewstarttime','interviewendtime',
                   'notes','recruiter','test_stage','project',
-                  'report','interviewstatus','eventcolor','projectstarttime']
+                  'report','interviewstatus','eventcolor','projectstarttime','offerstatus','offerletter']
 
 
 class JobApplicationsUpdaterSerializer(serializers.ModelSerializer):
@@ -56,6 +56,6 @@ class JobApplicationsUpdaterSerializer(serializers.ModelSerializer):
         model = JobApplication
         fields = ['id', 'job', 'candidate', 'selected', 'stage', 'interviewstarttime', 'interviewendtime',
                   'notes', 'recruiter', 'test_stage', 'project',
-                  'report', 'interviewstatus', 'eventcolor','projectstarttime']
+                  'report', 'interviewstatus', 'eventcolor','projectstarttime','offerstatus','offerletter']
 
 

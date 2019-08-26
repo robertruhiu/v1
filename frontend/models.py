@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-
+from accounts.models import Profile
 from marketplace.models import Job
 from django_countries.fields import CountryField
 from projects.models import Language, Framework ,Project
@@ -64,15 +64,16 @@ class Assessment(models.Model):
         ('analysis_complete', 'Analysis Complete'),
     )
     stage = models.CharField(choices=STAGE_CHOICES, default='invite_accepted', max_length=100)
-    candidate = models.ForeignKey(User, on_delete=models.CASCADE)
+    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE,null=True)
+    projectstarttime = models.DateTimeField(null=True, blank=True)
 
 class AssessmentReport(models.Model):
-    candidate = models.ForeignKey(User, on_delete=models.CASCADE)
+    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     score = models.IntegerField(null=True)
     skill = models.CharField(blank=True,null=True,max_length=100)
 
     def __str__(self):
-        return f'{self.candidate.first_name}: {self.project.name}'
+        return f'{self.candidate.user.first_name}: {self.project.name}'

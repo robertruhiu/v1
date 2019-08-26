@@ -12,6 +12,7 @@ import random
 from django.contrib.auth.models import User
 from marketplace.models import JobApplication,DevRequest
 from accounts.models import Profile
+from frontend.models import Assessment
 
 
 
@@ -55,6 +56,36 @@ class RecommendedProjects(generics.ListAPIView):
                 if onetag.lower() in oneproject.tags.lower():
                     randomlists.append(oneproject.id)
         randomlist = list(set(randomlists))
+
+        if len(randomlist) > 0:
+            projectid = random.choice(randomlist)
+        else:
+            projectid = randomlist[0]
+
+        return Project.objects.filter(pk=projectid)
+
+class SelfverifyProject(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = Projectserializer
+    def get_queryset(self):
+        framework = self.kwargs['framework']
+        user_id = self.kwargs['dev_id']
+        user = Profile.objects.get(pk=user_id)
+        # enable filter to ensure non repeat already done project in assessment
+        doneprojects = Assessment.objects.filter(candidate=user)
+        donelist =[]
+        for onedoneproject in doneprojects:
+            donelist.append(onedoneproject.project.id)
+
+        projects = Project.objects.all()
+
+        randomlists =[]
+        for oneproject  in projects :
+            if framework.lower() in oneproject.tags.lower():
+                randomlists.append(oneproject.id)
+        randomlistinitial = list(set(randomlists))
+
+        randomlist =list(set(randomlistinitial)-set(donelist))
 
         if len(randomlist) > 0:
             projectid = random.choice(randomlist)
@@ -115,7 +146,7 @@ class DeveloperProjects(generics.ListAPIView):
     serializer_class = Projectserializer
     def get_queryset(self):
         framework = self.kwargs['framework']
-        # user = User.objects.get(pk=user_id)
+
         developerprojects = Project.objects.filter(framework__name=framework)
         return developerprojects
 

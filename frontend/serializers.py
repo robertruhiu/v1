@@ -3,7 +3,7 @@ from django_countries import Countries
 from rest_framework import serializers
 
 from accounts.models import Profile
-from frontend.models import Experience, Portfolio, candidatesprojects, AssessmentReport
+from frontend.models import Experience, Portfolio, candidatesprojects, AssessmentReport,Assessment
 from projects.serializers import Projectserializer as MainProjectSerializer
 
 
@@ -52,10 +52,23 @@ class ProjectAsign(serializers.ModelSerializer):
         model = candidatesprojects
         fields = '__all__'
 
+class AssesmentSerializer(serializers.ModelSerializer):
+    candidate = ProfileSerializer()
+    project = MainProjectSerializer()
+    class Meta:
+        model = Assessment
+        fields = ('id','candidate','project', 'stage','projectstarttime')
+
+class AssesmentSerializerUpdater(serializers.ModelSerializer):
+    candidate = ProfileSerializer
+    project = MainProjectSerializer
+    class Meta:
+        model = Assessment
+        fields = ('id','candidate','project', 'stage','projectstarttime')
 
 class AssesmentReportSerializer(serializers.ModelSerializer):
-    candidate = UserSerializer()
+    candidate = ProfileSerializer()
     project = MainProjectSerializer()
     class Meta:
         model = AssessmentReport
-        fields = ('candidate','project', 'score',)
+        fields = ('id','candidate','project', 'score',)

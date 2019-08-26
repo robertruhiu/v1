@@ -9,7 +9,8 @@ from frontend.views import home,activity,tracker,update_candidateprojects,\
     ,deletetransaction,buildproject,calltoapply,apply,opencalltracker,competitions,newproject,\
     passedquizzes,failedquizzes,pickcandidates,update_finishedopencall,portfolio,experience,closetransaction,\
     editportfolioproject,about,management,grading,storegrades,analytics,ProfileUpdate,Profileget,Talentget,Experienceget,\
-    Portfolioget,AllUsers,Userget,AllExperienceget,AllPortfolioget,ProjectAssignment
+    Portfolioget,AllUsers,Userget,AllExperienceget,AllPortfolioget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
+    MySelfAssesmentsproject,MySelfAssesmentsprojectupdater
 
 from accounts.views import update_profile
 
@@ -70,6 +71,7 @@ urlpatterns = [
     path('management',management,name='management'),
     path('grading/<int:candidate_id>/<int:transaction_id>',grading,name='grading'),
     path('storegrades/<int:candidate_id>/<int:transaction_id>',storegrades,name='storegrades'),
+
     path('users/', UserList.as_view()),
     path('allusers/', AllUsers.as_view()),
     path('updater/<int:pk>', ProfileUpdate.as_view()),
@@ -81,6 +83,11 @@ urlpatterns = [
     path('getallexperience', AllExperienceget.as_view()),
     path('getallportofolio', AllPortfolioget.as_view()),
     path('asignproject', ProjectAssignment.as_view()),
+    path('createassess',SelfAssesmentCreate.as_view()),
+    path('myprojects/<int:candidate_id>',MySelfAssesments.as_view()),
+    path('myprojectdetails/<int:pk>',MySelfAssesmentsproject.as_view()),
+    path('myprojectdetailsupdater/<int:pk>',MySelfAssesmentsprojectupdater.as_view())
+    # path('selfprojectmanger')
 
 
 
