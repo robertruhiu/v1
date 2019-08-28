@@ -9,8 +9,8 @@ from frontend.views import home,activity,tracker,update_candidateprojects,\
     ,deletetransaction,buildproject,calltoapply,apply,opencalltracker,competitions,newproject,\
     passedquizzes,failedquizzes,pickcandidates,update_finishedopencall,portfolio,experience,closetransaction,\
     editportfolioproject,about,management,grading,storegrades,analytics,ProfileUpdate,Profileget,Talentget,Experienceget,\
-    Portfolioget,AllUsers,Userget,AllExperienceget,AllPortfolioget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
-    MySelfAssesmentsproject,MySelfAssesmentsprojectupdater
+    Portfolioget,AllUsers,Userget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
+    MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate
 
 from accounts.views import update_profile
 
@@ -80,8 +80,11 @@ urlpatterns = [
     path('gettalent/<int:pk>', Talentget.as_view()),
     path('getexperience/<int:candidate_id>', Experienceget.as_view()),
     path('getportofolio/<int:candidate_id>', Portfolioget.as_view()),
-    path('getallexperience', AllExperienceget.as_view()),
-    path('getallportofolio', AllPortfolioget.as_view()),
+    path('updateportfolio/<int:pk>', Portfolioupdate.as_view()),
+    path('newportfolio', Portfoliocreate.as_view()),
+    path('updateexperience/<int:pk>', Experienceupdate.as_view()),
+    path('newexperience', Experiencecreate.as_view()),
+
     path('asignproject', ProjectAssignment.as_view()),
     path('createassess',SelfAssesmentCreate.as_view()),
     path('myprojects/<int:candidate_id>',MySelfAssesments.as_view()),

@@ -29,7 +29,8 @@ from frontend.form import Projectinvite, EditProjectForm,Submissions,Portfolio_f
 from frontend.models import candidatesprojects,submissions,Portfolio,Experience,Report,Assessment
 from classroom.models import TakenQuiz,Quiz
 from marketplace.models import Job
-from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater,ProfileSerializerUpdater
+from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,\
+    ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater,ProfileSerializerUpdater,ProjectSerializerupdater,ExperienceSerializerupdater
 from rest_framework import generics, permissions
 
 class UserList(generics.ListAPIView):
@@ -61,11 +62,18 @@ class Portfolioget(generics.ListAPIView):
 
     def get_queryset(self):
         candidate_id = self.kwargs['candidate_id']
-        user = User.objects.get(id=candidate_id)
+        user = Profile.objects.get(id=candidate_id)
         return Portfolio.objects.filter(candidate_id=user)
 
+class Portfoliocreate(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Portfolio.objects.all()
+    serializer_class = ProjectSerializerupdater
 
-
+class Portfolioupdate(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Portfolio.objects.all()
+    serializer_class = ProjectSerializerupdater
 
 class Experienceget(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -74,18 +82,18 @@ class Experienceget(generics.ListAPIView):
     def get_queryset(self):
 
         candidate_id = self.kwargs['candidate_id']
-        user = User.objects.get(id=candidate_id)
+        user = Profile.objects.get(id=candidate_id)
         return Experience.objects.filter(candidate=user)
 
-
-class AllPortfolioget(generics.ListAPIView):
-    queryset = Portfolio.objects.all()
-    serializer_class = ProjectSerializer
-
-
-class AllExperienceget(generics.ListAPIView):
+class Experiencecreate(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
     queryset = Experience.objects.all()
-    serializer_class = ExperienceSerializer
+    serializer_class = ExperienceSerializerupdater
+
+class Experienceupdate(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Experience.objects.all()
+    serializer_class = ExperienceSerializerupdater
 
 
 class Profileget(generics.RetrieveAPIView):

@@ -24,7 +24,7 @@ class submissions(models.Model):
     repo = models.CharField(null=True, max_length=400)
 
 class Portfolio(models.Model):
-    candidate = models.ForeignKey(User, on_delete=models.CASCADE)
+    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE,related_name='candidateportfolio')
     title = models.CharField(null=True, max_length=200)
     description = models.CharField(null=True, max_length=400)
     repository_link = models.CharField(null=True, max_length=400)
@@ -34,7 +34,7 @@ class Portfolio(models.Model):
 
 
 class Experience(models.Model):
-    candidate = models.ForeignKey(User, on_delete=models.CASCADE)
+    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE,related_name='candidateexperience')
     title = models.CharField(null=True, max_length=100)
     company = models.CharField(null=True, max_length=100)
     description = models.CharField(null=True, max_length=100)

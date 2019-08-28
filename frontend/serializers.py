@@ -46,15 +46,29 @@ class ProfileSerializerUpdater(serializers.ModelSerializer):
 
 
 class ExperienceSerializer(serializers.ModelSerializer):
+    candidate = ProfileSerializer()
     class Meta:
         model = Experience
-        fields = '__all__'
+        fields = ['id','candidate','title','description','company','location','tech_tags','duration']
+
+class ExperienceSerializerupdater(serializers.ModelSerializer):
+    candidate = ProfileSerializer
+    class Meta:
+        model = Experience
+        fields = ['id','candidate','title','description','company','location','tech_tags','duration']
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    candidate = ProfileSerializer()
     class Meta:
         model = Portfolio
-        fields = '__all__'
+        fields = ['id','candidate','title','description','repository_link','demo_link','tech_tags']
+
+class ProjectSerializerupdater(serializers.ModelSerializer):
+    candidate = ProfileSerializer
+    class Meta:
+        model = Portfolio
+        fields = ['id','candidate','title','description','repository_link','demo_link','tech_tags']
 
 
 class ProjectAsign(serializers.ModelSerializer):

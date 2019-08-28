@@ -6,7 +6,7 @@ from django.urls import reverse
 from django_countries.fields import CountryField
 from django.contrib.auth.models import User
 from separatedvaluesfield.models import SeparatedValuesField
-from frontend.models import Report
+
 from projects.models import Project
 
 
