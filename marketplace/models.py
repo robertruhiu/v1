@@ -6,7 +6,10 @@ from django.urls import reverse
 from django_countries.fields import CountryField
 from django.contrib.auth.models import User
 from separatedvaluesfield.models import SeparatedValuesField
+from frontend.models import Report
 from projects.models import Project
+
+
 
 class Job(models.Model):
     ENGAGEMENT_TYPE = (
@@ -76,6 +79,7 @@ class JobApplication(models.Model):
     projectstarttime = models.DateTimeField(null=True, blank=True)
     offerstatus = models.CharField(max_length=500, null=True)
     offerletter = models.CharField(max_length=500, null=True)
+    demolink = models.CharField(blank=True, null=True, max_length=100)
 
 
 
@@ -95,6 +99,7 @@ class DevRequest(models.Model):
     projectstarttime = models.DateTimeField(null=True, blank=True)
     offerstatus = models.CharField(max_length=500, null=True)
     offerletter = models.CharField(max_length=500, null=True)
+    demolink = models.CharField(blank=True, null=True, max_length=100)
 
 
 

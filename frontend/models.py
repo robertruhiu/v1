@@ -68,6 +68,8 @@ class Assessment(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     report = models.ForeignKey(Report, on_delete=models.CASCADE,null=True)
     projectstarttime = models.DateTimeField(null=True, blank=True)
+    frameworktested = models.CharField(blank=True,null=True,max_length=100)
+    demolink = models.CharField(blank=True,null=True,max_length=100)
 
 class AssessmentReport(models.Model):
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)

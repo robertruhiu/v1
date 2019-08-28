@@ -29,7 +29,7 @@ from frontend.form import Projectinvite, EditProjectForm,Submissions,Portfolio_f
 from frontend.models import candidatesprojects,submissions,Portfolio,Experience,Report,Assessment
 from classroom.models import TakenQuiz,Quiz
 from marketplace.models import Job
-from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater
+from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater,ProfileSerializerUpdater
 from rest_framework import generics, permissions
 
 class UserList(generics.ListAPIView):
@@ -101,7 +101,7 @@ class Userget(generics.RetrieveAPIView):
 class ProfileUpdate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = ProfileSerializerUpdater
 
 class ProjectAssignment(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)

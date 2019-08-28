@@ -3,7 +3,7 @@ from django_countries import Countries
 from rest_framework import serializers
 
 from accounts.models import Profile
-from frontend.models import Experience, Portfolio, candidatesprojects, AssessmentReport,Assessment
+from frontend.models import Experience, Portfolio, candidatesprojects, AssessmentReport,Assessment,Report
 from projects.serializers import Projectserializer as MainProjectSerializer
 
 
@@ -31,7 +31,17 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('id','user','user_type','stage','csa','gender','linkedin_url','github_repo',
-                  'language','framework','years','about','skills','verified_skills',
+                  'years','about','skills','verified_skills',
+                  'country','availabilty','company','job_role','industry','company_url','file')
+
+class ProfileSerializerUpdater(serializers.ModelSerializer):
+    user = UserSerializer
+    country = SerializableCountryField(allow_blank=True)
+
+    class Meta:
+        model = Profile
+        fields = ('id','user','user_type','stage','csa','gender','linkedin_url','github_repo',
+                  'years','about','skills','verified_skills',
                   'country','availabilty','company','job_role','industry','company_url','file')
 
 
@@ -57,14 +67,14 @@ class AssesmentSerializer(serializers.ModelSerializer):
     project = MainProjectSerializer()
     class Meta:
         model = Assessment
-        fields = ('id','candidate','project', 'stage','projectstarttime')
+        fields = ('id','candidate','project', 'stage','projectstarttime','frameworktested')
 
 class AssesmentSerializerUpdater(serializers.ModelSerializer):
     candidate = ProfileSerializer
     project = MainProjectSerializer
     class Meta:
         model = Assessment
-        fields = ('id','candidate','project', 'stage','projectstarttime')
+        fields = ('id','candidate','project', 'stage','projectstarttime','frameworktested')
 
 class AssesmentReportSerializer(serializers.ModelSerializer):
     candidate = ProfileSerializer()
@@ -72,3 +82,8 @@ class AssesmentReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = AssessmentReport
         fields = ('id','candidate','project', 'score',)
+
+class ReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Report
+        fields = '__all__'
