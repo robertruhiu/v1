@@ -47,12 +47,14 @@ class ProfileSerializerUpdater(serializers.ModelSerializer):
 
 class ExperienceSerializer(serializers.ModelSerializer):
     candidate = ProfileSerializer()
+    location = SerializableCountryField(allow_blank=True)
     class Meta:
         model = Experience
         fields = ['id','candidate','title','description','company','location','tech_tags','duration']
 
 class ExperienceSerializerupdater(serializers.ModelSerializer):
     candidate = ProfileSerializer
+    location = SerializableCountryField(allow_blank=True)
     class Meta:
         model = Experience
         fields = ['id','candidate','title','description','company','location','tech_tags','duration']

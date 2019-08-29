@@ -37,7 +37,7 @@ class Experience(models.Model):
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE,related_name='candidateexperience')
     title = models.CharField(null=True, max_length=100)
     company = models.CharField(null=True, max_length=100)
-    description = models.CharField(null=True, max_length=100)
+    description = models.CharField(null=True, max_length=400)
     location = CountryField(null=True, max_length=30)
     duration = models.IntegerField(null=True)
     tech_tags = models.CharField(max_length=500, blank=True, null=True, )
