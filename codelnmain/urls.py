@@ -34,6 +34,7 @@ urlpatterns = [
     path('', include('frontend.urls', namespace='frontend')),
     path('', include('classroom.urls')),
     path('invitations/', include('invitations.urls', namespace='invitations')),
+    path('servermanagement/', include('servermanagement.urls', namespace='servermanagement')),
     path('marketplace/', include('marketplace.urls', namespace='marketplace')),
     path('blog/',include('blog.urls',namespace='blog')),
     path('martor/', include('martor.urls')),
@@ -42,9 +43,11 @@ urlpatterns = [
     path('api-token',obtain_jwt_token),
     path('api-token-refress',refresh_jwt_token),
     path('rest-auth/', include('rest_auth.urls')),
-    path('rest-auth/registration/', include('rest_auth.registration.urls'))
-
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+#     cart
+    path('cart/', include('cart.urls')),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

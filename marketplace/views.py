@@ -72,7 +72,6 @@ class Myjobsrequests(generics.ListAPIView):
     serializer_class = JobRequestSerializer
 
     def get_queryset(self):
-
         user_id = self.kwargs['posted_by']
         user =User.objects.get(id=user_id)
         return Job.objects.filter(posted_by=user)
@@ -84,6 +83,7 @@ class Jobsapplicants(generics.ListAPIView):
         job_id = self.kwargs['job']
         job = Job.objects.get(id=job_id)
         return JobApplication.objects.filter(job=job)
+
 class Specificjob(generics.RetrieveAPIView):
     queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
@@ -115,6 +115,7 @@ class Applicationprofile(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsRequestSerializer
+
 class PickReject(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
@@ -139,10 +140,12 @@ class JobManagerView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsRequestSerializer
+
 class TalentPickedManagerView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = DevRequest.objects.all()
     serializer_class = DevRequestSerializer
+
 class JobApply(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
@@ -153,8 +156,6 @@ class CandidateJobs(generics.ListAPIView):
     serializer_class = JobApplicationsRequestSerializer
     def get_queryset(self):
         candidate_id = self.kwargs['candidate']
-
-
         user = Profile.objects.get(id=candidate_id)
         return JobApplication.objects.filter(candidate=user)
 
@@ -170,7 +171,6 @@ class TalentPoolapplications(generics.ListAPIView):
 
 def job_list(request):
     if request.user.is_authenticated:
-
         applied_list = []
         alljoblist = []
         alljobs = Job.objects.all().order_by('-updated')

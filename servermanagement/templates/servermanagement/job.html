@@ -1,0 +1,31 @@
+{% load bootstrap4 %}
+<div class="container w3-padding-top">
+    <h2>schedule your test</h2>
+    <form method="post" action="{% url 'jobs:schedule-job' project.id %}">
+        {% csrf_token %}
+        {% bootstrap_form job_form %}
+
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        {% endbuttons %}
+    </form>
+
+
+</div>
+
+
+{#        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"#}
+{#                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"#}
+{#                crossorigin="anonymous"></script>#}
+{#<script>#}
+{#    $(function () {#}
+{#        $("#datetimepicker1").datetimepicker({#}
+{#            format: 'DD/MM/YYYY HH:mm',#}
+{#        });#}
+{#    });#}
+{#</script>#}
+
+
+
+
+

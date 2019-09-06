@@ -83,7 +83,7 @@ class AssesmentSerializer(serializers.ModelSerializer):
     project = MainProjectSerializer()
     class Meta:
         model = Assessment
-        fields = ('id','candidate','project', 'stage','projectstarttime','frameworktested')
+        fields = ('id','candidate','project', 'stage','test_mode','projectstarttime','frameworktested')
 
 class AssesmentSerializerUpdater(serializers.ModelSerializer):
     candidate = ProfileSerializer

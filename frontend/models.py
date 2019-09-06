@@ -10,7 +10,18 @@ from separatedvaluesfield.models import SeparatedValuesField
 
 # Create your models here.
 class candidatesprojects(models.Model):
-    stage = models.CharField(default='awaiting candidate', max_length=100)
+    TYPE_CHOICES = (
+        ('awaiting_candidate', 'Awaiting Candidate'),
+        ('invite_accepted', 'Invite Accepted'),
+        ('time_set', 'Time Set'),
+        ('link_available', 'Link Available'),
+        ('in_progress', 'In Progress'),
+        ('project_completed', 'Project Completed'),
+        ('analysis_started', 'Analysis Started'),
+        ('transfer_complete', 'Transfer Complete'),
+        ('analysis_complete', 'Analysis Complete'),
+    )
+    stage = models.CharField(max_length=100, default='awaiting_candidate', choices=TYPE_CHOICES)
     candidate = models.ForeignKey(User, on_delete=models.CASCADE,null=True,)
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE,null=True,)
 
@@ -56,6 +67,7 @@ class Assessment(models.Model):
     STAGE_CHOICES = (
         ('invite_accepted', 'Invite Accepted'),
         ('time_set', 'Time Set'),
+        ('approved', 'Approved'),
         ('link_available', 'Link Available'),
         ('in_progress', 'In Progress'),
         ('project_completed', 'Project Completed'),
@@ -63,13 +75,25 @@ class Assessment(models.Model):
         ('transfer_complete', 'Transfer Complete'),
         ('analysis_complete', 'Analysis Complete'),
     )
+    TEST_MODE_CHOICES = (
+        ('pending', 'Pending'),
+        ('manual_test', 'Manual Test'),
+        ('automated_test', 'Automated Test'),
+    )
     stage = models.CharField(choices=STAGE_CHOICES, default='invite_accepted', max_length=100)
+    test_mode = models.CharField(choices=TEST_MODE_CHOICES, default='pending', max_length=100)
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    report = models.ForeignKey(Report, on_delete=models.CASCADE,null=True)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE,null=True, blank=True)
     projectstarttime = models.DateTimeField(null=True, blank=True)
     frameworktested = models.CharField(blank=True,null=True,max_length=100)
     demolink = models.CharField(blank=True,null=True,max_length=100)
+
+    def time_remaining(self):
+        return f'2 hrs'
+
+    def __str__(self):
+        return f'{self.candidate.full_name}-{self.project.name}'
 
 class AssessmentReport(models.Model):
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)

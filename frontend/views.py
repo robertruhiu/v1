@@ -20,6 +20,7 @@ from django.contrib import messages
 from django.core import mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from rest_framework.views import APIView
 
 from accounts.forms import ProfileTypeForm, DeveloperFillingDetailsForm, RecruiterFillingDetailsForm,Profile
 from transactions.models import Transaction, Candidate,OpenCall,Applications
@@ -41,6 +42,13 @@ class UserList(generics.ListAPIView):
 
         return Profile.objects.filter(user_type='developer')
 
+class UserListsliced(generics.ListAPIView):
+
+    serializer_class = ProfileSerializer
+
+    def get_queryset(self):
+
+        return Profile.objects.filter(user_type='developer')[:4]
 class AllUsers(generics.ListAPIView):
 
     serializer_class = UserSerializer
@@ -49,12 +57,9 @@ class AllUsers(generics.ListAPIView):
 
         return User.objects.all()
 
-
-
 class Talentget(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-
 
 class Portfolioget(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -94,7 +99,6 @@ class Experienceupdate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Experience.objects.all()
     serializer_class = ExperienceSerializerupdater
-
 
 class Profileget(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
@@ -138,8 +142,6 @@ class MySelfAssesmentsprojectupdater(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Assessment.objects.all()
     serializer_class = AssesmentSerializerUpdater
-
-
 
 @login_required
 def developer_filling_details(request, current_profile):

@@ -49,10 +49,11 @@ INSTALLED_APPS = [
     'django.contrib.admindocs',
     'cloudinary_storage',
     'cloudinary',
-
+    'cart',
     'transactions',
     'payments',
     'marketplace',
+    'servermanagement',
     'crispy_forms',
 
     # third party libs
@@ -83,8 +84,8 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-
     ],
+
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
@@ -327,6 +328,8 @@ MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN,
                                 AWS_PUBLIC_MEDIA_LOCATION)
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+CART_SESSION_ID = 'cart'
 
 TAGGIT_CASE_INSENSITIVE = True
 if ENVIRONMENT != 'local':
