@@ -32,17 +32,17 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('id','user','user_type','stage','csa','gender','linkedin_url','github_repo',
                   'years','about','skills','verified_skills',
-                  'country','availabilty','company','job_role','industry','company_url','file')
+                  'country','availabilty','company','job_role','industry','company_url','file','salary')
 
 class ProfileSerializerUpdater(serializers.ModelSerializer):
     user = UserSerializer
-    country = SerializableCountryField(allow_blank=True)
+    country = SerializableCountryField
 
     class Meta:
         model = Profile
         fields = ('id','user','user_type','stage','csa','gender','linkedin_url','github_repo',
                   'years','about','skills','verified_skills',
-                  'country','availabilty','company','job_role','industry','company_url','file')
+                  'country','availabilty','company','job_role','industry','company_url','file','salary')
 
 
 class ExperienceSerializer(serializers.ModelSerializer):

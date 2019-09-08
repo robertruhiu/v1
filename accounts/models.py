@@ -72,6 +72,7 @@ class Profile(models.Model):
     company_url = models.CharField(max_length=500, null=True, blank=True)
     tags = TaggableManager()
     file = CloudinaryField(resource_type="raw", blank=True)
+    salary = models.IntegerField(null=True)
 
     def __str__(self):
         return self.user.username

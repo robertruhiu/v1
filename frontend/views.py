@@ -103,7 +103,7 @@ class Experienceupdate(generics.RetrieveUpdateDestroyAPIView):
 class Profileget(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Profile.objects.all()
-    serializer_class = ProfileSerializerUpdater
+    serializer_class = ProfileSerializer
 
 class Userget(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
