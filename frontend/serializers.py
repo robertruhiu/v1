@@ -36,7 +36,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class ProfileSerializerUpdater(serializers.ModelSerializer):
     user = UserSerializer
-    country = SerializableCountryField
+    country = SerializableCountryField(allow_blank=True)
 
     class Meta:
         model = Profile

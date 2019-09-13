@@ -47,6 +47,8 @@ class Profile(models.Model):
     stage = models.CharField(choices=STAGE_CHOICES, default='profile_type_selection', max_length=100)
     profile_photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True, null=True)
     csa = models.BooleanField(default=False)
+    available = models.BooleanField(default=True)
+    student =models.BooleanField(default=False)
     gender = models.CharField(choices=GENDER_CHOICES, null=True, blank=True, max_length=30)
     phone_number = models.CharField(null=True, max_length=30)
     # developer profile

@@ -101,5 +101,4 @@ class AssessmentReport(models.Model):
     score = models.IntegerField(null=True)
     skill = models.CharField(blank=True,null=True,max_length=100)
 
-    def __str__(self):
-        return f'{self.candidate.user.first_name}: {self.project.name}'
+

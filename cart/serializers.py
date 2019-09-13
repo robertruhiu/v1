@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 
-from cart.models import Cart, DeveloperOrder
+from cart.models import Cart
 from frontend.serializers import ProfileSerializer
 
 
@@ -10,12 +10,13 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ('id','user', 'total_amount')
+        fields = ('id','user','devspaid','checked_out','devspending','amount')
 
-class DeveloperOrderSerializer(serializers.ModelSerializer):
-    developer = ProfileSerializer()
-    cart = CartSerializer()
+class CartSerializerupdater(serializers.ModelSerializer):
+    user = ProfileSerializer
 
     class Meta:
-        model = DeveloperOrder
-        fields = ('id','developer', 'price', 'cart', )
+        model = Cart
+        fields = ('id','user','devspaid','checked_out','devspending','amount','transaction_id')
+
+

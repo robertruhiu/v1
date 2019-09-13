@@ -9,30 +9,11 @@ class Cart(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     checked_out = models.BooleanField(default=False)
-
-    @property
-    def total_amount(self):
-        cost = [dev.price for dev in self.developerorder_set.all()]
-        my_amount = sum(cost)
-        amount = 0
-        if len(cost) <= 10:
-            amount = 200
-        elif 11 >=len(cost) <=20:
-            amount = 400
-        return amount
-
-    def __str__(self):
-        return f'{self.user}'
+    devspending = models.CharField(max_length=900, null=True, blank=True)
+    devspaid = models.CharField(max_length=900, null=True, blank=True)
+    amount = models.IntegerField(blank=True,default=0)
+    transaction_id = models.CharField(max_length=900, null=True, blank=True)
 
 
-class DeveloperOrder(models.Model):
-    developer = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    price = models.IntegerField(blank=True)
 
-    def set_price(self):
-        self.price = 10
-        return self.price
 
-    def __str__(self):
-        return f'{self.cart} - {self.developer}'
