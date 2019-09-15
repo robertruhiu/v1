@@ -62,7 +62,7 @@ class TakeQuiz(generics.ListAPIView):
             for onequestion in currentquiz:
                 questionlist.append(onequestion.id)
 
-            questionrandomlist = random.sample(questionlist, 4)
+            questionrandomlist = random.sample(questionlist, 30)
             questions= ','.join(map(str, questionrandomlist))
 
 
@@ -92,7 +92,7 @@ class CalculateScore(generics.ListCreateAPIView):
         quiz = Quiz.objects.get(id=quiz_id)
 
         correctanswercounter = StudentAnswer.objects.filter(quiz=quiz, student=student, answer__is_correct=True).count()
-        score = (correctanswercounter / 4) * 100
+        score = (correctanswercounter / 30) * 100
         TakenQuiz.objects.create(student=student, quiz=quiz, score=score)
         return TakenQuiz.objects.filter(student=student)
 

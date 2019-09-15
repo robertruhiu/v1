@@ -48,7 +48,7 @@ class UserListsliced(generics.ListAPIView):
 
     def get_queryset(self):
 
-        return Profile.objects.filter(user_type='developer')[:4]
+        return Profile.objects.exclude(about__isnull=True).filter(user_type='developer')[:4]
 class AllUsers(generics.ListAPIView):
 
     serializer_class = UserSerializer

@@ -7,8 +7,6 @@ class Subject(models.Model):
     name = models.CharField(max_length=30)
     image = models.CharField(max_length=300,blank=True, null=True)
 
-
-
 class Quiz(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='quizzes')
     name = models.CharField(max_length=255)

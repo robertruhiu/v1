@@ -13,6 +13,7 @@ class Cart(models.Model):
     devspaid = models.CharField(max_length=900, null=True, blank=True)
     amount = models.IntegerField(blank=True,default=0)
     transaction_id = models.CharField(max_length=900, null=True, blank=True)
+    type = models.CharField(max_length=20, null=True, blank=True)
 
 
 
