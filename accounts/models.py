@@ -55,15 +55,15 @@ class Profile(models.Model):
     linkedin_url = models.CharField(max_length=500, null=True, )
     portfolio = models.CharField(max_length=500, blank=True, null=True)
     github_repo = models.CharField(max_length=500, null=True, )
-    language = models.CharField(max_length=140, null=True, blank=True)
-    framework = models.CharField(max_length=140, null=True, blank=True)
+    language = models.CharField(max_length=140, null=True, blank=True,default='')
+    framework = models.CharField(max_length=140, null=True, blank=True,default='')
     years = models.CharField(choices=YEARS_ACTIVE_CHOICES, null=True, max_length=30)
     about = models.CharField(null=True, max_length=300)
     profile_tags = SeparatedValuesField(null=True, max_length=150, token=',')
     skills = models.CharField(max_length=900, null=True, blank=True)
     verified_skills = models.CharField(max_length=900, null=True, blank=True)
     country = CountryField(null=True, max_length=30)
-    availabilty = models.CharField(choices=CONTRACT_CHOICES, null=True, max_length=30)
+    availabilty = models.CharField(choices=CONTRACT_CHOICES, null=True, max_length=40)
 
     # years = models.CharField(max_length=30, choices=YEARS_ACTIVE_CHOICES, null=True, blank=True),
 
@@ -100,9 +100,7 @@ class Profile(models.Model):
     def get_absolute_url(self):
         return '/accounts/profile/'
 
-    @property
-    def full_name(self):
-        return self.user.get_full_name()
+
 
     @property
     def date_joined(self):

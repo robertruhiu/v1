@@ -39,9 +39,12 @@ class DevRequestpick(generics.CreateAPIView):
 
 class DevRequests(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
-    queryset = DevRequest.objects.all()
     serializer_class = DevRequestSerializer
     lookup_field = 'owner'
+    def get_queryset(self):
+        user_id = self.kwargs['owner']
+        user = Profile.objects.get(id = user_id)
+        return DevRequest.objects.filter(owner=user)
 
 class MyApplicants(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -73,7 +76,7 @@ class Myjobsrequests(generics.ListAPIView):
 
     def get_queryset(self):
         user_id = self.kwargs['posted_by']
-        user =User.objects.get(id=user_id)
+        user = User.objects.get(id=user_id)
         return Job.objects.filter(posted_by=user)
 
 class Jobsapplicants(generics.ListAPIView):

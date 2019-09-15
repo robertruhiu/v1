@@ -160,7 +160,7 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'codelnmain.wsgi.application'
 
-# Database
+
 
 DATABASES = {
     'default': {
@@ -168,37 +168,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'mrembo',
-#         'USER': 'postgres',
-#         'PASSWORD': 'Pokerface1994',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'delfm8a38hujqh',
-#         'USER': 'zwoyihgclnpxxl',
-#         'PASSWORD': 'b8c1c02d756826889dd0c32024144b07f7e09216b6b225ab73a19f2ae92b20a3',
-#         'HOST': 'ec2-54-228-207-163.eu-west-1.compute.amazonaws.com',
-#         'PORT': '5432',
-#     }
-# }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'dbeqvronr59rp3',
-#         'USER': 'unyokuvzspuixp',
-#         'PASSWORD': 'e2c5c2d852cca022ee1e09b7c2bba04a0b08acbeeb2f1c6ef8c6db1efd1bb7c8',
-#         'HOST': 'ec2-54-217-234-157.eu-west-1.compute.amazonaws.com',
-#         'PORT': '5432',
-#     }
-# }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
