@@ -40,7 +40,7 @@ class UserList(generics.ListAPIView):
 
     def get_queryset(self):
 
-        return Profile.objects.exclude(about__isnull=True).filter(user_type='developer')
+        return Profile.objects.filter(user_type='developer')
 
 class UserListsliced(generics.ListAPIView):
 
