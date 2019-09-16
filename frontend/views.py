@@ -33,6 +33,9 @@ from marketplace.models import Job
 from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,\
     ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater,ProfileSerializerUpdater,ProjectSerializerupdater,ExperienceSerializerupdater
 from rest_framework import generics, permissions
+from django.utils.decorators import method_decorator
+
+
 
 class UserList(generics.ListAPIView):
 
@@ -40,7 +43,9 @@ class UserList(generics.ListAPIView):
 
     def get_queryset(self):
 
-        return Profile.objects.all()
+        return Profile.objects.select_related('user').exclude(about__isnull=True).filter(user_type='developer')
+
+
 
 class UserListsliced(generics.ListAPIView):
 
