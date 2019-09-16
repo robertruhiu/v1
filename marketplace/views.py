@@ -27,7 +27,8 @@ from accounts.models import Profile
 from django.utils.safestring import mark_safe
 import json
 from rest_framework.permissions import IsAuthenticated
-from .serializers import DevRequestSerializer,JobRequestSerializer,JobApplicationsRequestSerializer,JobApplicationsUpdaterSerializer,DevRequestUpdaterSerializer
+from .serializers import DevRequestSerializer,JobRequestSerializer,JobApplicationsRequestSerializer,JobApplicationsUpdaterSerializer,\
+    DevRequestUpdaterSerializer,MyapplicantsRequestSerializer
 from frontend.serializers import ProfileSerializer
 from rest_framework import generics
 
@@ -48,9 +49,16 @@ class DevRequests(generics.ListAPIView):
 
 class MyApplicants(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
-    queryset = JobApplication.objects.all()
-    serializer_class = JobApplicationsRequestSerializer
-    lookup_field = 'recruiter'
+    serializer_class = MyapplicantsRequestSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['owner']
+        user = Profile.objects.get(id=user_id)
+
+        return JobApplication.objects.select_related('job').filter(recruiter=user)
+
+
+
 
 
 class Myjobapplication(generics.ListAPIView):
@@ -80,12 +88,12 @@ class Myjobsrequests(generics.ListAPIView):
         return Job.objects.filter(posted_by=user)
 
 class Jobsapplicants(generics.ListAPIView):
-    serializer_class = JobApplicationsRequestSerializer
+    serializer_class = MyapplicantsRequestSerializer
 
     def get_queryset(self):
         job_id = self.kwargs['job']
         job = Job.objects.get(id=job_id)
-        return JobApplication.objects.filter(job=job)
+        return JobApplication.objects.select_related('job').filter(job=job)
 
 class Specificjob(generics.RetrieveAPIView):
     queryset = Job.objects.all()

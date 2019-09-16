@@ -29,12 +29,14 @@ from projects.models import Project, Framework
 from frontend.form import Projectinvite, EditProjectForm,Submissions,Portfolio_form,Experience_Form,About,GradingForm
 from frontend.models import candidatesprojects,submissions,Portfolio,Experience,Report,Assessment
 from classroom.models import TakenQuiz,Quiz
-from marketplace.models import Job
+from marketplace.models import Job,JobApplication
 from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,\
     ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater,ProfileSerializerUpdater,ProjectSerializerupdater,ExperienceSerializerupdater
 from rest_framework import generics, permissions
 from django.utils.decorators import method_decorator
-
+from django.db.models import CharField
+from django.db.models.functions import Length
+CharField.register_lookup(Length, 'length')
 
 
 class UserList(generics.ListAPIView):
@@ -43,7 +45,7 @@ class UserList(generics.ListAPIView):
 
     def get_queryset(self):
 
-        return Profile.objects.select_related('user').exclude(about__isnull=True).filter(user_type='developer')
+        return Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer')
 
 
 
@@ -53,7 +55,7 @@ class UserListsliced(generics.ListAPIView):
 
     def get_queryset(self):
 
-        return Profile.objects.exclude(about__isnull=True).filter(user_type='developer')[:4]
+        return Profile.objects.exclude(about__isnull=True).exclude(skills__isnull=True).filter(about__length__gt=100).filter(user_type='developer')[:4]
 class AllUsers(generics.ListAPIView):
 
     serializer_class = UserSerializer
@@ -237,6 +239,25 @@ def index(request):
 
 
 def home(request):
+    # devs = Profile.objects.filter(user_type='developer')
+    # for dev in devs:
+    #     if(dev.framework):
+    #         if ',' in dev.framework:
+    #              all= dev.framework.replace(" ", "").lower()
+    #              dev.skills = all +','+dev.skills
+    #              dev.save()
+    #
+    #     # if (dev.language):
+    #     #     if ',' in dev.language:
+    #     #         newskill = dev.language.replace(" ", "").lower()
+    #     #         all = newskill +','+dev.skills
+    #     #         dev.skills = all
+    #     #         dev.save()
+
+
+
+
+
     return render(request, 'frontend/landing.html')
 
 
