@@ -5,7 +5,7 @@ from marketplace.views import job_list, job_details, apply_for_job, manage_poste
     mydevs,paid_dev_details,create_or_edit_job,dev_data,Myjobsrequests,Jobsapplicants,\
     Specificjob,SpecificJobsapplicants,Myjobapplication,JobUpdate,JobCreate,JobsList,PickReject,PickRecommended,JobUnpublish,\
     DevRequestpick,DevRequests,CandidateManager,MyApplicants,Jobdetails,JobApply,CandidateJobs,\
-    TalentPoolapplications,Applicationprofile,CandidateManagerInfo,JobManagerView,TalentPickedManagerView
+    TalentPoolapplications,Applicationprofile,CandidateManagerInfo,JobManagerView,TalentPickedManagerView,Myjobsrequestssliced,JobsListverified
 
 app_name = 'marketplace'
 
@@ -33,7 +33,9 @@ urlpatterns = [
     path('myapplicants/<int:owner>',MyApplicants.as_view()),
     path('pickdev', DevRequestpick.as_view()),
     path('myjobs/<int:posted_by>', Myjobsrequests.as_view()),
+    path('myjobssliced/<int:posted_by>', Myjobsrequestssliced.as_view()),
     path('jobapplicants/<int:job>', Jobsapplicants.as_view()),
+
     path('specificjob/<int:pk>', Specificjob.as_view()),
     path('specificjobapplicants/<int:job>', SpecificJobsapplicants.as_view()),
     path('updatejob/<int:pk>', JobUpdate.as_view()),
@@ -44,7 +46,7 @@ urlpatterns = [
     path('candidateinfo/<int:pk>', CandidateManagerInfo.as_view()),
     path('pickrecommended', PickRecommended.as_view()),
     path('createjob', JobCreate.as_view()),
-    path('alljobs', JobsList.as_view()),
+    path('alljobs', JobsListverified.as_view()),
     path('myjobapplication/<int:candidate>/<int:job>', Myjobapplication.as_view()),
     path('jobdetails/<int:pk>', Jobdetails.as_view()),
     path('applyjob', JobApply.as_view()),

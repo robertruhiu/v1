@@ -110,7 +110,7 @@ class RecentProjects(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['id']
         user = Profile.objects.get(pk=user_id)
-        recentprojects = JobApplication.objects.filter(recruiter=user)
+        recentprojects = JobApplication.objects.select_related('recruiter').filter(recruiter=user)
         project_ids = []
         for oneproject in recentprojects:
             if oneproject.project:

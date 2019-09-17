@@ -28,7 +28,7 @@ from django.utils.safestring import mark_safe
 import json
 from rest_framework.permissions import IsAuthenticated
 from .serializers import DevRequestSerializer,JobRequestSerializer,JobApplicationsRequestSerializer,JobApplicationsUpdaterSerializer,\
-    DevRequestUpdaterSerializer,MyapplicantsRequestSerializer
+    DevRequestUpdaterSerializer,MyapplicantsRequestSerializer,MyapplicantsRequestSerializersliced,JobApplicationsRequestSerializerspecific
 from frontend.serializers import ProfileSerializer
 from rest_framework import generics
 
@@ -75,6 +75,10 @@ class JobsList(generics.ListCreateAPIView):
     queryset = Job.objects.all().order_by('-updated')
     serializer_class = JobRequestSerializer
 
+class JobsListverified(generics.ListCreateAPIView):
+    queryset = Job.objects.exclude(verified=False,published=False).all().order_by('-updated')
+    serializer_class = JobRequestSerializer
+
 class Jobdetails(generics.RetrieveAPIView):
     queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
@@ -85,7 +89,15 @@ class Myjobsrequests(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['posted_by']
         user = User.objects.get(id=user_id)
-        return Job.objects.filter(posted_by=user)
+        return Job.objects.filter(posted_by=user).order_by('-updated')
+
+class Myjobsrequestssliced(generics.ListAPIView):
+    serializer_class = JobRequestSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['posted_by']
+        user = User.objects.get(id=user_id)
+        return Job.objects.filter(posted_by=user).order_by('-updated')[:2]
 
 class Jobsapplicants(generics.ListAPIView):
     serializer_class = MyapplicantsRequestSerializer
@@ -95,17 +107,18 @@ class Jobsapplicants(generics.ListAPIView):
         job = Job.objects.get(id=job_id)
         return JobApplication.objects.select_related('job').filter(job=job)
 
+
 class Specificjob(generics.RetrieveAPIView):
     queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
 
 class SpecificJobsapplicants(generics.ListAPIView):
-    serializer_class = JobApplicationsRequestSerializer
+    serializer_class = JobApplicationsRequestSerializerspecific
 
     def get_queryset(self):
         job_id = self.kwargs['job']
         job = Job.objects.get(id=job_id)
-        return JobApplication.objects.filter(job=job)
+        return JobApplication.objects.select_related('candidate').filter(job=job)
 
 class JobUpdate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
