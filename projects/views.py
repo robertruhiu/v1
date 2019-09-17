@@ -69,6 +69,7 @@ class SelfverifyProject(generics.ListAPIView):
     serializer_class = Projectserializer
     def get_queryset(self):
         framework = self.kwargs['framework']
+
         user_id = self.kwargs['dev_id']
         user = Profile.objects.get(pk=user_id)
         # enable filter to ensure non repeat already done project in assessment
@@ -81,8 +82,9 @@ class SelfverifyProject(generics.ListAPIView):
 
         randomlists =[]
         for oneproject  in projects :
-            if framework.lower() in oneproject.tags.lower():
-                randomlists.append(oneproject.id)
+            if oneproject.tags:
+                if framework.lower() in oneproject.tags.lower():
+                    randomlists.append(oneproject.id)
         randomlistinitial = list(set(randomlists))
 
         randomlist =list(set(randomlistinitial)-set(donelist))

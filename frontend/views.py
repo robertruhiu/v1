@@ -239,25 +239,6 @@ def index(request):
 
 
 def home(request):
-    # devs = Profile.objects.filter(user_type='developer')
-    # for dev in devs:
-    #     if(dev.framework):
-    #         if ',' in dev.framework:
-    #              all= dev.framework.replace(" ", "").lower()
-    #              dev.skills = all +','+dev.skills
-    #              dev.save()
-    #
-    #     # if (dev.language):
-    #     #     if ',' in dev.language:
-    #     #         newskill = dev.language.replace(" ", "").lower()
-    #     #         all = newskill +','+dev.skills
-    #     #         dev.skills = all
-    #     #         dev.save()
-
-
-
-
-
     return render(request, 'frontend/landing.html')
 
 

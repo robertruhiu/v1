@@ -5,7 +5,8 @@ from marketplace.views import job_list, job_details, apply_for_job, manage_poste
     mydevs,paid_dev_details,create_or_edit_job,dev_data,Myjobsrequests,Jobsapplicants,\
     Specificjob,SpecificJobsapplicants,Myjobapplication,JobUpdate,JobCreate,JobsList,PickReject,PickRecommended,JobUnpublish,\
     DevRequestpick,DevRequests,CandidateManager,MyApplicants,Jobdetails,JobApply,CandidateJobs,\
-    TalentPoolapplications,Applicationprofile,CandidateManagerInfo,JobManagerView,TalentPickedManagerView,Myjobsrequestssliced,JobsListverified
+    TalentPoolapplications,Applicationprofile,CandidateManagerInfo,JobManagerView,TalentPickedManagerView,Myjobsrequestssliced,\
+    JobsListverified,DevRequestssimple
 
 app_name = 'marketplace'
 
@@ -30,6 +31,7 @@ urlpatterns = [
     path('payment_canceled', payment_canceled, name='payment_canceled'),
     path('payment_done', payment_done, name='payment_done'),
     path('mydevs/<int:owner>', DevRequests.as_view()),
+    path('mydevssimple/<int:owner>', DevRequestssimple.as_view()),
     path('myapplicants/<int:owner>',MyApplicants.as_view()),
     path('pickdev', DevRequestpick.as_view()),
     path('myjobs/<int:posted_by>', Myjobsrequests.as_view()),

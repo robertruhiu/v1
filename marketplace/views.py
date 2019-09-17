@@ -28,7 +28,7 @@ from django.utils.safestring import mark_safe
 import json
 from rest_framework.permissions import IsAuthenticated
 from .serializers import DevRequestSerializer,JobRequestSerializer,JobApplicationsRequestSerializer,JobApplicationsUpdaterSerializer,\
-    DevRequestUpdaterSerializer,MyapplicantsRequestSerializer,MyapplicantsRequestSerializersliced,JobApplicationsRequestSerializerspecific
+    DevRequestUpdaterSerializer,MyapplicantsRequestSerializer,MyapplicantsRequestSerializersliced,JobApplicationsRequestSerializerspecific,DevRequestSerializersimple
 from frontend.serializers import ProfileSerializer
 from rest_framework import generics
 
@@ -41,6 +41,14 @@ class DevRequestpick(generics.CreateAPIView):
 class DevRequests(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = DevRequestSerializer
+    lookup_field = 'owner'
+    def get_queryset(self):
+        user_id = self.kwargs['owner']
+        user = Profile.objects.get(id = user_id)
+        return DevRequest.objects.filter(owner=user)
+class DevRequestssimple(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = DevRequestSerializersimple
     lookup_field = 'owner'
     def get_queryset(self):
         user_id = self.kwargs['owner']

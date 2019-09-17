@@ -16,7 +16,16 @@ class DevRequestSerializer(serializers.ModelSerializer):
         fields = ['id','developer', 'paid', 'stage', 'interviewstarttime', 'interviewendtime', 'notes',
                   'owner', 'test_stage', 'project',
                   'report', 'interviewstatus', 'eventcolor','projectstarttime','offerstatus','offerletter','demolink' ]
-
+class DevRequestSerializersimple(serializers.ModelSerializer):
+    developer = ProfileSerializer
+    owner = ProfileSerializer
+    project = Projectserializer
+    report = ReportSerializer
+    class Meta:
+        model = DevRequest
+        fields = ['id','developer', 'paid', 'stage', 'interviewstarttime', 'interviewendtime', 'notes',
+                  'owner', 'test_stage', 'project',
+                  'report', 'interviewstatus', 'eventcolor','projectstarttime','offerstatus','offerletter','demolink' ]
 class DevRequestUpdaterSerializer(serializers.ModelSerializer):
     developer = ProfileSerializer
     owner = ProfileSerializer
