@@ -113,7 +113,9 @@ CORS_ORIGIN_WHITELIST = (
     'http://mulan.herokuapp.com',
     'http://leanapp.herokuapp.com',
     'https://codelnalpha.herokuapp.com',
-    'http://codelnalpha.herokuapp.com'
+    'http://codelnalpha.herokuapp.com',
+    'http://codeln.com',
+    'https://codeln.com'
 
 )
 
