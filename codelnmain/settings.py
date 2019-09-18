@@ -105,6 +105,7 @@ JWT_AUTH = {
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'http://127.0.0.1:8080',
     'http://localhost:8080',
     'http://localhost:8081',
     'http://localhost:8082',
@@ -338,3 +339,14 @@ CKEDITOR_CONFIGS = {
 
     },
 }
+
+ENVIRONMENT = config('ENVIRONMENT', default='ENVIRONMENT')
+if ENVIRONMENT == 'production':
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER=True
+    SECURE_SSL_REDIRECT = True
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_HTTPONLY = True
+    X_FRAME_OPTIONS = 'DENY'
+
+

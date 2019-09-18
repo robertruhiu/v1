@@ -38,6 +38,7 @@ class Profile(models.Model):
         ('fulltime', 'fulltime'),
         ('contract', 'contract'),
         ('remote', 'remote'),
+        ('parttime', 'parttime'),
         ('freelance', 'freelance'),
 
     )
