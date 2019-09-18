@@ -115,7 +115,9 @@ CORS_ORIGIN_WHITELIST = (
     'https://codelnalpha.herokuapp.com',
     'http://codelnalpha.herokuapp.com',
     'http://codeln.com',
-    'https://codeln.com'
+    'https://codeln.com',
+    'http://www.codeln.com',
+    'https://www.codeln.com'
 
 )
 
