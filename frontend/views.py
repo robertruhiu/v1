@@ -402,13 +402,13 @@ def report(request,candidate_id,transaction_id):
     print(type(report.keycompitency[0]))
     return render(request, 'frontend/recruiter/report.html', {'user': user, 'transaction': transaction,'report':report})
 
-
+@login_required
 def onboarddevs(request):
 
 
     return redirect(reverse('frontend:seedevs'))
 
-
+@login_required
 def onboardrecruiters(request):
 
 
@@ -438,7 +438,7 @@ def page_404(request,exception=None):
 def page_500(request):
     return render(request, 'frontend/error_pages/500.html')
 
-
+@login_required
 def seedevs(request):
 
     developers=User.objects.filter(profile__user_type='developer').order_by('-date_joined')
@@ -446,7 +446,7 @@ def seedevs(request):
 
     return render(request, 'frontend/recruiter/devlist.html', {'developers': developers})
 
-
+@login_required
 def seerecruiters(request):
 
     recruiters = User.objects.filter(profile__user_type='recruiter').order_by('-date_joined')
@@ -678,7 +678,7 @@ def newproject(request):
 
 
 
-
+@login_required
 def experience(request):
     if request.method == 'POST':
         new_experience = Experience_Form(request.POST)
@@ -779,17 +779,19 @@ def about(request):
             new_about.save()
             return redirect('frontend:portfolio')
     return redirect(reverse('frontend:portfolio'))
+@login_required
 def management(request):
     jobs=Job.objects.all()
 
     return render(request, 'frontend/recruiter/management.html',{'jobs':jobs})
+@login_required
 def grading(request,candidate_id,transaction_id):
     candidate = User.objects.get(id=candidate_id)
     transaction = Transaction.objects.get(id=transaction_id)
     gradingform = GradingForm()
     return render(request, 'frontend/recruiter/grading.html',{'candidate':candidate,'transaction':transaction,'form':gradingform })
 
-
+@login_required
 def storegrades(request,candidate_id,transaction_id):
     candidate = User.objects.get(id=candidate_id)
     transaction = Transaction.objects.get(id=transaction_id)
@@ -863,6 +865,7 @@ def storegrades(request,candidate_id,transaction_id):
 
 
     return redirect('frontend:edittransactions', transaction_id)
+@login_required
 def analytics(request):
     passedtests = TakenQuiz.objects.filter(score__gte=50).annotate(month=TruncMonth('date')).values(
         'month').annotate(
