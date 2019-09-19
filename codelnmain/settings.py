@@ -136,6 +136,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
 ROOT_URLCONF = 'codelnmain.urls'
@@ -178,6 +180,19 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": config('REDISCLOUD_URL', default='REDISCLOUD_URL'),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "example"
+    }
+}
+# Cache time to live is 15 minutes.
+CACHE_TTL = 60 * 15
 
 AUTH_PASSWORD_VALIDATORS = [
     {

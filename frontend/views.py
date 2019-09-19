@@ -37,6 +37,15 @@ from django.utils.decorators import method_decorator
 from django.db.models import CharField
 from django.db.models.functions import Length
 CharField.register_lookup(Length, 'length')
+from django.conf import settings
+from django.core.cache import cache
+from rest_framework.decorators import api_view
+from rest_framework import status
+from rest_framework.response import Response
+from django.views.decorators.cache import cache_page
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
 
 
 class UserList(generics.ListAPIView):
@@ -44,8 +53,14 @@ class UserList(generics.ListAPIView):
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
-
         return Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer')
+
+class UserListCreateViewAsRedis(UserList, generics.ListCreateAPIView):
+
+    @method_decorator(cache_page(60, cache='default'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserListCreateViewAsRedis, self).dispatch(request, *args, **kwargs)
+
 
 
 
