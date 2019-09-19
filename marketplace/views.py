@@ -84,7 +84,7 @@ class JobsList(generics.ListCreateAPIView):
     serializer_class = JobRequestSerializer
 
 class JobsListverified(generics.ListCreateAPIView):
-    queryset = Job.objects.exclude(verified=False,published=False).all().order_by('-updated')
+    queryset = Job.objects.exclude(verified=False).exclude(published=False).all().order_by('-updated')
     serializer_class = JobRequestSerializer
 
 class Jobdetails(generics.RetrieveAPIView):
