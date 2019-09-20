@@ -32,11 +32,11 @@ from .serializers import DevRequestSerializer,JobRequestSerializer,JobApplicatio
 from frontend.serializers import ProfileSerializer
 from rest_framework import generics
 from django.conf import settings
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page,never_cache
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.utils.decorators import method_decorator
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
-
+decorators = [never_cache]
 class DevRequestpick(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = DevRequest.objects.all()
@@ -219,6 +219,7 @@ class JobApply(generics.CreateAPIView):
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsUpdaterSerializer
 
+@method_decorator(decorators, name='dispatch')
 class CandidateJobs(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = JobApplicationsRequestSerializer
@@ -227,6 +228,7 @@ class CandidateJobs(generics.ListAPIView):
         user = Profile.objects.get(id=candidate_id)
         return JobApplication.objects.filter(candidate=user)
 
+@method_decorator(decorators, name='dispatch')
 class TalentPoolapplications(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = DevRequestSerializer
