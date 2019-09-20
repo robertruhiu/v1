@@ -82,7 +82,7 @@ class UserListsliced(generics.ListAPIView):
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
-        customlist =[1707,1700,1704,1726]
+        customlist =[1707,1544,1704,1726]
 
         return Profile.objects.exclude(about__isnull=True).exclude(skills__isnull=True).filter(about__length__gt=100).filter(user_type='developer').filter(pk__in=customlist)
 class AllUsers(generics.ListAPIView):
