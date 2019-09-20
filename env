@@ -7,4 +7,4 @@ GITHUB_USERNAME=robertruhiu
 DEBUG=True
 ALLOWED_HOSTS=localhost
 ENVIRONMENT=local
-REDISCLOUD_URL=redis://rediscloud:GsTn1oke1zqFdwO8lnXmxH0EjirGlQku@redis-19014.c1.eu-west-1-3.ec2.cloud.redislabs.com:19014
+REDIS_URL=redis://h:p49760e20d4b374d8f92e843ac046e269ae136f39b04d03aa7bd63db380b57873@ec2-18-200-147-211.eu-west-1.compute.amazonaws.com:29319

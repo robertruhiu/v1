@@ -11,7 +11,7 @@ from frontend.views import home,activity,tracker,update_candidateprojects,\
     editportfolioproject,about,management,grading,storegrades,analytics,ProfileUpdate,Profileget,Talentget,Experienceget,\
     Portfolioget,AllUsers,Userget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
     MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate,\
-    UserListsliced,UserListCreateViewAsRedis
+    UserListsliced,UserListCreateViewAsRedis,Profilegetcache
 
 from accounts.views import update_profile
 
@@ -83,6 +83,7 @@ urlpatterns = [
     path('updater/<int:pk>', ProfileUpdate.as_view()),
     path('getuser/<int:pk>', Userget.as_view()),
     path('getprofile/<int:pk>', Profileget.as_view()),
+    path('getprofilecache/<int:pk>', Profilegetcache.as_view()),
     path('gettalent/<int:pk>', Talentget.as_view()),
     path('getexperience/<int:candidate_id>', Experienceget.as_view()),
     path('getportofolio/<int:candidate_id>', Portfolioget.as_view()),

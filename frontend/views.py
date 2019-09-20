@@ -47,13 +47,26 @@ from django.core.cache.backends.base import DEFAULT_TIMEOUT
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 
-
+taken = TakenQuiz.objects.select_related('student').all()
+portfolio = Portfolio.objects.select_related('candidate').all()
+experience = Experience.objects.select_related('candidate').all()
+takenlist =[]
+portfoliolist=[]
+experiencelist=[]
+for onetaken in taken:
+    takenlist.append(onetaken.student.id)
+for oneportfolio in portfolio:
+    portfoliolist.append(oneportfolio.candidate.id)
+for oneexperience in experience:
+    experiencelist.append(oneexperience.candidate.id)
+candidateslist = list(set(takenlist+portfoliolist+experiencelist))
 class UserList(generics.ListAPIView):
 
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
-        return Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer')
+
+        return Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer').filter(pk__in=candidateslist)
 
 class UserListCreateViewAsRedis(UserList, generics.ListCreateAPIView):
 
@@ -69,8 +82,9 @@ class UserListsliced(generics.ListAPIView):
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
+        customlist =[1707,1700,1704,1726]
 
-        return Profile.objects.exclude(about__isnull=True).exclude(skills__isnull=True).filter(about__length__gt=100).filter(user_type='developer')[:4]
+        return Profile.objects.exclude(about__isnull=True).exclude(skills__isnull=True).filter(about__length__gt=100).filter(user_type='developer').filter(pk__in=customlist)
 class AllUsers(generics.ListAPIView):
 
     serializer_class = UserSerializer
@@ -90,7 +104,7 @@ class Portfolioget(generics.ListAPIView):
     def get_queryset(self):
         candidate_id = self.kwargs['candidate_id']
         user = Profile.objects.get(id=candidate_id)
-        return Portfolio.objects.filter(candidate_id=user)
+        return Portfolio.objects.select_related('candidate').filter(candidate_id=user)
 
 class Portfoliocreate(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -110,7 +124,7 @@ class Experienceget(generics.ListAPIView):
 
         candidate_id = self.kwargs['candidate_id']
         user = Profile.objects.get(id=candidate_id)
-        return Experience.objects.filter(candidate=user)
+        return Experience.objects.select_related('candidate').filter(candidate=user)
 
 class Experiencecreate(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -126,6 +140,12 @@ class Profileget(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+
+class Profilegetcache(Profileget, generics.ListCreateAPIView):
+
+    @method_decorator(cache_page(60, cache='default'))
+    def dispatch(self, request, *args, **kwargs):
+        return super(Profilegetcache, self).dispatch(request, *args, **kwargs)
 
 class Userget(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)

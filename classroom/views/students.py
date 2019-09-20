@@ -46,7 +46,7 @@ class TakenQuizzes(generics.ListAPIView):
     def get_queryset(self):
         candidate_id = self.kwargs['candidate']
         user = Profile.objects.get(pk=candidate_id)
-        return TakenQuiz.objects.filter(user=user)
+        return TakenQuiz.objects.select_related('student').filter(user=user)
 
 class QuizQuestions(generics.ListAPIView):
     serializer_class = QuestionSerializer
