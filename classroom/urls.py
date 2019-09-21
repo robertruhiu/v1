@@ -1,10 +1,9 @@
 from django.urls import include, path
 
 from .views import students, teachers
-from classroom.views.students import AllQuizzes,TakeQuiz,QuizQuestions,PostAnswer,UpdateRandomquiz,CalculateScore,Taken,AllQuizzescache
+from classroom.views.students import AllQuizzes,TakeQuiz,QuizQuestions,PostAnswer,UpdateRandomquiz,CalculateScore,Taken
 urlpatterns = [
     path('allquizzes', AllQuizzes.as_view()),
-    path('allquizzescache', AllQuizzescache.as_view()),
     path('takequiz/<int:candidate>/<int:quiz>', TakeQuiz.as_view()),
     path('questions/<int:quiz>', QuizQuestions.as_view()),
     path('updaterandquiz/<int:pk>', UpdateRandomquiz.as_view()),

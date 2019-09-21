@@ -37,14 +37,6 @@ from django.utils.decorators import method_decorator
 from django.db.models import CharField
 from django.db.models.functions import Length
 CharField.register_lookup(Length, 'length')
-from django.conf import settings
-from django.core.cache import cache
-from rest_framework.decorators import api_view
-from rest_framework import status
-from rest_framework.response import Response
-from django.views.decorators.cache import cache_page
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 
 taken = TakenQuiz.objects.select_related('student').all()
@@ -66,14 +58,7 @@ class UserList(generics.ListAPIView):
 
     def get_queryset(self):
 
-        return Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer').filter(pk__in=candidateslist)
-
-class UserListCreateViewAsRedis(UserList, generics.ListCreateAPIView):
-
-    @method_decorator(cache_page(60, cache='default'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(UserListCreateViewAsRedis, self).dispatch(request, *args, **kwargs)
-
+        return Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer')
 
 
 
@@ -140,12 +125,6 @@ class Profileget(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-
-class Profilegetcache(Profileget, generics.ListCreateAPIView):
-
-    @method_decorator(cache_page(60, cache='default'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(Profilegetcache, self).dispatch(request, *args, **kwargs)
 
 class Userget(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)

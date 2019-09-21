@@ -31,12 +31,7 @@ from .serializers import DevRequestSerializer,JobRequestSerializer,JobApplicatio
     DevRequestUpdaterSerializer,MyapplicantsRequestSerializer,MyapplicantsRequestSerializersliced,JobApplicationsRequestSerializerspecific,DevRequestSerializersimple
 from frontend.serializers import ProfileSerializer
 from rest_framework import generics
-from django.conf import settings
-from django.views.decorators.cache import cache_page,never_cache
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
-from django.utils.decorators import method_decorator
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
-decorators = [never_cache]
+
 class DevRequestpick(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = DevRequest.objects.all()
@@ -51,7 +46,6 @@ class DevRequests(generics.ListAPIView):
         user_id = self.kwargs['owner']
         user = Profile.objects.get(id = user_id)
         return DevRequest.objects.filter(owner=user)
-
 class DevRequestssimple(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = DevRequestSerializersimple
@@ -60,12 +54,6 @@ class DevRequestssimple(generics.ListAPIView):
         user_id = self.kwargs['owner']
         user = Profile.objects.get(id = user_id)
         return DevRequest.objects.filter(owner=user)
-
-class DevRequestcache(DevRequestssimple, generics.ListCreateAPIView):
-
-    @method_decorator(cache_page(60, cache='default'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(DevRequestcache, self).dispatch(request, *args, **kwargs)
 
 class MyApplicants(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -80,6 +68,7 @@ class MyApplicants(generics.ListAPIView):
 
 
 
+
 class Myjobapplication(generics.ListAPIView):
     serializer_class = JobApplicationsRequestSerializer
     def get_queryset(self):
@@ -90,7 +79,6 @@ class Myjobapplication(generics.ListAPIView):
         return JobApplication.objects.filter(job=job).filter(candidate=user)
 
 
-
 class JobsList(generics.ListCreateAPIView):
     queryset = Job.objects.all().order_by('-updated')
     serializer_class = JobRequestSerializer
@@ -98,12 +86,6 @@ class JobsList(generics.ListCreateAPIView):
 class JobsListverified(generics.ListCreateAPIView):
     queryset = Job.objects.exclude(verified=False).exclude(published=False).all().order_by('-updated')
     serializer_class = JobRequestSerializer
-
-class JobsListverifiedcache(JobsListverified, generics.ListCreateAPIView):
-
-    @method_decorator(cache_page(60, cache='default'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(JobsListverifiedcache, self).dispatch(request, *args, **kwargs)
 
 class Jobdetails(generics.RetrieveAPIView):
     queryset = Job.objects.all()
@@ -125,13 +107,6 @@ class Myjobsrequestssliced(generics.ListAPIView):
         user = User.objects.get(id=user_id)
         return Job.objects.filter(posted_by=user).order_by('-updated')[:2]
 
-class Myjobsrequestsslicedcache(Myjobsrequestssliced, generics.ListCreateAPIView):
-
-    @method_decorator(cache_page(60, cache='default'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(Myjobsrequestsslicedcache, self).dispatch(request, *args, **kwargs)
-
-
 class Jobsapplicants(generics.ListAPIView):
     serializer_class = MyapplicantsRequestSerializer
 
@@ -140,11 +115,6 @@ class Jobsapplicants(generics.ListAPIView):
         job = Job.objects.get(id=job_id)
         return JobApplication.objects.select_related('job').filter(job=job)
 
-class MyApplicantsListcache(Jobsapplicants, generics.ListCreateAPIView):
-
-    @method_decorator(cache_page(60, cache='default'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(MyApplicantsListcache, self).dispatch(request, *args, **kwargs)
 
 class Specificjob(generics.RetrieveAPIView):
     queryset = Job.objects.all()
@@ -157,12 +127,6 @@ class SpecificJobsapplicants(generics.ListAPIView):
         job_id = self.kwargs['job']
         job = Job.objects.get(id=job_id)
         return JobApplication.objects.select_related('candidate').filter(job=job)
-
-class SpecificJobsapplicantscache(SpecificJobsapplicants, generics.ListCreateAPIView):
-
-    @method_decorator(cache_page(60, cache='default'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(SpecificJobsapplicantscache, self).dispatch(request, *args, **kwargs)
 
 class JobUpdate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
@@ -219,7 +183,6 @@ class JobApply(generics.CreateAPIView):
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsUpdaterSerializer
 
-@method_decorator(decorators, name='dispatch')
 class CandidateJobs(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = JobApplicationsRequestSerializer
@@ -228,7 +191,6 @@ class CandidateJobs(generics.ListAPIView):
         user = Profile.objects.get(id=candidate_id)
         return JobApplication.objects.filter(candidate=user)
 
-@method_decorator(decorators, name='dispatch')
 class TalentPoolapplications(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = DevRequestSerializer

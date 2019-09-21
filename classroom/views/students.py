@@ -19,12 +19,6 @@ from rest_framework import generics
 from ..serializers import QuizSerializer,TakenQuizSerializer,RandomQuizSerializer,QuestionSerializer,StudentAnswerSerializer
 from accounts.models import Profile
 from rest_framework.permissions import IsAuthenticated
-from django.conf import settings
-from django.views.decorators.cache import cache_page
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
-from django.utils.decorators import method_decorator
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
-
 class AllQuizzes(generics.ListAPIView):
 
     serializer_class = QuizSerializer
@@ -35,18 +29,12 @@ class AllQuizzes(generics.ListAPIView):
             .annotate(questions_count=Count('questions')) \
             .filter(questions_count__gt=0)
 
-class AllQuizzescache(AllQuizzes, generics.ListCreateAPIView):
-
-    @method_decorator(cache_page(60, cache='default'))
-    def dispatch(self, request, *args, **kwargs):
-        return super(AllQuizzescache, self).dispatch(request, *args, **kwargs)
-
 class TakenQuizzes(generics.ListAPIView):
     serializer_class = TakenQuizSerializer
     def get_queryset(self):
         candidate_id = self.kwargs['candidate']
         user = Profile.objects.get(pk=candidate_id)
-        return TakenQuiz.objects.select_related('student').filter(user=user)
+        return TakenQuiz.objects.filter(user=user)
 
 class QuizQuestions(generics.ListAPIView):
     serializer_class = QuestionSerializer

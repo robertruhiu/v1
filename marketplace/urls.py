@@ -6,8 +6,7 @@ from marketplace.views import job_list, job_details, apply_for_job, manage_poste
     Specificjob,SpecificJobsapplicants,Myjobapplication,JobUpdate,JobCreate,JobsList,PickReject,PickRecommended,JobUnpublish,\
     DevRequestpick,DevRequests,CandidateManager,MyApplicants,Jobdetails,JobApply,CandidateJobs,\
     TalentPoolapplications,Applicationprofile,CandidateManagerInfo,JobManagerView,TalentPickedManagerView,Myjobsrequestssliced,\
-    JobsListverified,DevRequestssimple,MyApplicantsListcache,SpecificJobsapplicantscache,\
-    DevRequestcache,Myjobsrequestsslicedcache,JobsListverifiedcache
+    JobsListverified,DevRequestssimple
 
 app_name = 'marketplace'
 
@@ -31,23 +30,16 @@ urlpatterns = [
     path('process_payment', process_payment, name='process_payment'),
     path('payment_canceled', payment_canceled, name='payment_canceled'),
     path('payment_done', payment_done, name='payment_done'),
-
-
     path('mydevs/<int:owner>', DevRequests.as_view()),
     path('mydevssimple/<int:owner>', DevRequestssimple.as_view()),
-    path('mydevssimplecache/<int:owner>', DevRequestcache.as_view()),
     path('myapplicants/<int:owner>',MyApplicants.as_view()),
-
     path('pickdev', DevRequestpick.as_view()),
     path('myjobs/<int:posted_by>', Myjobsrequests.as_view()),
     path('myjobssliced/<int:posted_by>', Myjobsrequestssliced.as_view()),
-    path('myjobsslicedcache/<int:posted_by>', Myjobsrequestsslicedcache.as_view()),
     path('jobapplicants/<int:job>', Jobsapplicants.as_view()),
-    path('jobapplicantscache/<int:job>',MyApplicantsListcache.as_view()),
 
     path('specificjob/<int:pk>', Specificjob.as_view()),
     path('specificjobapplicants/<int:job>', SpecificJobsapplicants.as_view()),
-    path('specificjobapplicantscache/<int:job>', SpecificJobsapplicantscache.as_view()),
     path('updatejob/<int:pk>', JobUpdate.as_view()),
     path('unpublishjob/<int:pk>', JobUnpublish.as_view()),
     path('pickreject/<int:pk>', PickReject.as_view()),
@@ -57,7 +49,6 @@ urlpatterns = [
     path('pickrecommended', PickRecommended.as_view()),
     path('createjob', JobCreate.as_view()),
     path('alljobs', JobsListverified.as_view()),
-    path('alljobscache', JobsListverifiedcache.as_view()),
     path('myjobapplication/<int:candidate>/<int:job>', Myjobapplication.as_view()),
     path('jobdetails/<int:pk>', Jobdetails.as_view()),
     path('applyjob', JobApply.as_view()),

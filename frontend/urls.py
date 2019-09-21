@@ -10,8 +10,7 @@ from frontend.views import home,activity,tracker,update_candidateprojects,\
     passedquizzes,failedquizzes,pickcandidates,update_finishedopencall,portfolio,experience,closetransaction,\
     editportfolioproject,about,management,grading,storegrades,analytics,ProfileUpdate,Profileget,Talentget,Experienceget,\
     Portfolioget,AllUsers,Userget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
-    MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate,\
-    UserListsliced,UserListCreateViewAsRedis,Profilegetcache
+    MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate,UserListsliced
 
 from accounts.views import update_profile
 
@@ -77,13 +76,11 @@ urlpatterns = [
     path('storegrades/<int:candidate_id>/<int:transaction_id>',storegrades,name='storegrades'),
 
     path('users/', UserList.as_view()),
-    path('cacheusers/', UserListCreateViewAsRedis.as_view()),
     path('userssliced/', UserListsliced.as_view()),
     path('allusers/', AllUsers.as_view()),
     path('updater/<int:pk>', ProfileUpdate.as_view()),
     path('getuser/<int:pk>', Userget.as_view()),
     path('getprofile/<int:pk>', Profileget.as_view()),
-    path('getprofilecache/<int:pk>', Profilegetcache.as_view()),
     path('gettalent/<int:pk>', Talentget.as_view()),
     path('getexperience/<int:candidate_id>', Experienceget.as_view()),
     path('getportofolio/<int:candidate_id>', Portfolioget.as_view()),
@@ -96,8 +93,7 @@ urlpatterns = [
     path('createassess',SelfAssesmentCreate.as_view()),
     path('myprojects/<int:candidate_id>',MySelfAssesments.as_view()),
     path('myprojectdetails/<int:pk>',MySelfAssesmentsproject.as_view()),
-    path('myprojectdetailsupdater/<int:pk>',MySelfAssesmentsprojectupdater.as_view()),
-
+    path('myprojectdetailsupdater/<int:pk>',MySelfAssesmentsprojectupdater.as_view())
     # path('selfprojectmanger')
 ]
 
