@@ -36,6 +36,9 @@ from rest_framework import generics, permissions
 from django.utils.decorators import method_decorator
 from django.db.models import CharField
 from django.db.models.functions import Length
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
 CharField.register_lookup(Length, 'length')
 
 
@@ -59,6 +62,22 @@ class UserList(generics.ListAPIView):
     def get_queryset(self):
 
         return Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer')
+
+
+class DevList(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'frontend/recruiter/devlist.html'
+
+    def get(self, request):
+        queryset = Profile.objects.select_related('user').filter(user_type='developer').order_by('-user__date_joined')
+        return Response({'developers': queryset})
+class RecruiterList(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'frontend/recruiter/recruiterslist.html'
+
+    def get(self, request):
+        queryset = Profile.objects.select_related('user').filter(user_type='recruiter').order_by('-user__date_joined')
+        return Response({'payers': queryset})
 
 
 
@@ -460,6 +479,7 @@ def seedevs(request):
 
     return render(request, 'frontend/recruiter/devlist.html', {'developers': developers})
 
+
 @login_required
 def seerecruiters(request):
 
@@ -468,7 +488,7 @@ def seerecruiters(request):
 
     return render(request, 'frontend/recruiter/recruiterslist.html', {'payers': recruiters})
 
-@login_required
+
 def manageprojects(request):
     projects = Project.objects.all()
     return render(request, 'frontend/recruiter/projects.html', {'projects': projects})

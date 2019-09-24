@@ -1,10 +1,13 @@
-DEFAULT_FROM_EMAIL=codeln@codeln.com
-EMAIL_HOST_PASSWORD=#tag#icui4cu#
-EMAIL_HOST_USER=codeln@codeln.com
+DEFAULT_FROM_EMAIL=robertruhiu@gmail.com
+EMAIL_HOST_USER=robertruhiu@gmail.com
+EMAIL_HOST_PASSWORD=Pokerface1994
 SECRET_KEY=!&)6qusz5um2+_6=465*-t-=*gks#q=o@z*db8b_4v-zrbyh7x
 ACCESS_TOKEN=c3ed201518a9367822159c33e4ed40aa89882443
 GITHUB_USERNAME=robertruhiu
 DEBUG=True
 ALLOWED_HOSTS=localhost
 ENVIRONMENT=local
-
+NAME=dfil8g96tk7hkc
+USER=sjusuxmfujvqbl
+PASSWORD=b224fd24e224948730e6792eefabea999ef4a2200e5750adde05b411b56b4b1d
+HOSTNAME=ec2-174-129-27-3.compute-1.amazonaws.com

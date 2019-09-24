@@ -10,7 +10,7 @@ from frontend.views import home,activity,tracker,update_candidateprojects,\
     passedquizzes,failedquizzes,pickcandidates,update_finishedopencall,portfolio,experience,closetransaction,\
     editportfolioproject,about,management,grading,storegrades,analytics,ProfileUpdate,Profileget,Talentget,Experienceget,\
     Portfolioget,AllUsers,Userget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
-    MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate,UserListsliced
+    MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate,UserListsliced,DevList,RecruiterList
 
 from accounts.views import update_profile
 
@@ -45,8 +45,8 @@ urlpatterns = [
          name='update_candidateprojects'),
     path('onboarddevs',onboarddevs,name='onboarddevs'),
     path('onboardrecruiters',onboardrecruiters,name='onboardrecruiters'),
-    path('seedevs',seedevs,name='seedevs'),
-    path('seerecruiters',seerecruiters,name='seerecruiters'),
+    path('seedevs',DevList.as_view(),name='seedevs'),
+    path('seerecruiters',RecruiterList.as_view(),name='seerecruiters'),
     path('manageprojects',manageprojects,name='manageprojects'),
     path('managetransactions',managetransactions,name='managetransactions'),
     path('editproject/<int:project_id>',editproject,name='editproject'),
@@ -76,6 +76,8 @@ urlpatterns = [
     path('storegrades/<int:candidate_id>/<int:transaction_id>',storegrades,name='storegrades'),
 
     path('users/', UserList.as_view()),
+    path('devlist', DevList.as_view()),
+    path('recruiterlist', RecruiterList.as_view()),
     path('userssliced/', UserListsliced.as_view()),
     path('allusers/', AllUsers.as_view()),
     path('updater/<int:pk>', ProfileUpdate.as_view()),
