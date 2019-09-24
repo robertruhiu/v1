@@ -168,13 +168,14 @@ WSGI_APPLICATION = 'codelnmain.wsgi.application'
 
 
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dfil8g96tk7hkc',
-        'USER': 'sjusuxmfujvqbl',
-        'PASSWORD': 'b224fd24e224948730e6792eefabea999ef4a2200e5750adde05b411b56b4b1d',
-        'HOST': 'ec2-174-129-27-3.compute-1.amazonaws.com',
+        'NAME': 'd2crlmu5kuvt7f',
+        'USER': 'mheusicbswonlr',
+        'PASSWORD': 'ef399151ab8704a0972ac2eb75128eed0dd74119e97f8462f1b1f198b5424787',
+        'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
         'PORT': '5432',
     }
 }
