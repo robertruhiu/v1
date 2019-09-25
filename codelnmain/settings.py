@@ -26,7 +26,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = config('SECRET_KEY', default='SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ENVIRONMENT = config('ENVIRONMENT', default='local')
 
@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'marketplace',
     'servermanagement',
     'crispy_forms',
+    'rest_auth',
+    'rest_auth.registration',
 
     # third party libs
     'allauth',
@@ -75,8 +77,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'rest_auth',
-    'rest_auth.registration',
+
 
 ]
 REST_FRAMEWORK = {
@@ -166,19 +167,24 @@ AUTHENTICATION_BACKENDS = (
 WSGI_APPLICATION = 'codelnmain.wsgi.application'
 
 
-
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd2crlmu5kuvt7f',
-        'USER': 'mheusicbswonlr',
-        'PASSWORD': 'ef399151ab8704a0972ac2eb75128eed0dd74119e97f8462f1b1f198b5424787',
-        'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'd2crlmu5kuvt7f',
+#         'USER': 'mheusicbswonlr',
+#         'PASSWORD': 'ef399151ab8704a0972ac2eb75128eed0dd74119e97f8462f1b1f198b5424787',
+#         'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -262,7 +268,8 @@ ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.SignUpForm'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 600
-
+URL_FRONT = 'http://localhost:8080/#/'
+ACCOUNT_PASSWORD_RESET_CONFIRM = URL_FRONT + 'password_reset_confirm'
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = ACCOUNT_EMAIL_VERIFICATION
 SOCIALACCOUNT_EMAIL_REQUIRED = ACCOUNT_EMAIL_REQUIRED

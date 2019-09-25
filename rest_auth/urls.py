@@ -11,7 +11,7 @@ urlpatterns = [
         name='rest_password_reset'),
     url(r'^password/reset/confirm/$', PasswordResetConfirmView.as_view(),
         name='rest_password_reset_confirm'),
-    url(r'^password_reset_confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)$', PasswordResetConfirmView.as_view(),
+    url(r'^password_reset_confirm/(?P<uidb64>[0-9A-Za-z]+)/(?P<token>.+)$', PasswordResetConfirmView.as_view(),
         name='password_reset_confirm'),
     url(r'^login/$', LoginView.as_view(), name='rest_login'),
     # URLs that require a user to be logged in with a valid session / token.

@@ -25,7 +25,10 @@ from accounts.views import profile
 urlpatterns = [
     path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('accounts/', include('allauth.urls')),
+    path('templates/', include('allauth.urls')),
     path('accounts/profile/', profile, name='profile'),
     path('accounts/profile/<int:pk>', profile, name='view_profile'),
     path('projects/', include('projects.urls', namespace='projects')),
@@ -42,8 +45,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api-token',obtain_jwt_token),
     path('api-token-refress',refresh_jwt_token),
-    path('rest-auth/', include('rest_auth.urls')),
-    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+
 #     cart
     path('cart/', include('cart.urls')),
 ]

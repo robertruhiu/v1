@@ -181,12 +181,12 @@ class PasswordResetView(GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         # Create a serializer with request.data
-        print(request.data)
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         serializer.save()
-        print(serializer)
+
         # Return the success message with OK HTTP status
         return Response(
             {"detail": _("Password reset e-mail has been sent.")},
