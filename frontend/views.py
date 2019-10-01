@@ -78,14 +78,14 @@ class Allrecruiters(generics.ListAPIView):
 
 def DevList(request):
 
-    response = requests.get('http://127.0.0.1:9000/alldevs')
+    response = requests.get('https://codelnapi.herokuapp.com/alldevs')
     data = response.json()
 
     return render(request, 'frontend/recruiter/devlist.html', {'developers':data})
 
 
 def RecruiterList(request):
-    response = requests.get('http://127.0.0.1:9000/allrecruiters')
+    response = requests.get('https://codelnapi.herokuapp.com/allrecruiters')
     data = response.json()
 
     return render(request, 'frontend/recruiter/recruiterslist.html', {'payers': data})
