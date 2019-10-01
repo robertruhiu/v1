@@ -57,27 +57,39 @@ for oneexperience in experience:
 candidateslist = list(set(takenlist+portfoliolist+experiencelist))
 class UserList(generics.ListAPIView):
 
+
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
 
         return Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer')
 
+class Alldevs(generics.ListAPIView):
+    serializer_class = ProfileSerializer
 
-class DevList(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'frontend/recruiter/devlist.html'
+    def get_queryset(self):
+        return Profile.objects.select_related('user').filter(user_type='developer').order_by('-user__date_joined')
 
-    def get(self, request):
-        queryset = Profile.objects.select_related('user').filter(user_type='developer').order_by('-user__date_joined')
-        return Response({'developers': queryset})
-class RecruiterList(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'frontend/recruiter/recruiterslist.html'
+class Allrecruiters(generics.ListAPIView):
+    serializer_class = ProfileSerializer
 
-    def get(self, request):
-        queryset = Profile.objects.select_related('user').filter(user_type='recruiter').order_by('-user__date_joined')
-        return Response({'payers': queryset})
+    def get_queryset(self):
+        return Profile.objects.select_related('user').filter(user_type='recruiter').order_by('-user__date_joined')
+
+def DevList(request):
+
+    response = requests.get('http://127.0.0.1:9000/alldevs')
+    data = response.json()
+
+    return render(request, 'frontend/recruiter/devlist.html', {'developers':data})
+
+
+def RecruiterList(request):
+    response = requests.get('http://127.0.0.1:9000/allrecruiters')
+    data = response.json()
+
+    return render(request, 'frontend/recruiter/recruiterslist.html', {'payers': data})
+
 
 
 

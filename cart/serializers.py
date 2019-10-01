@@ -10,13 +10,13 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ('id','user','devspaid','checked_out','devspending','amount')
+        fields = ('id','user','devspaid','checked_out','devspending','amount','conditions')
 
 class CartSerializerupdater(serializers.ModelSerializer):
     user = ProfileSerializer
 
     class Meta:
         model = Cart
-        fields = ('id','user','devspaid','checked_out','devspending','amount','transaction_id')
+        fields = ('id','user','devspaid','checked_out','devspending','amount','transaction_id','conditions')
 
 

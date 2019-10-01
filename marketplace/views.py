@@ -17,8 +17,8 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from classroom.models import  TakenQuiz
-from frontend.form import Portfolio_form, Experience_Form,CvForm
+from classroom.models import TakenQuiz
+from frontend.form import Portfolio_form, Experience_Form, CvForm
 from frontend.models import Experience, Portfolio
 
 from .models import Job, JobApplication, DevRequest
@@ -27,10 +27,13 @@ from accounts.models import Profile
 from django.utils.safestring import mark_safe
 import json
 from rest_framework.permissions import IsAuthenticated
-from .serializers import DevRequestSerializer,JobRequestSerializer,JobApplicationsRequestSerializer,JobApplicationsUpdaterSerializer,\
-    DevRequestUpdaterSerializer,MyapplicantsRequestSerializer,MyapplicantsRequestSerializersliced,JobApplicationsRequestSerializerspecific,DevRequestSerializersimple
+from .serializers import DevRequestSerializer, JobRequestSerializer, JobApplicationsRequestSerializer, \
+    JobApplicationsUpdaterSerializer, \
+    DevRequestUpdaterSerializer, MyapplicantsRequestSerializer, MyapplicantsRequestSerializersliced, \
+    JobApplicationsRequestSerializerspecific, DevRequestSerializersimple
 from frontend.serializers import ProfileSerializer
 from rest_framework import generics
+
 
 class DevRequestpick(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -42,18 +45,23 @@ class DevRequests(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = DevRequestSerializer
     lookup_field = 'owner'
+
     def get_queryset(self):
         user_id = self.kwargs['owner']
-        user = Profile.objects.get(id = user_id)
+        user = Profile.objects.get(id=user_id)
         return DevRequest.objects.filter(owner=user)
+
+
 class DevRequestssimple(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = DevRequestSerializersimple
     lookup_field = 'owner'
+
     def get_queryset(self):
         user_id = self.kwargs['owner']
-        user = Profile.objects.get(id = user_id)
+        user = Profile.objects.get(id=user_id)
         return DevRequest.objects.filter(owner=user)
+
 
 class MyApplicants(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -66,11 +74,9 @@ class MyApplicants(generics.ListAPIView):
         return JobApplication.objects.select_related('job').filter(recruiter=user)
 
 
-
-
-
 class Myjobapplication(generics.ListAPIView):
     serializer_class = JobApplicationsRequestSerializer
+
     def get_queryset(self):
         job_id = self.kwargs['job']
         candidate_id = self.kwargs['candidate']
@@ -83,13 +89,16 @@ class JobsList(generics.ListCreateAPIView):
     queryset = Job.objects.all().order_by('-updated')
     serializer_class = JobRequestSerializer
 
+
 class JobsListverified(generics.ListCreateAPIView):
     queryset = Job.objects.exclude(verified=False).exclude(published=False).all().order_by('-updated')
     serializer_class = JobRequestSerializer
 
+
 class Jobdetails(generics.RetrieveAPIView):
     queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
+
 
 class Myjobsrequests(generics.ListAPIView):
     serializer_class = JobRequestSerializer
@@ -99,6 +108,7 @@ class Myjobsrequests(generics.ListAPIView):
         user = User.objects.get(id=user_id)
         return Job.objects.filter(posted_by=user).order_by('-updated')
 
+
 class Myjobsrequestssliced(generics.ListAPIView):
     serializer_class = JobRequestSerializer
 
@@ -106,6 +116,7 @@ class Myjobsrequestssliced(generics.ListAPIView):
         user_id = self.kwargs['posted_by']
         user = User.objects.get(id=user_id)
         return Job.objects.filter(posted_by=user).order_by('-updated')[:2]
+
 
 class Jobsapplicants(generics.ListAPIView):
     serializer_class = MyapplicantsRequestSerializer
@@ -120,6 +131,7 @@ class Specificjob(generics.RetrieveAPIView):
     queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
 
+
 class SpecificJobsapplicants(generics.ListAPIView):
     serializer_class = JobApplicationsRequestSerializerspecific
 
@@ -128,77 +140,152 @@ class SpecificJobsapplicants(generics.ListAPIView):
         job = Job.objects.get(id=job_id)
         return JobApplication.objects.select_related('candidate').filter(job=job)
 
+
 class JobUpdate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
+
 
 class JobUnpublish(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
 
+
 class JobCreate(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
-    queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
+
+    def get_queryset(self):
+        return Job.objects.all()
+
+
+class newjobapplication(generics.RetrieveAPIView):
+    serializer_class = JobApplicationsRequestSerializer
+    job_id = 0
+    def get_queryset(self):
+        application_id = self.kwargs['pk']
+        application = JobApplication.objects.get(id=application_id)
+        # recruiter notification  email
+
+        subject = application.job.title +' '+ 'new applicant'
+        html_message = render_to_string('invitations/email/jobapplications.html',
+                                        {'job': application.job})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = application.job.posted_by.email
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+        # candidate email
+
+        subject = 'Application received'
+        html_message = render_to_string('invitations/email/applynotifiy.html',
+                                        {'dev': application.candidate.user, 'job': application.job})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = [application.candidate.user.email]
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+
+        return Job.objects.all()
+
+class newjob(generics.RetrieveAPIView):
+    serializer_class = JobRequestSerializer
+    def get_queryset(self):
+        job_id = self.kwargs['pk']
+        job = Job.objects.get(id=job_id)
+        # recruiter notification  email
+
+        subject = job.title +' '+ 'under review'
+        html_message = render_to_string('invitations/email/jobreview.html',
+                                        {'job':job})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = job.posted_by.email
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+        # codeln notification email
+
+        subject = 'Review new job'
+        html_message = render_to_string('invitations/email/newjob.html',
+                                        {'job':job})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = 'codeln@codeln.com'
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+
+        return Job.objects.all()
+
+
 
 class Applicationprofile(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsRequestSerializer
 
+
 class PickReject(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsUpdaterSerializer
+
 
 class PickRecommended(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsUpdaterSerializer
 
+
 class CandidateManager(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = DevRequest.objects.all()
     serializer_class = DevRequestUpdaterSerializer
+
 
 class CandidateManagerInfo(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = DevRequest.objects.all()
     serializer_class = DevRequestSerializer
 
+
 class JobManagerView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsRequestSerializer
+
 
 class TalentPickedManagerView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = DevRequest.objects.all()
     serializer_class = DevRequestSerializer
 
+
 class JobApply(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsUpdaterSerializer
 
+
 class CandidateJobs(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = JobApplicationsRequestSerializer
+
     def get_queryset(self):
         candidate_id = self.kwargs['candidate']
         user = Profile.objects.get(id=candidate_id)
         return JobApplication.objects.filter(candidate=user)
 
+
 class TalentPoolapplications(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = DevRequestSerializer
+
     def get_queryset(self):
         candidate_id = self.kwargs['candidate']
         user = Profile.objects.get(id=candidate_id)
         return DevRequest.objects.filter(developer=user)
-
 
 
 def job_list(request):
@@ -213,7 +300,7 @@ def job_list(request):
         applied_jobs = JobApplication.objects.filter(candidate=developer)
         for one_applied in applied_jobs:
             applied_list.append(one_applied.job_id)
-        availablejobs_list=list(set(alljoblist)-set(applied_list))
+        availablejobs_list = list(set(alljoblist) - set(applied_list))
         availablejobs = Job.objects.filter(pk__in=availablejobs_list)
 
         instance = get_object_or_404(Profile, user_id=request.user.id)
@@ -224,8 +311,6 @@ def job_list(request):
             unsigned=unsigned,
             jobs=availablejobs,
             applied_jobs=applied_jobs,
-
-
 
         )
         if request.method == 'POST':
@@ -242,32 +327,30 @@ def job_list(request):
         )
     return render(request, 'frontend/jobs.html', context)
 
+
 @login_required
 def job_details(request, id):
     job = Job.objects.get(id=id)
 
     selected_candidates = []
     applicants = []
-    selected_devs = JobApplication.objects.filter(selected=True,job=job).all()
+    selected_devs = JobApplication.objects.filter(selected=True, job=job).all()
     for selectdev in selected_devs:
         selected_candidates.append(selectdev.candidate)
-    all_devs = JobApplication.objects.filter(selected=False,job=job).all()
+    all_devs = JobApplication.objects.filter(selected=False, job=job).all()
     for alldev in all_devs:
         applicants.append(alldev.candidate)
 
     # recommended=Profile.objects.filter(profile_tags__icontains=job.tech_stack.lower())
 
-
-
     alldevs = []
 
+    listofdevs = list(set(alldevs))
 
-    listofdevs=list(set(alldevs))
-
-    recommended=User.objects.filter(pk__in=listofdevs)
+    recommended = User.objects.filter(pk__in=listofdevs)
     return render(request, 'marketplace/recruiter/jobs/detail.html',
-                      {'job': job, 'applicants': applicants, 'recommended': recommended,
-                       'selected_candidates': selected_candidates})
+                  {'job': job, 'applicants': applicants, 'recommended': recommended,
+                   'selected_candidates': selected_candidates})
 
 
 @login_required
@@ -287,20 +370,20 @@ def create_or_edit_job(request, _id=None):
 
         return HttpResponseRedirect(reverse('marketplace:manage_posted_jobs'))
 
-
-    return render(request, 'marketplace/recruiter/jobs/create.html', {'job_form': job_form,'job': mark_safe(json.dumps(job.description))})
+    return render(request, 'marketplace/recruiter/jobs/create.html',
+                  {'job_form': job_form, 'job': mark_safe(json.dumps(job.description))})
 
 
 @login_required
 def apply_for_job(request, job_id):
-    job=Job.objects.get(id=job_id)
+    job = Job.objects.get(id=job_id)
     if request.method == 'POST':
-        newapply = JobApplication(candidate=request.user, job=job,stage='new',recruiter=job.posted_by)
+        newapply = JobApplication(candidate=request.user, job=job, stage='new', recruiter=job.posted_by)
         newapply.save()
 
         subject = job.title + 'Application sent by' + request.user.first_name + request.user.last_name
         html_message = render_to_string('invitations/email/jobapplications.html',
-                                        {'dev': request.user,'job':job})
+                                        {'dev': request.user, 'job': job})
         plain_message = strip_tags(html_message)
         from_email = 'codeln@codeln.com'
         to = 'jobs@codeln.com'
@@ -318,6 +401,7 @@ def apply_for_job(request, job_id):
     else:
         return redirect(reverse('marketplace:job_list'))
 
+
 @login_required
 def manage_posted_jobs(request):
     jobs = Job.objects.filter(posted_by=request.user)
@@ -330,6 +414,7 @@ def manage_posted_jobs(request):
         job_details.append((job, app, sele))
 
     return render(request, 'marketplace/recruiter/jobs/list.html', {'job_details': job_details})
+
 
 @login_required
 def pick_candidate(request, job_id, dev_id):
@@ -345,8 +430,8 @@ def pick_candidate(request, job_id, dev_id):
     to = [dev.email]
     mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
-
     return HttpResponseRedirect(reverse('marketplace:recruiter_job_detail', args=(job_id,)))
+
 
 @login_required
 def select_candidate(request, job_id, dev_id):
@@ -368,11 +453,11 @@ def select_candidate(request, job_id, dev_id):
 
 @login_required
 def get_recommended_developers(job):
-
     developers = User.objects.filter(profile__user_type='developer').filter(
         profile__profile_tags__icontains=job.tech_stack.lower()).distinct()
 
     return developers
+
 
 @login_required
 def dev_pool(request):
@@ -381,40 +466,39 @@ def dev_pool(request):
         devcount = dev_req.developers
         requestcount = len(devcount)
 
-        picked=[]
+        picked = []
         for one_dev in dev_req.developers:
-
             picked.append(int(one_dev))
-        picked_devs=User.objects.filter(pk__in=picked)
+        picked_devs = User.objects.filter(pk__in=picked)
         developers_list = User.objects.filter(profile__user_type='developer').exclude(pk__in=picked)
 
-
         experiences = Experience.objects.all()
         verified_projects = Portfolio.objects.all()
         paginator = Paginator(developers_list, 25)
         page = request.GET.get('page')
         developers = paginator.get_page(page)
         return render(request, 'marketplace/recruiter/dev_pool.html',
-                      {'developers': developers, 'experiences': experiences, 'projects': verified_projects,'picked':picked_devs,
+                      {'developers': developers, 'experiences': experiences, 'projects': verified_projects,
+                       'picked': picked_devs,
                        'dev_count': mark_safe(json.dumps(requestcount))})
     except DevRequest.DoesNotExist:
-        developers_list=User.objects.filter(profile__user_type='developer')
+        developers_list = User.objects.filter(profile__user_type='developer')
         experiences = Experience.objects.all()
         verified_projects = Portfolio.objects.all()
         paginator = Paginator(developers_list, 25)
         page = request.GET.get('page')
         developers = paginator.get_page(page)
         return render(request, 'marketplace/recruiter/dev_pool.html',
-                  {'developers': developers,'experiences':experiences,'projects':verified_projects})
+                      {'developers': developers, 'experiences': experiences, 'projects': verified_projects})
+
+
 @login_required
-
 def dev_data(APIVIEW):
-
     developers = User.objects.filter(profile__user_type='developer')
 
-    dev_data={}
-    experience=[]
-    project=[]
+    dev_data = {}
+    experience = []
+    project = []
     for dev in developers:
         experiences = Experience.objects.filter(candidate_id=dev.id)
         for work in experiences:
@@ -422,12 +506,11 @@ def dev_data(APIVIEW):
         verified_projects = Portfolio.objects.filter(candidate_id=dev.id)
         for one_project in verified_projects:
             project.append(one_project)
-        dev_data[dev]=[experience,project]
+        dev_data[dev] = [experience, project]
 
     data = {
-        'title':'dennis'
+        'title': 'dennis'
     }
-
 
     return Response(data)
 
@@ -436,11 +519,8 @@ def dev_data(APIVIEW):
 def dev_details(request, dev_id):
     dev_picked = False
 
-
     requested_dev = User.objects.get(id=dev_id)
     student = Profile.objects.get(id=dev_id)
-
-
 
     verified_skills = TakenQuiz.objects.filter(student=student).filter(score__gte=50).all()
     skill = []
@@ -453,9 +533,9 @@ def dev_details(request, dev_id):
     verified_projects = Portfolio.objects.filter(candidate=requested_dev).all()
     return render(request, 'marketplace/recruiter/dev_portfolio.html',
                   {
-                   'verified_projects': verified_projects,
-                   'experiences': experiences, 'skills': skills, 'developer': requested_dev,
-                   'dev_picked': dev_picked})
+                      'verified_projects': verified_projects,
+                      'experiences': experiences, 'skills': skills, 'developer': requested_dev,
+                      'dev_picked': dev_picked})
 
 
 @login_required()
@@ -463,12 +543,12 @@ def add_dev_to_wish_list(request):
     if request.method == 'GET':
         dev_id = request.GET['dev_id']
         try:
-            dev_list=[]
+            dev_list = []
             dev_req = DevRequest.objects.filter(owner=request.user, paid=False, closed=False).get()
             for onedev in dev_req.developers:
                 dev_list.append(onedev)
             dev_list.append(str(dev_id))
-            dev_req.developers=dev_list
+            dev_req.developers = dev_list
             dev_req.save()
             count = len(dev_req.developers)
             data = {
@@ -482,7 +562,7 @@ def add_dev_to_wish_list(request):
             dev_req.save()
             count = len(dev_req.developers)
             dev_count = {
-                'dev_count':count
+                'dev_count': count
             }
 
             return JsonResponse(dev_count)
@@ -494,13 +574,8 @@ def add_dev_to_wish_list(request):
 
 @login_required()
 def process_payment(request):
-
-
-    dev_req = DevRequest.objects.filter(paid=False,closed=False,owner=request.user).get()
+    dev_req = DevRequest.objects.filter(paid=False, closed=False, owner=request.user).get()
     amount = len(dev_req.developers) * 20
-
-
-
 
     return render(request, 'marketplace/recruiter/payment.html',
                   {'amount': amount, 'transaction': dev_req})
@@ -513,11 +588,11 @@ def payment_canceled(request):
 
 @csrf_exempt
 def payment_done(request):
-    dev_req = DevRequest.objects.get(closed=False,paid=False,owner=request.user)
+    dev_req = DevRequest.objects.get(closed=False, paid=False, owner=request.user)
     dev_req.paid = True
     dev_req.closed = True
     dev_req.save()
-    email=[]
+    email = []
     for onedev in dev_req.developers:
         email.append(onedev.id)
     print(email)
@@ -532,23 +607,24 @@ def payment_done(request):
 
     return render(request, 'transactions/invitations.html',
                   {'candidates': dev_req.dev, 'current_transaction': dev_req})
+
+
 @login_required
 def mydevs(request):
-    mydevs =DevRequest.objects.filter(owner=request.user)
-    devs=[]
+    mydevs = DevRequest.objects.filter(owner=request.user)
+    devs = []
     for alldevspaidfor in mydevs:
         for onedev in alldevspaidfor.developers:
             devs.append(int(onedev))
-    alldevs=list(set(devs))
+    alldevs = list(set(devs))
     developers = User.objects.filter(pk__in=alldevs)
 
-    return render(request, 'marketplace/recruiter/paid.html',{'developers':developers})
+    return render(request, 'marketplace/recruiter/paid.html', {'developers': developers})
+
 
 @login_required
 def paid_dev_details(request, dev_id):
     student = Profile.objects.get(id=dev_id)
-
-
 
     requested_dev = User.objects.get(id=dev_id)
 
@@ -563,6 +639,6 @@ def paid_dev_details(request, dev_id):
     verified_projects = Portfolio.objects.filter(candidate=requested_dev).all()
     return render(request, 'marketplace/recruiter/paidprofiles.html',
                   {
-                   'verified_projects': verified_projects,
-                   'experiences': experiences, 'skills': skills, 'developer': requested_dev,
-                   })
+                      'verified_projects': verified_projects,
+                      'experiences': experiences, 'skills': skills, 'developer': requested_dev,
+                  })

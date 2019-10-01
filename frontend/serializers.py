@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'email',
-                  'password', 'username')
+                 'username','date_joined')
 
 class SerializableCountryField(serializers.ChoiceField):
     def __init__(self, **kwargs):
@@ -32,7 +32,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('id','user','user_type','stage','csa','gender','linkedin_url','github_repo',
                   'years','about','skills','verified_skills',
-                  'country','availabilty','company','job_role','industry','company_url','file','salary')
+                  'country','availabilty','company','job_role','industry','company_url','file','salary','available')
 
 class ProfileSerializerUpdater(serializers.ModelSerializer):
     user = UserSerializer
@@ -42,7 +42,7 @@ class ProfileSerializerUpdater(serializers.ModelSerializer):
         model = Profile
         fields = ('id','user','user_type','stage','csa','gender','linkedin_url','github_repo',
                   'years','about','skills','verified_skills',
-                  'country','availabilty','company','job_role','industry','company_url','file','salary')
+                  'country','availabilty','company','job_role','industry','company_url','file','salary','available')
 
 
 class ExperienceSerializer(serializers.ModelSerializer):

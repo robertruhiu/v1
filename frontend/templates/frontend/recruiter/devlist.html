@@ -86,6 +86,7 @@
         <div class="d-lg-none" style="margin-top: 7em">
 
         </div>
+
     <div class="table-responsive w-auto" >
         <table class="table table-sm" id="myDevs">
             <thead class="thead-dark">
@@ -94,6 +95,8 @@
                 <th scope="col">Name</th>
                 <th scope="col">email</th>
                 <th scope="col">Country</th>
+                <th scope="col">Skills</th>
+                <th scope="col">Cv</th>
 
                 <th scope="col">Date joined</th>
 
@@ -106,7 +109,9 @@
                     <td class="w-auto"> {{ forloop.counter }} </td>
                     <td class="w-auto">{{ dev.user.first_name }} {{ dev.user.last_name }}</td>
                     <td class="w-auto">{{ dev.user.email }}</td>
-                    <td>{{ dev.country.name }}</td>
+                    <td>{{ dev.country }}</td>
+                    <td>{{ dev.skills }}</td>
+                    <td><a target="_blank" href="https://res.cloudinary.com/dwtvwjhn3/{{ dev.file }}">cv link</a></td>
 
                     <td>{{ dev.user.date_joined }}</td>
 
