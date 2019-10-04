@@ -19,7 +19,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import handler404, handler500
-from rest_framework_jwt.views import obtain_jwt_token,refresh_jwt_token
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 from accounts.views import profile
 
 urlpatterns = [
