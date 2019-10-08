@@ -10,10 +10,12 @@ from django.views import generic
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from frontend.models import candidatesprojects, Assessment
+from accounts.models import Profile
+from frontend.models import candidatesprojects, Assessment, TestCenter
+from frontend.serializers import TestCenterSerializer
 from servermanagement.forms import JobForm
 from servermanagement.models import Job
-
+from frontend.serializers import AssesmentSerializerUpdater
 
 # EnterpriseJob
 # Create your views here.
@@ -374,7 +376,7 @@ from rest_framework.views import APIView
 #         # return render(request, 'servermanagement/candidate_report.html', {'report': my_report,
 #         #                                                       'candidate_setup': candidate_setup, })
 
-from rest_framework import status
+from rest_framework import status, generics
 # from servermanagement.models import Server
 
 # class EnterpriseScheduleDemoJob(APIView):
@@ -573,18 +575,43 @@ class AssessmentDetail(APIView):
         assessment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET'])
-@permission_classes([AllowAny,])
-def manual_test(request, pk):
-    if request.method == 'GET':
-        assessment =  Assessment.objects.get(pk=pk)
-        assessment.test_mode = 'manual_test'
-        assessment.save()
-        # remove job model craeted
-        job = Job.objects.get(project=assessment, type='create_server')
-        job.delete()
-        # email to candidate
-        manual_notification_mail(assessment.candidate.user.email, assessment.projectstarttime)
+# @api_view(['GET'])
+# @permission_classes([AllowAny,])
+# def manual_test(request, pk):
+#     if request.method == 'GET':
+#         assessment =  Assessment.objects.get(pk=pk)
+#         assessment.test_mode = 'manual_test'
+#         assessment.save()
+#         # remove job model craeted
+#         job = Job.objects.get(project=assessment, type='create_server')
+#         job.delete()
+#         # email to candidate
+#         manual_notification_mail(assessment.candidate.user.email, assessment.projectstarttime)
+#         return Response('OK')
+#
+
+class TestCenterList(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = TestCenter.objects.all()
+    serializer_class = TestCenterSerializer
+
+class manual_test(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Assessment.objects.all()
+    serializer_class = AssesmentSerializerUpdater
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,])
+def manual_test1(request):
+    if request.method == 'POST':
+        candidate_id = request.data.get('candidate')
+        test_center = request.data.get('test_center')
+        frameworktested = request.data.get('frameworktested')
+        candidate = Profile.objects.get(pk=candidate_id)
+        test_center = TestCenter.objects.get(pk=test_center)
+        assessment =  Assessment.objects.get_or_create(test_center=test_center, candidate=candidate,
+                                                test_choice='on_site_test',frameworktested=frameworktested)
         return Response('OK')
 
 @api_view(['GET'])

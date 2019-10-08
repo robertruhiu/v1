@@ -75,7 +75,7 @@ class Allrecruiters(generics.ListAPIView):
 
     def get_queryset(self):
         return Profile.objects.select_related('user').filter(user_type='recruiter').order_by('-user__date_joined')
-
+@login_required
 def DevList(request):
 
     response = requests.get('https://codelnapi.herokuapp.com/alldevs')
@@ -83,7 +83,7 @@ def DevList(request):
 
     return render(request, 'frontend/recruiter/devlist.html', {'developers':data})
 
-
+@login_required
 def RecruiterList(request):
     response = requests.get('https://codelnapi.herokuapp.com/allrecruiters')
     data = response.json()
@@ -500,7 +500,7 @@ def seerecruiters(request):
 
     return render(request, 'frontend/recruiter/recruiterslist.html', {'payers': recruiters})
 
-
+@login_required
 def manageprojects(request):
     projects = Project.objects.all()
     return render(request, 'frontend/recruiter/projects.html', {'projects': projects})

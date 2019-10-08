@@ -6,7 +6,7 @@ from marketplace.views import job_list, job_details, apply_for_job, manage_poste
     Specificjob,SpecificJobsapplicants,Myjobapplication,JobUpdate,JobCreate,JobsList,PickReject,PickRecommended,JobUnpublish,\
     DevRequestpick,DevRequests,CandidateManager,MyApplicants,Jobdetails,JobApply,CandidateJobs,\
     TalentPoolapplications,Applicationprofile,CandidateManagerInfo,JobManagerView,TalentPickedManagerView,Myjobsrequestssliced,\
-    JobsListverified,DevRequestssimple,newjobapplication,newjob
+    JobsListverified,DevRequestssimple,newjobapplication,newjob,newonsite
 
 app_name = 'marketplace'
 
@@ -59,6 +59,7 @@ urlpatterns = [
 
 
     path('newjobapplication/<int:pk>',newjobapplication.as_view()),
+    path('newonsite/<int:pk>',newonsite.as_view()),
     path('newjobemail/<int:pk>',newjob.as_view()),
 
 ]

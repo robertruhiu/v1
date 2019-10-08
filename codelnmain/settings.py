@@ -28,6 +28,7 @@ SECRET_KEY = config('SECRET_KEY', default='SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+
 ENVIRONMENT = config('ENVIRONMENT', default='local')
 
 # SECURITY WARNING: keep the secret key used in production secret!

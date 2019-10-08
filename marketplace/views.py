@@ -19,7 +19,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from classroom.models import TakenQuiz
 from frontend.form import Portfolio_form, Experience_Form, CvForm
-from frontend.models import Experience, Portfolio
+from frontend.models import Experience, Portfolio,Assessment
 
 from .models import Job, JobApplication, DevRequest
 from .forms import JobForm
@@ -33,7 +33,7 @@ from .serializers import DevRequestSerializer, JobRequestSerializer, JobApplicat
     JobApplicationsRequestSerializerspecific, DevRequestSerializersimple
 from frontend.serializers import ProfileSerializer
 from rest_framework import generics
-
+from frontend.serializers import AssesmentSerializer
 
 class DevRequestpick(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -160,6 +160,25 @@ class JobCreate(generics.CreateAPIView):
     def get_queryset(self):
         return Job.objects.all()
 
+class newonsite(generics.RetrieveAPIView):
+    serializer_class = AssesmentSerializer
+
+    def get_queryset(self):
+        assesment_id = self.kwargs['pk']
+        assesment = Assessment.objects.get(id=assesment_id)
+
+        # candidate email
+
+        subject = 'Codeln onsite assessment'
+        html_message = render_to_string('invitations/email/onsite.html',
+                                        {'center': assesment})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = [assesment.candidate.user.email]
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+
+        return Assessment.objects.all()
 
 class newjobapplication(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer

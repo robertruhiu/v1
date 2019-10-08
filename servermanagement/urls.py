@@ -17,8 +17,9 @@ Including another URLconf
 from django.urls import path
 
 from servermanagement.views import schedule_job, JobDetailView, test_widgets, test_create_server, \
-    report, AssessmentDetail, manual_test, automated_test
-    # , EnterpriseScheduleJob, \
+    report, AssessmentDetail, manual_test, automated_test, TestCenterList
+
+# , EnterpriseScheduleJob, \
     # EnterpriseProjectsDetail, EnterpriseCandidateDetail, EnterpriseCandidateProjectsDetail, \
     # EnterpriseCandidateSetUpDetail, EnterpriseScheduleDemoJob, candidate_pending, EnterpriseCandidateEmail
 
@@ -37,8 +38,9 @@ urlpatterns = [
 urlpatterns += [
     # path('test_form/', test_widgets, name='test-form'),
     # path('approve_test/<int:pk>/', AssessmentDetail.as_view(), name='approve_test'),
+    path('test_centers/', TestCenterList.as_view(), name='test_centers'),
     path('automated_test/<int:pk>/', automated_test, name='automated_test'),
-    path('manual_test/<int:pk>/', manual_test, name='manual_test'),
+    path('manual_test/', manual_test.as_view()),
 ]
 
 # enterprise urls

@@ -63,11 +63,20 @@ class Report(models.Model):
     github = models.CharField(null=True, max_length=300)
 
 # temporary data model for demo
+class TestCenter(models.Model):
+    venue = models.CharField(blank=True,null=True,max_length=100)
+    country = models.CharField(blank=True,null=True,max_length=100)
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+    location = models.URLField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.venue} - {self.country} '
+
 class Assessment(models.Model):
     STAGE_CHOICES = (
         ('invite_accepted', 'Invite Accepted'),
         ('time_set', 'Time Set'),
-        ('approved', 'Approved'),
         ('link_available', 'Link Available'),
         ('in_progress', 'In Progress'),
         ('project_completed', 'Project Completed'),
@@ -75,25 +84,22 @@ class Assessment(models.Model):
         ('transfer_complete', 'Transfer Complete'),
         ('analysis_complete', 'Analysis Complete'),
     )
-    TEST_MODE_CHOICES = (
-        ('pending', 'Pending'),
-        ('manual_test', 'Manual Test'),
+    TEST_CHOICES = (
+        ('on_site_test', 'On Site Test'),
         ('automated_test', 'Automated Test'),
     )
-    stage = models.CharField(choices=STAGE_CHOICES, default='invite_accepted', max_length=100)
-    test_mode = models.CharField(choices=TEST_MODE_CHOICES, default='pending', max_length=100)
+    stage = models.CharField(choices=STAGE_CHOICES, default='invite_accepted', max_length=100, blank=True, null=True )
+    test_choice = models.CharField(choices=TEST_CHOICES, default='automated_test', max_length=100)
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     report = models.ForeignKey(Report, on_delete=models.CASCADE,null=True, blank=True)
     projectstarttime = models.DateTimeField(null=True, blank=True)
-    frameworktested = models.CharField(blank=True,null=True,max_length=100)
+    frameworktested = models.CharField(blank=True,null=True,max_length=500)
     demolink = models.CharField(blank=True,null=True,max_length=100)
-
-    def time_remaining(self):
-        return f'2 hrs'
+    test_center = models.ForeignKey(TestCenter, on_delete=models.CASCADE, blank=True, null=True )
 
     def __str__(self):
-        return f'{self.candidate.full_name}-{self.project.name}'
+        return f'{self.candidate.user.first_name} - {self.test_choice}'
 
 class AssessmentReport(models.Model):
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)
@@ -101,4 +107,5 @@ class AssessmentReport(models.Model):
     score = models.IntegerField(null=True)
     skill = models.CharField(blank=True,null=True,max_length=100)
 
-
+    def __str__(self):
+        return f'{self.candidate.user.first_name}: {self.project.name}'
