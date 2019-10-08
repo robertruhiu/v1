@@ -66,8 +66,8 @@ class Report(models.Model):
 class TestCenter(models.Model):
     venue = models.CharField(blank=True,null=True,max_length=100)
     country = models.CharField(blank=True,null=True,max_length=100)
-    start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
+    start_time = models.DateTimeField(null=True, blank=True)
     location = models.URLField(null=True, blank=True)
 
     def __str__(self):
