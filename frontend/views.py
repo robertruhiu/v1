@@ -31,7 +31,7 @@ from frontend.models import candidatesprojects,submissions,Portfolio,Experience,
 from classroom.models import TakenQuiz,Quiz
 from marketplace.models import Job,JobApplication
 from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,\
-    ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater,ProfileSerializerUpdater,ProjectSerializerupdater,ExperienceSerializerupdater
+    ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater,ProfileSerializerUpdater,ProjectSerializerupdater,ExperienceSerializerupdater,AssesmentSerializermini
 from rest_framework import generics, permissions
 from django.utils.decorators import method_decorator
 from django.db.models import CharField
@@ -179,11 +179,11 @@ class SelfAssesmentCreate(generics.CreateAPIView):
 
 class MySelfAssesments(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = AssesmentSerializer
+    serializer_class = AssesmentSerializermini
     def get_queryset(self):
         candidate_id = self.kwargs['candidate_id']
-        user = Profile.objects.get(id=candidate_id)
-        return Assessment.objects.filter(candidate=user)
+
+        return Assessment.objects.select_related('project').exclude(project__isnull=True).filter(candidate_id=candidate_id)
 
 class MySelfAssesmentsproject(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
