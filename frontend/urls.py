@@ -11,7 +11,7 @@ from frontend.views import home,activity,tracker,update_candidateprojects,\
     editportfolioproject,about,management,grading,storegrades,analytics,ProfileUpdate,Profileget,Talentget,Experienceget,\
     Portfolioget,AllUsers,Userget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
     MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate,\
-    UserListsliced,DevList,RecruiterList,Alldevs,Allrecruiters
+    UserListsliced,DevList,RecruiterList,Alldevs,Allrecruiters,Mytestcenters
 
 from accounts.views import update_profile
 
@@ -95,6 +95,7 @@ urlpatterns = [
     path('asignproject', ProjectAssignment.as_view()),
     path('createassess',SelfAssesmentCreate.as_view()),
     path('myprojects/<int:candidate_id>',MySelfAssesments.as_view()),
+    path('mytestcenters/<int:candidate_id>',Mytestcenters.as_view()),
     path('myprojectdetails/<int:pk>',MySelfAssesmentsproject.as_view()),
     path('myprojectdetailsupdater/<int:pk>',MySelfAssesmentsprojectupdater.as_view()),
     path('alldevs',Alldevs.as_view()),

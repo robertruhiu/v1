@@ -184,6 +184,13 @@ class MySelfAssesments(generics.ListAPIView):
         candidate_id = self.kwargs['candidate_id']
 
         return Assessment.objects.select_related('project').exclude(project__isnull=True).filter(candidate_id=candidate_id)
+class Mytestcenters(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = AssesmentSerializermini
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate_id']
+
+        return Assessment.objects.select_related('project').filter(candidate_id=candidate_id)
 
 class MySelfAssesmentsproject(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)

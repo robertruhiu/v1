@@ -93,7 +93,7 @@ class AssesmentSerializer(serializers.ModelSerializer):
 class AssesmentSerializermini(serializers.ModelSerializer):
     candidate = ProfileSerializer
     project = MainProjectSerializer()
-    test_center = TestCenterSerializer
+    test_center = TestCenterSerializer()
     class Meta:
         model = Assessment
         fields = ('id','candidate','project', 'stage','projectstarttime','frameworktested','test_center','test_choice')
