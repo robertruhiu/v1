@@ -132,6 +132,7 @@
 
         </nav>
 
+
         {% if selected_candidates %}
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade " id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
@@ -153,13 +154,13 @@
                     {% for dev in applicants %}
                         <tr>
                             <td> {{ forloop.counter }} </td>
-                            <td>{{ dev.first_name }} {{ dev.last_name }}</td>
-                            <td>{{ dev.email }}</td>
-                            <td>{{ dev.profile.country.name }}</td>
+                            <td>{{ dev.user.first_name }} {{ dev.user.last_name }}</td>
+                            <td>{{ dev.user.email }}</td>
+                            <td>{{ dev.user.profile.country.name }}</td>
 
-                            <td><a href=" {{ dev.profile.file.url }}">Cv link</a></td>
-                            <td><a href="{{ dev.profile.github_repo }}" target="_blank">github account</a></td>
-                            <td><a href="{{ dev.profile.linkedin_url }}" target="_blank">linkedin</a></td>
+                            <td><a href=" {{ dev.user.profile.file.url }}">Cv link</a></td>
+                            <td><a href="{{ dev.user.profile.github_repo }}" target="_blank">github account</a></td>
+                            <td><a href="{{ dev.user.profile.linkedin_url }}" target="_blank">linkedin</a></td>
 
                             <td><a style="text-decoration: none"
                                    href="{% url 'marketplace:select_candidate' job.id dev.id %}"><span
@@ -193,13 +194,13 @@
                     {% for dev in recommended %}
                         <tr>
                             <td> {{ forloop.counter }} </td>
-                            <td>{{ dev.first_name }} {{ dev.last_name }}</td>
-                            <td>{{ dev.email }}</td>
-                            <td>{{ dev.profile.country.name }}</td>
+                            <td>{{ dev.user.first_name }} {{ dev.last_name }}</td>
+                            <td>{{ dev.user.email }}</td>
+                            <td>{{ dev.user.profile.country.name }}</td>
 
-                            <td><a href=" {{ dev.profile.file.url }}">Cv link</a></td>
-                            <td><a href="{{ dev.profile.github_repo }}" target="_blank">github account</a></td>
-                            <td><a href="{{ dev.profile.linkedin_url }}" target="_blank">linkedin</a></td>
+                            <td><a href=" {{ dev.user.profile.file.url }}">Cv link</a></td>
+                            <td><a href="{{ dev.user.profile.github_repo }}" target="_blank">github account</a></td>
+                            <td><a href="{{ dev.user.profile.linkedin_url }}" target="_blank">linkedin</a></td>
 
                             <td><a style="text-decoration: none"
                                    href="{% url 'marketplace:select_candidate' job.id dev.id %}"><span
@@ -235,13 +236,13 @@
                         {% for dev in selected_candidates %}
                             <tr>
                             <td> {{ forloop.counter }} </td>
-                            <td>{{ dev.first_name }} {{ dev.last_name }}</td>
-                            <td>{{ dev.email }}</td>
-                            <td>{{ dev.profile.country.name }}</td>
+                            <td>{{ dev.user.first_name }} {{ dev.last_name }}</td>
+                            <td>{{ dev.user.email }}</td>
+                            <td>{{ dev.user.profile.country.name }}</td>
 
-                            <td><a href=" {{ dev.profile.file.url }}">Cv link</a></td>
-                            <td><a href="{{ dev.profile.github_repo }}" target="_blank">github account</a></td>
-                            <td><a href="{{ dev.profile.linkedin_url }}" target="_blank">linkedin</a></td>
+                            <td><a href=" {{ dev.user.profile.file.url }}">Cv link</a></td>
+                            <td><a href="{{ dev.user.profile.github_repo }}" target="_blank">github account</a></td>
+                            <td><a href="{{ dev.user.profile.linkedin_url }}" target="_blank">linkedin</a></td>
 
 
                         </tr>
@@ -279,15 +280,16 @@
                     </thead>
                     <tbody>
                     {% for dev in applicants %}
+
                         <tr>
                             <td> {{ forloop.counter }} </td>
-                            <td>{{ dev.first_name }} {{ dev.last_name }}</td>
-                            <td>{{ dev.email }}</td>
-                            <td>{{ dev.profile.country.name }}</td>
+                            <td>{{ dev.user.first_name }} {{ dev.user.last_name }}</td>
+                            <td>{{ dev.user.email }}</td>
+                            <td>{{ dev.user.profile.country.name }}</td>
 
-                            <td><a href=" {{ dev.profile.file.url }}">Cv link</a></td>
-                            <td><a href="{{ dev.profile.github_repo }}" target="_blank">github account</a></td>
-                            <td><a href="{{ dev.profile.linkedin_url }}" target="_blank">linkedin</a></td>
+                            <td><a href=" {{ dev.user.profile.file.url }}">Cv link</a></td>
+                            <td><a href="{{ dev.user.profile.github_repo }}" target="_blank">github account</a></td>
+                            <td><a href="{{ dev.user.profile.linkedin_url }}" target="_blank">linkedin</a></td>
 
                             <td><a style="text-decoration: none"
                                    href="{% url 'marketplace:select_candidate' job.id dev.id %}"><span
@@ -321,13 +323,13 @@
                     {% for dev in recommended %}
                         <tr>
                             <td> {{ forloop.counter }} </td>
-                            <td>{{ dev.first_name }} {{ dev.last_name }}</td>
-                            <td>{{ dev.email }}</td>
-                            <td>{{ dev.profile.country.name }}</td>
+                            <td>{{ dev.user.first_name }} {{ dev.user.last_name }}</td>
+                            <td>{{ dev.user.email }}</td>
+                            <td>{{ dev.user.profile.country.name }}</td>
 
-                            <td><a href=" {{ dev.profile.file.url }}">Cv link</a></td>
-                            <td><a href="{{ dev.profile.github_repo }}" target="_blank">github account</a></td>
-                            <td><a href="{{ dev.profile.linkedin_url }}" target="_blank">linkedin</a></td>
+                            <td><a href=" {{ dev.user.profile.file.url }}">Cv link</a></td>
+                            <td><a href="{{ dev.user.profile.github_repo }}" target="_blank">github account</a></td>
+                            <td><a href="{{ dev.user.profile.linkedin_url }}" target="_blank">linkedin</a></td>
 
                             <td><a style="text-decoration: none"
                                    href="{% url 'marketplace:select_candidate' job.id dev.id %}"><span
@@ -363,13 +365,13 @@
                         {% for dev in selected_candidates %}
                             <tr>
                             <td> {{ forloop.counter }} </td>
-                            <td>{{ dev.first_name }} {{ dev.last_name }}</td>
-                            <td>{{ dev.email }}</td>
-                            <td>{{ dev.profile.country.name }}</td>
+                            <td>{{ dev.user.first_name }} {{ dev.user.last_name }}</td>
+                            <td>{{ dev.user.email }}</td>
+                            <td>{{ dev.user.profile.country.name }}</td>
 
-                            <td><a href=" {{ dev.profile.file.url }}">Cv link</a></td>
-                            <td><a href="{{ dev.profile.github_repo }}" target="_blank">github account</a></td>
-                            <td><a href="{{ dev.profile.linkedin_url }}" target="_blank">linkedin</a></td>
+                            <td><a href=" {{ dev.user.profile.file.url }}">Cv link</a></td>
+                            <td><a href="{{ dev.user.profile.github_repo }}" target="_blank">github account</a></td>
+                            <td><a href="{{ dev.user.profile.linkedin_url }}" target="_blank">linkedin</a></td>
 
                             <td><a style="text-decoration: none"
                                    href="{% url 'marketplace:select_candidate' job.id dev.id %}"><span
