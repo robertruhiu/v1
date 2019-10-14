@@ -106,7 +106,11 @@ class Myjobsrequests(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['posted_by']
         user = User.objects.get(id=user_id)
-        return Job.objects.filter(posted_by=user).order_by('-updated')
+        if user.is_staff:
+            return Job.objects.all().order_by('-updated')
+        else:
+            return Job.objects.filter(posted_by=user).order_by('-updated')
+
 
 
 class Myjobsrequestssliced(generics.ListAPIView):
@@ -423,7 +427,7 @@ def apply_for_job(request, job_id):
 
 @login_required
 def manage_posted_jobs(request):
-    jobs = Job.objects.filter(posted_by=request.user)
+    jobs = Job.objects.all()
     job_details = []
     for job in jobs:
         applied = JobApplication.objects.filter(job_id=job.id).all()
