@@ -181,6 +181,16 @@ class newonsite(generics.RetrieveAPIView):
         to = [assesment.candidate.user.email]
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
+        # recruiter notification  email
+
+        subject = 'New Onsite assessment applicant'
+        html_message = render_to_string('invitations/email/onsitenotify.html',
+                                        {'center': assesment})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = 'philisiah@codeln.com'
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
 
         return Assessment.objects.all()
 
