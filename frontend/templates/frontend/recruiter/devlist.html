@@ -92,6 +92,7 @@
             <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
+                <th scope="col">id</th>
                 <th scope="col">Name</th>
                 <th scope="col">email</th>
                 <th scope="col">Country</th>
@@ -107,6 +108,7 @@
             {% for dev in developers %}
                 <tr>
                     <td class="w-auto"> {{ forloop.counter }} </td>
+                    <td class="w-auto">{{ dev.user.id }}</td>
                     <td class="w-auto">{{ dev.user.first_name }} {{ dev.user.last_name }}</td>
                     <td class="w-auto">{{ dev.user.email }}</td>
                     <td>{{ dev.country }}</td>
