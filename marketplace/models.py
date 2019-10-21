@@ -39,6 +39,7 @@ class Job(models.Model):
     company = models.CharField(max_length=300)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
+    city = models.CharField(max_length=255,null=True, blank=True)
     description = models.TextField()
     job_role = models.CharField(max_length=30, choices=JOB_ROLE, default='Full Stack Developer')
     dev_experience = models.CharField(max_length=30, choices=DEV_EXPERIENCE, default='Mid-Level')
