@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'first_name', 'last_name', 'email',
-                 'username','date_joined')
+                 'username','date_joined','is_staff')
 
 class SerializableCountryField(serializers.ChoiceField):
     def __init__(self, **kwargs):
