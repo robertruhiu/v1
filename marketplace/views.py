@@ -193,7 +193,42 @@ class newonsite(generics.RetrieveAPIView):
 
 
         return Assessment.objects.all()
+class newpick(generics.RetrieveAPIView):
+    serializer_class = JobApplicationsRequestSerializer
 
+    def get_queryset(self):
+        application_id = self.kwargs['application_id']
+        application = JobApplication.objects.get(id=application_id)
+
+        # candidate email
+
+        subject = 'Invitation to recruitment drive'
+        html_message = render_to_string('invitations/email/invite.html',
+                                        {'application': application})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = [application.candidate.user.email]
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+        return Assessment.objects.all()
+class acceptreject(generics.RetrieveAPIView):
+    serializer_class = JobApplicationsRequestSerializer
+
+    def get_queryset(self):
+        application_id = self.kwargs['application_id']
+        application = JobApplication.objects.get(id=application_id)
+
+        # candidate email
+
+        subject = 'Recruitment invitation status'
+        html_message = render_to_string('invitations/email/Acceptance.html',
+                                        {'application': application})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = [application.job.posted_by.email]
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+        return Assessment.objects.all()
 class newjobapplication(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
     job_id = 0

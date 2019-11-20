@@ -98,7 +98,7 @@ class UserListsliced(generics.ListAPIView):
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
-        customlist =[1707,1544,1704,1726]
+        customlist =config('TOPTIER', default='TOPTIER').split(",")
 
         return Profile.objects.exclude(about__isnull=True).exclude(skills__isnull=True).filter(about__length__gt=100).filter(user_type='developer').filter(pk__in=customlist)
 class AllUsers(generics.ListAPIView):
@@ -202,6 +202,24 @@ class MySelfAssesmentsprojectupdater(generics.RetrieveUpdateDestroyAPIView):
     queryset = Assessment.objects.all()
     serializer_class = AssesmentSerializerUpdater
 
+class Timesetemail(generics.RetrieveAPIView):
+    serializer_class = AssesmentSerializer
+
+    def get_queryset(self):
+        assesment_id = self.kwargs['pk']
+        assesment = Assessment.objects.get(id=assesment_id)
+
+        # recruiter notification  email
+
+        subject = 'New online assessment applicant'
+        html_message = render_to_string('invitations/email/online.html',
+                                        {'center': assesment})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = 'philisiah@codeln.com'
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+        return Assessment.objects.all()
 @login_required
 def developer_filling_details(request, current_profile):
     if request.method == 'POST':
@@ -291,6 +309,9 @@ def index(request):
 
 
 def home(request):
+    attendees = Assessment.objects.filter(test_center=1)
+    for one in attendees:
+        print(one.candidate.user.first_name+','+one.candidate.user.email +','+ one.frameworktested +','+one.candidate.country.name)
     return render(request, 'frontend/landing.html')
 
 
