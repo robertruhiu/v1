@@ -120,8 +120,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://codeln.com',
     'https://codeln.com',
     'http://www.codeln.com',
-    'https://www.codeln.com',
-    'https://vue-cla-test.herokuapp.com/'
+    'https://www.codeln.com'
 
 )
 

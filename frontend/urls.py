@@ -11,7 +11,7 @@ from frontend.views import home,activity,tracker,update_candidateprojects,\
     editportfolioproject,about,management,grading,storegrades,analytics,ProfileUpdate,Profileget,Talentget,Experienceget,\
     Portfolioget,AllUsers,Userget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
     MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate,\
-    UserListsliced,DevList,RecruiterList,Alldevs,Allrecruiters,Mytestcenters,Timesetemail
+    UserListsliced,DevList,RecruiterList,Alldevs,Allrecruiters,Mytestcenters,Timesetemail,Newuser
 
 from accounts.views import update_profile
 
@@ -99,6 +99,7 @@ urlpatterns = [
     path('myprojectdetails/<int:pk>',MySelfAssesmentsproject.as_view()),
     path('myprojectdetailsupdater/<int:pk>',MySelfAssesmentsprojectupdater.as_view()),
     path('newselfverify/<int:pk>',Timesetemail.as_view()),
+    path('newuser/<int:pk>',Newuser.as_view()),
     path('alldevs',Alldevs.as_view()),
     path('allrecruiters',Allrecruiters.as_view())
     # path('selfprojectmanger')

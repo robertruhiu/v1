@@ -220,6 +220,23 @@ class Timesetemail(generics.RetrieveAPIView):
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
         return Assessment.objects.all()
+class Newuser(generics.RetrieveAPIView):
+    serializer_class = ProfileSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs['pk']
+        User = Profile.objects.get(id=user_id)
+
+        # recruiter notification  email
+
+        subject = 'Welcome to Codeln'
+        html_message = render_to_string('invitations/email/newusers.html')
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = User.user.email
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+        return Assessment.objects.all()
 @login_required
 def developer_filling_details(request, current_profile):
     if request.method == 'POST':
