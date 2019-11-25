@@ -27,5 +27,9 @@ class CartUpdate(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerializerupdater
 
+class CartGet(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
 
 
