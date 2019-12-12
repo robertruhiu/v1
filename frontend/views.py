@@ -41,10 +41,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 CharField.register_lookup(Length, 'length')
 
+filteredcandidates = Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer')
+candidate_list =[]
+for onecandidate in filteredcandidates:
+    candidate_list.append(onecandidate.pk)
 
-taken = TakenQuiz.objects.select_related('student').all()
-portfolio = Portfolio.objects.select_related('candidate').all()
-experience = Experience.objects.select_related('candidate').all()
+taken = TakenQuiz.objects.select_related('student').filter(pk__in=candidate_list)
+portfolio = Portfolio.objects.select_related('candidate').filter(pk__in=candidate_list)
+experience = Experience.objects.select_related('candidate').filter(pk__in=candidate_list)
 takenlist =[]
 portfoliolist=[]
 experiencelist=[]
@@ -54,7 +58,24 @@ for oneportfolio in portfolio:
     portfoliolist.append(oneportfolio.candidate.id)
 for oneexperience in experience:
     experiencelist.append(oneexperience.candidate.id)
-candidateslist = list(set(takenlist+portfoliolist+experiencelist))
+candidateslist = list(set(portfoliolist+experiencelist+takenlist))
+
+
+def Talentorder(request):
+    order_list =[]
+
+
+    combolist = portfoliolist + experiencelist
+    print(combolist)
+
+    for one_in_combo in combolist:
+        if one_in_combo in takenlist:
+            takenlist.remove(one_in_combo)
+
+        order_list = combolist + takenlist
+
+
+    return HttpResponse(json.dumps(order_list), content_type="application/json")
 class UserList(generics.ListAPIView):
 
 
