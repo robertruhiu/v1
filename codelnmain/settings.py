@@ -80,6 +80,9 @@ INSTALLED_APPS = [
     'corsheaders',
 
 
+
+
+
 ]
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -185,7 +188,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'd2crlmu5kuvt7f',
         'USER': 'mheusicbswonlr',
-        'PASSWORD': 'ef399151ab8704a0972ac2eb75128eed0dd74119e97f8462f1b1f198b5424787',
+        'PASSWORD': config('PASSWORD', default='PASSWORD'),
         'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
         'PORT': '5432',
     }
@@ -360,5 +363,10 @@ if ENVIRONMENT == 'production':
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_HTTPONLY = True
     X_FRAME_OPTIONS = 'DENY'
+# Celery
+BROKER_URL = 'redis://h:pe21b83831bad351b3edc54cf4c3d56203fb8343fc9f3977ebd51202dde4482d1@ec2-52-7-9-220.compute-1.amazonaws.com:29819'
 
-
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Africa/Accra'

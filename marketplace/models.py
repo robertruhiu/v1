@@ -6,7 +6,7 @@ from django.urls import reverse
 from django_countries.fields import CountryField
 from django.contrib.auth.models import User
 from separatedvaluesfield.models import SeparatedValuesField
-
+import uuid
 from projects.models import Project
 
 
@@ -54,6 +54,7 @@ class Job(models.Model):
     published = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
     deadline = models.DateTimeField(null=True, blank=True)
+    tag = models.TextField(null=True, blank=True)
 
 
     class Meta:

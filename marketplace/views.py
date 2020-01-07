@@ -19,8 +19,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from classroom.models import TakenQuiz
 from frontend.form import Portfolio_form, Experience_Form, CvForm
-from frontend.models import Experience, Portfolio,Assessment
-
+from frontend.models import Experience, Portfolio, Assessment
+from rest_framework.decorators import api_view
 from .models import Job, JobApplication, DevRequest
 from .forms import JobForm
 from accounts.models import Profile
@@ -34,6 +34,9 @@ from .serializers import DevRequestSerializer, JobRequestSerializer, JobApplicat
 from frontend.serializers import ProfileSerializer
 from rest_framework import generics
 from frontend.serializers import AssesmentSerializer
+from marketplace.tasks import send_email
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions
 
 class DevRequestpick(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -112,7 +115,6 @@ class Myjobsrequests(generics.ListAPIView):
             return Job.objects.filter(posted_by=user).order_by('-updated')
 
 
-
 class Myjobsrequestssliced(generics.ListAPIView):
     serializer_class = JobRequestSerializer
 
@@ -164,6 +166,7 @@ class JobCreate(generics.CreateAPIView):
     def get_queryset(self):
         return Job.objects.all()
 
+
 class newonsite(generics.RetrieveAPIView):
     serializer_class = AssesmentSerializer
 
@@ -191,8 +194,9 @@ class newonsite(generics.RetrieveAPIView):
         to = 'philisiah@codeln.com'
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
-
         return Assessment.objects.all()
+
+
 class newpick(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
 
@@ -211,6 +215,8 @@ class newpick(generics.RetrieveAPIView):
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
         return Assessment.objects.all()
+
+
 class acceptreject(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
 
@@ -229,15 +235,18 @@ class acceptreject(generics.RetrieveAPIView):
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
         return Assessment.objects.all()
+
+
 class newjobapplication(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
     job_id = 0
+
     def get_queryset(self):
         application_id = self.kwargs['pk']
         application = JobApplication.objects.get(id=application_id)
         # recruiter notification  email
 
-        subject = application.job.title +' '+ 'new applicant'
+        subject = application.job.title + ' ' + 'new applicant'
         html_message = render_to_string('invitations/email/jobapplications.html',
                                         {'job': application.job})
         plain_message = strip_tags(html_message)
@@ -255,19 +264,20 @@ class newjobapplication(generics.RetrieveAPIView):
         to = [application.candidate.user.email]
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
-
         return Job.objects.all()
+
 
 class newjob(generics.RetrieveAPIView):
     serializer_class = JobRequestSerializer
+
     def get_queryset(self):
         job_id = self.kwargs['pk']
         job = Job.objects.get(id=job_id)
         # recruiter notification  email
 
-        subject = job.title +' '+ 'under review'
+        subject = job.title + ' ' + 'under review'
         html_message = render_to_string('invitations/email/jobreview.html',
-                                        {'job':job})
+                                        {'job': job})
         plain_message = strip_tags(html_message)
         from_email = 'codeln@codeln.com'
         to = job.posted_by.email
@@ -277,15 +287,13 @@ class newjob(generics.RetrieveAPIView):
 
         subject = 'Review new job'
         html_message = render_to_string('invitations/email/newjob.html',
-                                        {'job':job})
+                                        {'job': job})
         plain_message = strip_tags(html_message)
         from_email = 'codeln@codeln.com'
         to = 'codeln@codeln.com'
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
-
         return Job.objects.all()
-
 
 
 class Applicationprofile(generics.RetrieveUpdateDestroyAPIView):
@@ -354,6 +362,17 @@ class TalentPoolapplications(generics.ListAPIView):
         candidate_id = self.kwargs['candidate']
         user = Profile.objects.get(id=candidate_id)
         return DevRequest.objects.filter(developer=user)
+
+
+@api_view()
+@permission_classes((permissions.AllowAny,))
+def publishedemails(request,job_id):
+    send_email.delay(job_id)
+    return Response({"message": "Hello, world!"})
+
+
+
+
 
 
 def job_list(request):

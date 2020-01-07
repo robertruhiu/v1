@@ -1,12 +1,14 @@
 from django.urls import path
 
 from marketplace.views import job_list, job_details, apply_for_job, manage_posted_jobs, pick_candidate, \
-    select_candidate, dev_pool, dev_details, process_payment, payment_canceled, payment_done, add_dev_to_wish_list,\
-    mydevs,paid_dev_details,create_or_edit_job,dev_data,Myjobsrequests,Jobsapplicants,\
-    Specificjob,SpecificJobsapplicants,Myjobapplication,JobUpdate,JobCreate,JobsList,PickReject,PickRecommended,JobUnpublish,\
-    DevRequestpick,DevRequests,CandidateManager,MyApplicants,Jobdetails,JobApply,CandidateJobs,\
-    TalentPoolapplications,Applicationprofile,CandidateManagerInfo,JobManagerView,TalentPickedManagerView,Myjobsrequestssliced,\
-    JobsListverified,DevRequestssimple,newjobapplication,newjob,newonsite,newpick,acceptreject
+    select_candidate, dev_pool, dev_details, process_payment, payment_canceled, payment_done, add_dev_to_wish_list, \
+    mydevs, paid_dev_details, create_or_edit_job, dev_data, Myjobsrequests, Jobsapplicants, \
+    Specificjob, SpecificJobsapplicants, Myjobapplication, JobUpdate, JobCreate, JobsList, PickReject, PickRecommended, \
+    JobUnpublish, \
+    DevRequestpick, DevRequests, CandidateManager, MyApplicants, Jobdetails, JobApply, CandidateJobs, \
+    TalentPoolapplications, Applicationprofile, CandidateManagerInfo, JobManagerView, TalentPickedManagerView, \
+    Myjobsrequestssliced, \
+    JobsListverified, DevRequestssimple, newjobapplication, newjob, newonsite, newpick, acceptreject, publishedemails
 
 app_name = 'marketplace'
 
@@ -17,7 +19,7 @@ urlpatterns = [
     path('apply_for_job/<int:job_id>/', apply_for_job, name='apply_for_job'),
 
     path('post_job/', create_or_edit_job, name='post_job'),
-    path('edit_job/<int:_id>/',create_or_edit_job,  name='edit_job'),
+    path('edit_job/<int:_id>/', create_or_edit_job, name='edit_job'),
     path('manage_posted_jobs/', manage_posted_jobs, name='manage_posted_jobs'),
     path('pick_candidate/<int:job_id>/<int:dev_id>/', pick_candidate, name='pick_candidate'),
     path('select_candidate/<int:job_id>/<int:dev_id>/', select_candidate, name='select_candidate'),
@@ -32,7 +34,7 @@ urlpatterns = [
     path('payment_done', payment_done, name='payment_done'),
     path('mydevs/<int:owner>', DevRequests.as_view()),
     path('mydevssimple/<int:owner>', DevRequestssimple.as_view()),
-    path('myapplicants/<int:owner>',MyApplicants.as_view()),
+    path('myapplicants/<int:owner>', MyApplicants.as_view()),
     path('pickdev', DevRequestpick.as_view()),
     path('myjobs/<int:posted_by>', Myjobsrequests.as_view()),
     path('myjobssliced/<int:posted_by>', Myjobsrequestssliced.as_view()),
@@ -57,11 +59,11 @@ urlpatterns = [
     path('jobmanagerview/<int:pk>', JobManagerView.as_view()),
     path('talentpickedmanagerview/<int:pk>', TalentPickedManagerView.as_view()),
 
-
-    path('newjobapplication/<int:pk>',newjobapplication.as_view()),
-    path('newonsite/<int:pk>',newonsite.as_view()),
-    path('newjobemail/<int:pk>',newjob.as_view()),
-    path('newpick/<int:application_id>',newpick.as_view()),
-    path('acceptreject/<int:application_id>',acceptreject.as_view()),
+    path('newjobapplication/<int:pk>', newjobapplication.as_view()),
+    path('newonsite/<int:pk>', newonsite.as_view()),
+    path('newjobemail/<int:pk>', newjob.as_view()),
+    path('newpick/<int:application_id>', newpick.as_view()),
+    path('acceptreject/<int:application_id>', acceptreject.as_view()),
+    path('publishedemails/<int:job_id>/', publishedemails, name='publishedemails'),
 
 ]

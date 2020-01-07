@@ -39,6 +39,7 @@ from django.db.models.functions import Length
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 CharField.register_lookup(Length, 'length')
 
 filteredcandidates = Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer')
@@ -347,9 +348,7 @@ def index(request):
 
 
 def home(request):
-    attendees = Assessment.objects.filter(test_center=1)
-    for one in attendees:
-        print(one.candidate.user.first_name+','+one.candidate.user.email +','+ one.frameworktested +','+one.candidate.country.name)
+
     return render(request, 'frontend/landing.html')
 
 
