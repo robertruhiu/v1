@@ -246,13 +246,13 @@ class newjobapplication(generics.RetrieveAPIView):
         application = JobApplication.objects.get(id=application_id)
         # recruiter notification  email
 
-        subject = application.job.title + ' ' + 'new applicant'
-        html_message = render_to_string('invitations/email/jobapplications.html',
-                                        {'job': application.job})
-        plain_message = strip_tags(html_message)
-        from_email = 'codeln@codeln.com'
-        to = application.job.posted_by.email
-        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+        # subject = application.job.title + ' ' + 'new applicant'
+        # html_message = render_to_string('invitations/email/jobapplications.html',
+        #                                 {'job': application.job})
+        # plain_message = strip_tags(html_message)
+        # from_email = 'codeln@codeln.com'
+        # to = application.job.posted_by.email
+        # mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
         # candidate email
 
