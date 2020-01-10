@@ -48,13 +48,13 @@ experience = Experience.objects.select_related('candidate').all()
 takenlist =[]
 portfoliolist=[]
 experiencelist=[]
-for onetaken in taken:
-    takenlist.append(onetaken.student.id)
-for oneportfolio in portfolio:
-    portfoliolist.append(oneportfolio.candidate.id)
-for oneexperience in experience:
-    experiencelist.append(oneexperience.candidate.id)
-candidateslist = list(set(takenlist+portfoliolist+experiencelist))
+# for onetaken in taken:
+#     takenlist.append(onetaken.student.id)
+# for oneportfolio in portfolio:
+#     portfoliolist.append(oneportfolio.candidate.id)
+# for oneexperience in experience:
+#     experiencelist.append(oneexperience.candidate.id)
+# candidateslist = list(set(takenlist+portfoliolist+experiencelist))
 class UserList(generics.ListAPIView):
 
 

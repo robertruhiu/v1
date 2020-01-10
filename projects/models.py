@@ -32,6 +32,7 @@ class Framework(models.Model):
 
     def __str__(self):
         return self.name
+
 class level(models.Model):
     name = models.CharField(max_length=140)
     language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)

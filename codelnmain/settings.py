@@ -26,7 +26,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = config('SECRET_KEY', default='SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 
 ENVIRONMENT = config('ENVIRONMENT', default='local')
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'payments',
     'marketplace',
     'servermanagement',
+    'api',
     'crispy_forms',
     'rest_auth',
     'rest_auth.registration',
@@ -77,6 +78,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_api_key',
     'corsheaders',
 
 
@@ -174,23 +176,23 @@ AUTHENTICATION_BACKENDS = (
 WSGI_APPLICATION = 'codelnmain.wsgi.application'
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd2crlmu5kuvt7f',
-        'USER': 'mheusicbswonlr',
-        'PASSWORD': 'ef399151ab8704a0972ac2eb75128eed0dd74119e97f8462f1b1f198b5424787',
-        'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'd2crlmu5kuvt7f',
+#         'USER': 'mheusicbswonlr',
+#         'PASSWORD': 'ef399151ab8704a0972ac2eb75128eed0dd74119e97f8462f1b1f198b5424787',
+#         'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -361,5 +363,7 @@ if ENVIRONMENT == 'production':
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_HTTPONLY = True
     X_FRAME_OPTIONS = 'DENY'
+
+
 
 
