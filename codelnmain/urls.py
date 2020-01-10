@@ -45,6 +45,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api-token',obtain_jwt_token),
     path('api-token-refress',refresh_jwt_token),
+    path('api/', include('api.urls', namespace='api')),
 
 #     cart
     path('cart/', include('cart.urls')),

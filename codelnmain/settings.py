@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
 
+
     # third party libs
     'allauth',
     'allauth.account',
@@ -77,7 +78,11 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_api_key',
+    'api',
     'corsheaders',
+
+
 
 
 
