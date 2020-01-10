@@ -176,23 +176,23 @@ AUTHENTICATION_BACKENDS = (
 WSGI_APPLICATION = 'codelnmain.wsgi.application'
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd2crlmu5kuvt7f',
-        'USER': 'mheusicbswonlr',
-        'PASSWORD': 'ef399151ab8704a0972ac2eb75128eed0dd74119e97f8462f1b1f198b5424787',
-        'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'd2crlmu5kuvt7f',
+#         'USER': 'mheusicbswonlr',
+#         'PASSWORD': 'ef399151ab8704a0972ac2eb75128eed0dd74119e97f8462f1b1f198b5424787',
+#         'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 
 AUTH_PASSWORD_VALIDATORS = [
