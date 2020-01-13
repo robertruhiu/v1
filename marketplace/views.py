@@ -89,12 +89,12 @@ class Myjobapplication(generics.ListAPIView):
 
 
 class JobsList(generics.ListCreateAPIView):
-    queryset = Job.objects.all().order_by('-updated')
+    queryset = Job.objects.all().order_by('-created')
     serializer_class = JobRequestSerializer
 
 
 class JobsListverified(generics.ListCreateAPIView):
-    queryset = Job.objects.exclude(verified=False).exclude(published=False).all().order_by('-updated')
+    queryset = Job.objects.exclude(verified=False).exclude(published=False).all().order_by('-created')
     serializer_class = JobRequestSerializer
 
 
@@ -110,9 +110,9 @@ class Myjobsrequests(generics.ListAPIView):
         user_id = self.kwargs['posted_by']
         user = User.objects.get(id=user_id)
         if user.is_staff:
-            return Job.objects.all().order_by('-updated')
+            return Job.objects.all().order_by('-created')
         else:
-            return Job.objects.filter(posted_by=user).order_by('-updated')
+            return Job.objects.filter(posted_by=user).order_by('-created')
 
 
 class Myjobsrequestssliced(generics.ListAPIView):
@@ -121,7 +121,7 @@ class Myjobsrequestssliced(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['posted_by']
         user = User.objects.get(id=user_id)
-        return Job.objects.filter(posted_by=user).order_by('-updated')[:2]
+        return Job.objects.filter(posted_by=user).order_by('-created')[:2]
 
 
 class Jobsapplicants(generics.ListAPIView):
@@ -379,7 +379,7 @@ def job_list(request):
     if request.user.is_authenticated:
         applied_list = []
         alljoblist = []
-        alljobs = Job.objects.all().order_by('-updated')
+        alljobs = Job.objects.all().order_by('-created')
 
         for one_job in alljobs:
             alljoblist.append(one_job.id)
@@ -407,7 +407,7 @@ def job_list(request):
             if form.is_valid():
                 form.save()
     else:
-        jobs = Job.objects.all().order_by('-updated')
+        jobs = Job.objects.all().order_by('-created')
         context = dict(
             jobs=jobs
 
