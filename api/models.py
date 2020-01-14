@@ -28,6 +28,7 @@ class EnterpriseAPIKey(AbstractAPIKey):
 
 
 class EnterpriseProject(models.Model):
+    slug = models.SlugField(default='', editable=False)
     enterprise = models.ForeignKey(Enterprise, on_delete=models.CASCADE, related_name='projects')
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tests')
 
@@ -35,8 +36,14 @@ class EnterpriseProject(models.Model):
     def developers(self):
         return self.developers.all()
 
+    def save(self, *args, **kwargs):
+        value = self.project.name
+        self.slug = slugify(value, allow_unicode=True)
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f'{self.enterprise.company_name} - {self.project.name} '
+        return f'{self.enterprise.company_name} - {self.slug} '
+
 
 
 class EnterpriseDeveloper(models.Model):
@@ -60,3 +67,6 @@ class EnterpriseDeveloperReport(models.Model):
     score = models.IntegerField(null=True, blank=True)
     skill = models.CharField(blank=True, null=True, max_length=100)
     developer = models.ForeignKey(EnterpriseDeveloper, on_delete=models.CASCADE, related_name="report")
+
+    def __str__(self):
+        return f'{self.developer.project.project.name} - { self.developer.username }'
