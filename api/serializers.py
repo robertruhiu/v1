@@ -36,7 +36,7 @@ class EnterpriseProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EnterpriseProject
-        fields = ('project',)
+        fields = ('slug', 'project',)
 
 
 class EnterpriseDeveloperSerializer(serializers.ModelSerializer):

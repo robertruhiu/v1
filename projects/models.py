@@ -89,7 +89,5 @@ class Project(models.Model):
     duration = models.DurationField(default=timedelta(hours=2))
     project_template = models.URLField(blank=True, null=True)
 
-
-
     def __str__(self):
         return self.name
