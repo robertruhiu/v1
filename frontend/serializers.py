@@ -32,7 +32,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('id','user','user_type','stage','csa','gender','linkedin_url','github_repo',
                   'years','about','skills','verified_skills',
-                  'country','availabilty','company','job_role','industry','company_url','file','salary','available')
+                  'country','availabilty','company','job_role','industry','company_url','file','salary','available','student')
 
 class ProfileSerializerUpdater(serializers.ModelSerializer):
     user = UserSerializer
@@ -42,7 +42,7 @@ class ProfileSerializerUpdater(serializers.ModelSerializer):
         model = Profile
         fields = ('id','user','user_type','stage','csa','gender','linkedin_url','github_repo',
                   'years','about','skills','verified_skills',
-                  'country','availabilty','company','job_role','industry','company_url','file','salary','available')
+                  'country','availabilty','company','job_role','industry','company_url','file','salary','available','student')
 
 
 class ExperienceSerializer(serializers.ModelSerializer):
