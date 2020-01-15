@@ -84,6 +84,7 @@ class JobApplication(models.Model):
     demolink = models.CharField(blank=True, null=True, max_length=100)
     carted = models.BooleanField(default=False)
     type=models.CharField(max_length=500, null=True,default='applied')
+    created = models.DateTimeField(auto_now_add=True,null=True, blank=True)
 
 
 
@@ -104,6 +105,7 @@ class DevRequest(models.Model):
     offerstatus = models.CharField(max_length=500, null=True)
     offerletter = models.CharField(max_length=500, null=True)
     demolink = models.CharField(blank=True, null=True, max_length=100)
+    created = models.DateTimeField(auto_now_add=True,null=True, blank=True)
 
 
 

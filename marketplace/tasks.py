@@ -29,5 +29,3 @@ def send_email(job_id):
         from_email = 'codeln@codeln.com'
         mail.send_mail(subject, plain_message, from_email, to, html_message=html_message)
 
-
-
