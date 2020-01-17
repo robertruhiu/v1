@@ -21,7 +21,7 @@ from django.core import mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from rest_framework.views import APIView
-
+import cryptography
 from accounts.forms import ProfileTypeForm, DeveloperFillingDetailsForm, RecruiterFillingDetailsForm,Profile
 from transactions.models import Transaction, Candidate,OpenCall,Applications
 from invitations.models import Invitation
@@ -39,7 +39,9 @@ from django.db.models.functions import Length
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from cryptography.fernet import Fernet
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions
 CharField.register_lookup(Length, 'length')
 
 filteredcandidates = Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer')
@@ -259,6 +261,28 @@ class Newuser(generics.RetrieveAPIView):
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
         return Assessment.objects.all()
+
+@api_view()
+@permission_classes((permissions.AllowAny,))
+def unsubscribe(request,token):
+    key = config('KEY', default='KEY').encode()
+    # message = "1".encode()
+    # print(type(str(token[2:-1]).encode()))
+    user_token = token[2:-1].encode()
+
+    f = Fernet(key)
+
+    decrypted = f.decrypt(user_token)
+    currentprofile = Profile.objects.get(pk=int(decrypted))
+    currentprofile.notifications = False
+    currentprofile.save()
+
+
+    return HttpResponse(currentprofile)
+
+
+
+# old code
 @login_required
 def developer_filling_details(request, current_profile):
     if request.method == 'POST':
@@ -348,6 +372,14 @@ def index(request):
 
 
 def home(request):
+    key = config('KEY', default='KEY').encode()
+    message = "1".encode()
+
+    f = Fernet(key)
+    encrypted = f.encrypt(message)
+    print(encrypted)
+
+
 
     return render(request, 'frontend/landing.html')
 

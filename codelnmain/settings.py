@@ -371,7 +371,7 @@ if ENVIRONMENT == 'production':
     X_FRAME_OPTIONS = 'DENY'
 # Celery
 BROKER_URL = 'redis://h:pe21b83831bad351b3edc54cf4c3d56203fb8343fc9f3977ebd51202dde4482d1@ec2-52-7-9-220.compute-1.amazonaws.com:29819'
-
+# BROKER_URL ='redis://127.0.0.1:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

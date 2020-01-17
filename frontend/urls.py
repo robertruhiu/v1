@@ -11,7 +11,7 @@ from frontend.views import home,activity,tracker,update_candidateprojects,\
     editportfolioproject,about,management,grading,storegrades,analytics,ProfileUpdate,Profileget,Talentget,Experienceget,\
     Portfolioget,AllUsers,Userget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
     MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate,\
-    UserListsliced,DevList,RecruiterList,Alldevs,Allrecruiters,Mytestcenters,Talentorder,Timesetemail,Newuser
+    UserListsliced,DevList,RecruiterList,Alldevs,Allrecruiters,Mytestcenters,Talentorder,Timesetemail,Newuser,unsubscribe
 
 from accounts.views import update_profile
 
@@ -103,6 +103,7 @@ urlpatterns = [
     path('alldevs',Alldevs.as_view()),
     path('allrecruiters',Allrecruiters.as_view()),
     path('talentorder', Talentorder, name='Talentorder'),
+    path('unsubscribe/<str:token>',unsubscribe,name='unsubscribe'),
     # path('selfprojectmanger')
 ]
 

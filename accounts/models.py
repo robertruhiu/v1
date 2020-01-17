@@ -58,7 +58,7 @@ class Profile(models.Model):
     verified_skills = models.CharField(max_length=900, null=True, blank=True)
     country = CountryField(null=True, max_length=30)
     availabilty = models.CharField(null=True, max_length=100,blank=True)
-    notifications = models.BooleanField(default=False)
+    notifications = models.BooleanField(default=True)
 
     # years = models.CharField(max_length=30, choices=YEARS_ACTIVE_CHOICES, null=True, blank=True),
 

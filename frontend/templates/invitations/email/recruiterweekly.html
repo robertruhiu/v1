@@ -339,6 +339,18 @@
                 background-color: #34495e !important;
                 border-color: #34495e !important;
             }
+
+            .column {
+                float: left;
+                width: 25%;
+            }
+
+            /* Clear floats after the columns */
+            .row:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
         }
     </style>
 </head>
@@ -367,15 +379,26 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <p>Recruitment invitation status</p>
-                                        <p>Hello,
-                                        </p>
-                                        <p>The following candidate {{ application.candidate.user.first_name }} who
-                                            applied for the {{ application.job.title }}
-                                            has decided to {{ application.stage }} the application.</p>
-
+                                        <p>Your weekly overview of candidate activity on your jobs</p>
+                                        <p>All applicants : {{ all_applications }}</p>
+                                        <p>Here is a breakdown of the varios stages they are at</p>
+                                        <div class="row">
+                                            <div class="column">
+                                                <p>New : {{ new }}</p>
+                                            </div>
+                                            <div class="column">
+                                                <p>Active :{{ active }} </p>
+                                            </div>
+                                            <div class="column">
+                                                <p>Testing :{{ testing }}</p>
+                                            </div>
+                                            <div class="column">
+                                                <p>Interview : {{ interview }}</p>
+                                            </div>
+                                        </div>
 
                                         <p></p>
+
                                         <p>Cheers,
                                         </p>
                                         <p>#TeamCodeln
@@ -390,7 +413,14 @@
 
                     <!-- END MAIN CONTENT AREA -->
                 </table>
+                <div style="margin-bottom: 1rem;margin-top: 1rem">
+                    <p style="text-align: center;color:#979797;text-decoration:none">
+                        <a href='{{ unsubscribe_url }}' style="color:#979797" target="_blank">Unsubscribe from our
+                            emails</a>
+                    </p>
 
+
+                </div>
 
 
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%"
