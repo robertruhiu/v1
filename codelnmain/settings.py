@@ -16,6 +16,7 @@ import dj_database_url
 import django_heroku
 from decouple import config
 from celery.schedules import crontab
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -27,7 +28,6 @@ SECRET_KEY = config('SECRET_KEY', default='SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
 
 ENVIRONMENT = config('ENVIRONMENT', default='local')
 
@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
 
-
     # third party libs
     'allauth',
     'allauth.account',
@@ -82,12 +81,6 @@ INSTALLED_APPS = [
     'api',
     'corsheaders',
     'django_celery_beat'
-
-
-
-
-
-
 
 ]
 REST_FRAMEWORK = {
@@ -181,24 +174,23 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'codelnmain.wsgi.application'
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'd2crlmu5kuvt7f',
+#         'USER': 'mheusicbswonlr',
+#         'PASSWORD': config('PASSWORD', default='PASSWORD'),
+#         'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
+#         'PORT': '5432',
 #     }
 # }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd2crlmu5kuvt7f',
-        'USER': 'mheusicbswonlr',
-        'PASSWORD': config('PASSWORD', default='PASSWORD'),
-        'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
-        'PORT': '5432',
-    }
-}
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -364,11 +356,13 @@ CKEDITOR_CONFIGS = {
 ENVIRONMENT = config('ENVIRONMENT', default='ENVIRONMENT')
 if ENVIRONMENT == 'production':
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER=True
+    SECURE_BROWSER_XSS_FILTER = True
     SECURE_SSL_REDIRECT = True
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_HTTPONLY = True
     X_FRAME_OPTIONS = 'DENY'
+
+# please learn how to use config variables.... all these are security leaks
 # Celery
 BROKER_URL = 'redis://h:pe21b83831bad351b3edc54cf4c3d56203fb8343fc9f3977ebd51202dde4482d1@ec2-52-7-9-220.compute-1.amazonaws.com:29819'
 # BROKER_URL ='redis://127.0.0.1:6379'
@@ -376,3 +370,7 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Accra'
+
+
+
+

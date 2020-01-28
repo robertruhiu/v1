@@ -40,11 +40,11 @@ class EnterpriseProjectSerializer(serializers.ModelSerializer):
 
 
 class EnterpriseDeveloperSerializer(serializers.ModelSerializer):
-    project = EnterpriseProjectSerializer
+    project = EnterpriseProjectSerializer()
 
     class Meta:
         model = EnterpriseDeveloper
-        fields = ('username', 'email', 'project', 'select_time',)
+        fields = ('username', 'email', 'project', 'select_time', 'project_completed', 'metadata')
 
 
 class EnterpriseDeveloperReportSerializer(serializers.ModelSerializer):

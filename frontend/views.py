@@ -372,6 +372,13 @@ def index(request):
 
 
 def home(request):
+    key = config('KEY', default='KEY').encode()
+    message = "1".encode()
+
+    f = Fernet(key)
+    encrypted = f.encrypt(message)
+    print(encrypted)
+
 
 
     return render(request, 'frontend/landing.html')

@@ -2,7 +2,8 @@ from django.contrib import admin
 
 from  rest_framework_api_key.admin import APIKeyModelAdmin
 
-from api.models import Enterprise, EnterpriseAPIKey, EnterpriseProject, EnterpriseDeveloper, EnterpriseDeveloperReport
+from api.models import Enterprise, EnterpriseAPIKey, EnterpriseProject, EnterpriseDeveloper, EnterpriseDeveloperReport, \
+    WebHookSubscriber
 
 
 # Register your models here.
@@ -29,4 +30,9 @@ class EnterpriseDeveloperAdmin(admin.ModelAdmin):
 
 @admin.register(EnterpriseDeveloperReport)
 class EnterpriseDeveloperReportAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(WebHookSubscriber)
+class WebHookSubscriberAdmin(admin.ModelAdmin):
     pass

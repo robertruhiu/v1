@@ -1,2 +1,2 @@
 web: gunicorn codelnmain.wsgi
-worker: celery -A codelnmain worker --beat --scheduler django --loglevel=info
+worker: python manage.py celery worker -B -l info
