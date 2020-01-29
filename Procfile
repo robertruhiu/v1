@@ -1,2 +1,3 @@
 web: gunicorn codelnmain.wsgi
-worker: celery worker -A codelnmain -E -l debug
+worker: python manage.py celery worker --loglevel=info
+celery_beat: python manage.py celery beat --loglevel=info
