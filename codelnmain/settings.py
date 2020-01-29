@@ -27,7 +27,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = config('SECRET_KEY', default='SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ENVIRONMENT = config('ENVIRONMENT', default='local')
 
@@ -174,23 +174,23 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'codelnmain.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'd2crlmu5kuvt7f',
-#         'USER': 'mheusicbswonlr',
-#         'PASSWORD': config('PASSWORD', default='PASSWORD'),
-#         'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
-#         'PORT': '5432',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd2crlmu5kuvt7f',
+        'USER': 'mheusicbswonlr',
+        'PASSWORD': config('PASSWORD', default='PASSWORD'),
+        'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
+        'PORT': '5432',
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -366,6 +366,9 @@ if ENVIRONMENT == 'production':
 # Celery
 BROKER_URL = 'redis://h:pe21b83831bad351b3edc54cf4c3d56203fb8343fc9f3977ebd51202dde4482d1@ec2-52-7-9-220.compute-1.amazonaws.com:29819'
 # BROKER_URL ='redis://127.0.0.1:6379'
+BROKER_TRANSPORT_OPTIONS = {
+    "max_connections": 2,
+}
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
