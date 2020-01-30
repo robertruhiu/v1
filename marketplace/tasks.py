@@ -23,7 +23,7 @@ def send_email(job_id):
             emails.append(one_profile.user.email)
     for one in emails:
         to =[]
-        url = 'http://codeln.com/jobdetails/'+ job_id
+        url = 'http://codeln.com/jobdetails/'+ str(job_id)
         to.append(one)
         subject = 'This job fits one of your skillsets.Apply now'
         html_message = render_to_string('invitations/email/jobemails.html',{'job': job,'url':url})

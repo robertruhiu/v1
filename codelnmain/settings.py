@@ -27,7 +27,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = config('SECRET_KEY', default='SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ENVIRONMENT = config('ENVIRONMENT', default='local')
 
@@ -364,11 +364,15 @@ if ENVIRONMENT == 'production':
 
 # please learn how to use config variables.... all these are security leaks
 # Celery
-BROKER_URL = 'redis://h:pe21b83831bad351b3edc54cf4c3d56203fb8343fc9f3977ebd51202dde4482d1@ec2-52-7-9-220.compute-1.amazonaws.com:29819'
+
+
 # BROKER_URL ='redis://127.0.0.1:6379'
+
+BROKER_URL = 'redis://h:p7447897bdb1ccfe1f2448928ba6b440c9cf26be2b94dd9e218dd540b7f47636d@ec2-54-156-212-247.compute-1.amazonaws.com:9519'
 BROKER_TRANSPORT_OPTIONS = {
-    "max_connections": 2,
+    "max_connections": 20,
 }
+
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
