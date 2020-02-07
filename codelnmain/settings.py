@@ -366,12 +366,8 @@ if ENVIRONMENT == 'production':
 # Celery
 
 
-# BROKER_URL ='redis://127.0.0.1:6379'
+BROKER_URL = config('BROKER', default='BROKER')
 
-BROKER_URL = 'redis://h:p7447897bdb1ccfe1f2448928ba6b440c9cf26be2b94dd9e218dd540b7f47636d@ec2-54-156-212-247.compute-1.amazonaws.com:9519'
-BROKER_TRANSPORT_OPTIONS = {
-    "max_connections": 20,
-}
 
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
