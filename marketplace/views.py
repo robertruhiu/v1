@@ -37,7 +37,7 @@ from frontend.serializers import AssesmentSerializer
 from marketplace.tasks import send_email
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
-
+import datetime
 class DevRequestpick(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = DevRequest.objects.all()
@@ -97,6 +97,9 @@ class JobsListverified(generics.ListCreateAPIView):
     queryset = Job.objects.exclude(verified=False).exclude(published=False).all().order_by('-created')
     serializer_class = JobRequestSerializer
 
+class Alljobsdeadlinefilter(generics.ListCreateAPIView):
+    queryset = Job.objects.filter(deadline__gte=datetime.datetime.now()).exclude(verified=False).exclude(published=False).all().order_by('-created')
+    serializer_class = JobRequestSerializer
 
 class Jobdetails(generics.RetrieveAPIView):
     queryset = Job.objects.all()
@@ -295,6 +298,45 @@ class newjob(generics.RetrieveAPIView):
 
         return Job.objects.all()
 
+class recruiterpublished(generics.RetrieveAPIView):
+    serializer_class = JobRequestSerializer
+
+    def get_queryset(self):
+        job_id = self.kwargs['job_id']
+        job = Job.objects.get(id=job_id)
+        # recruiter notification  email
+
+        subject = job.title + ' ' + 'has been published'
+        html_message = render_to_string('invitations/email/jobreviewsuccess.html',
+                                        {'job': job})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = job.posted_by.email
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+
+
+        return Job.objects.all()
+
+class rejectionemail(generics.RetrieveAPIView):
+    serializer_class = JobApplicationsRequestSerializer
+
+    def get_queryset(self):
+        application_id = self.kwargs['application_id']
+        application = JobApplication.objects.get(id=application_id)
+        # candidate rejection  email
+
+        subject = application_id.job.title + ' ' + 'has been published''Your application under job has been rejected'
+        html_message = render_to_string('invitations/email/rejectionemail.html',
+                                        {'application': application})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = application.candidate.user.email
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+
+
+        return Job.objects.all()
 
 class Applicationprofile(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)

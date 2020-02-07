@@ -8,7 +8,7 @@ from marketplace.views import job_list, job_details, apply_for_job, manage_poste
     DevRequestpick, DevRequests, CandidateManager, MyApplicants, Jobdetails, JobApply, CandidateJobs, \
     TalentPoolapplications, Applicationprofile, CandidateManagerInfo, JobManagerView, TalentPickedManagerView, \
     Myjobsrequestssliced, \
-    JobsListverified, DevRequestssimple, newjobapplication, newjob, newonsite, newpick, acceptreject, publishedemails
+    JobsListverified, DevRequestssimple, newjobapplication, newjob, newonsite, newpick, acceptreject, publishedemails,Alljobsdeadlinefilter,recruiterpublished,rejectionemail
 
 app_name = 'marketplace'
 
@@ -51,6 +51,8 @@ urlpatterns = [
     path('pickrecommended', PickRecommended.as_view()),
     path('createjob', JobCreate.as_view()),
     path('alljobs', JobsListverified.as_view()),
+    path('alljobsdeadlinefilter', Alljobsdeadlinefilter.as_view()),
+
     path('myjobapplication/<int:candidate>/<int:job>', Myjobapplication.as_view()),
     path('jobdetails/<int:pk>', Jobdetails.as_view()),
     path('applyjob', JobApply.as_view()),
@@ -64,6 +66,11 @@ urlpatterns = [
     path('newjobemail/<int:pk>', newjob.as_view()),
     path('newpick/<int:application_id>', newpick.as_view()),
     path('acceptreject/<int:application_id>', acceptreject.as_view()),
-    path('publishedemails/<int:job_id>/', publishedemails, name='publishedemails'),
+    path('publishedemails/<int:job_id>', publishedemails, name='publishedemails'),
+    path('recruiterpublished/<int:job_id>', recruiterpublished.as_view, name='recruiterpublished'),
+    path('rejectionemail/<int:application_id>', rejectionemail.as_view, name='rejectionemail'),
+
+
+
 
 ]

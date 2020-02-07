@@ -17,8 +17,10 @@ from api.serializers import EnterpriseDeveloperReport, \
 
 
 def setup_finished_mail(recipient, url):
+    url = 'https://philisiah-news-search.codeln.com/'
+    password = 'xjE/lcuUJ0w='
     subject = 'Hi there your test is ready!'
-    message = f'Your Workspace is ready.\n Go to {url} to start project'
+    message = f'Your Workspace is ready.\n Go to {url} to start project. Your IDE password is {password}'
     email_from = config('EMAIL_HOST_USER')
     request = [recipient]
 
@@ -57,7 +59,7 @@ def schedule_test(request):
         metadata = request.data.get('metadata')
         date1 = datetime.datetime.strptime(request.data.get('select_time'), '%Y-%m-%d %H:%M')
         select_time = date1.replace(tzinfo=pytz.UTC)
-        project = EnterpriseProject.objects.get(pk=project_id)
+        project = EnterpriseProject.objects.get(project_id=project_id)
         dev, created = EnterpriseDeveloper.objects.get_or_create(username=username, email=email, project=project,
                                                                  metadata=metadata)
         if created:
