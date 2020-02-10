@@ -8,7 +8,8 @@ from marketplace.views import job_list, job_details, apply_for_job, manage_poste
     DevRequestpick, DevRequests, CandidateManager, MyApplicants, Jobdetails, JobApply, CandidateJobs, \
     TalentPoolapplications, Applicationprofile, CandidateManagerInfo, JobManagerView, TalentPickedManagerView, \
     Myjobsrequestssliced, \
-    JobsListverified, DevRequestssimple, newjobapplication, newjob, newonsite, newpick, acceptreject, publishedemails,Alljobsdeadlinefilter,recruiterpublished,rejectionemail
+    JobsListverified, DevRequestssimple, newjobapplication, newjob, newonsite, newpick, acceptreject, publishedemails,\
+    Alljobsdeadlinefilter,recruiterpublished,rejectionemail,projectemail,timesetemail
 
 app_name = 'marketplace'
 
@@ -69,6 +70,9 @@ urlpatterns = [
     path('publishedemails/<int:job_id>', publishedemails, name='publishedemails'),
     path('recruiterpublished/<int:job_id>', recruiterpublished.as_view, name='recruiterpublished'),
     path('rejectionemail/<int:application_id>', rejectionemail.as_view, name='rejectionemail'),
+    path('projectemail/<int:pk>', projectemail.as_view()),
+    path('timesetemail/<int:pk>', timesetemail.as_view()),
+
 
 
 

@@ -326,12 +326,51 @@ class rejectionemail(generics.RetrieveAPIView):
         application = JobApplication.objects.get(id=application_id)
         # candidate rejection  email
 
-        subject = application_id.job.title + ' ' + 'has been published''Your application under job has been rejected'
+        subject = application_id.job.title + ' ' + 'Your application under job has been rejected'
         html_message = render_to_string('invitations/email/rejectionemail.html',
                                         {'application': application})
         plain_message = strip_tags(html_message)
         from_email = 'codeln@codeln.com'
         to = application.candidate.user.email
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+
+
+        return Job.objects.all()
+
+class projectemail(generics.RetrieveAPIView):
+    serializer_class = JobApplicationsRequestSerializer
+
+    def get_queryset(self):
+        application_id = self.kwargs['pk']
+        application = JobApplication.objects.get(id=application_id)
+        # candidate project asign  email
+
+        subject = 'Your have been assigned a project under job  under job' +' ' + application.job.title
+        html_message = render_to_string('invitations/email/projectemail.html',
+                                        {'application': application})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = application.candidate.user.email
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+
+
+        return Job.objects.all()
+class timesetemail(generics.RetrieveAPIView):
+    serializer_class = JobApplicationsRequestSerializer
+
+    def get_queryset(self):
+        application_id = self.kwargs['pk']
+        application = JobApplication.objects.get(id=application_id)
+        # candidate project asign  email
+
+        subject = 'Candidate has set time for project under job'+' '+ application.job.title
+        html_message = render_to_string('invitations/email/jobprojecttime.html',
+                                        {'application': application})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = 'philisiah@codeln.com'
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
 
