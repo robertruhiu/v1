@@ -70,9 +70,9 @@ class EnterpriseDeveloper(models.Model):
 
 
 class EnterpriseDeveloperReport(models.Model):
-    requirements = SeparatedValuesField(null=True, max_length=150, token=',', blank=True)
-    competency = SeparatedValuesField(null=True, max_length=150, token=',', blank=True)
-    grading = SeparatedValuesField(null=True, max_length=150, token=',', blank=True)
+    requirements = JSONField(null=True,  blank=True)
+    competency = JSONField(null=True,  blank=True)
+    grading = JSONField(null=True,  blank=True)
     score = models.IntegerField(null=True, blank=True)
     skill = models.CharField(blank=True, null=True, max_length=100)
     developer = models.ForeignKey(EnterpriseDeveloper, on_delete=models.CASCADE, related_name="report")

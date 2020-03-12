@@ -64,6 +64,38 @@ class RecommendedProjects(generics.ListAPIView):
 
         return Project.objects.filter(pk=projectid)
 
+class BasicProject(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = Projectserializer
+    def get_queryset(self):
+
+
+        user_id = self.kwargs['dev_id']
+        user = Profile.objects.get(pk=user_id)
+        # enable filter to ensure non repeat already done project in assessment
+        doneprojects = Assessment.objects.filter(candidate=user)
+        donelist =[]
+        for onedoneproject in doneprojects:
+            donelist.append(onedoneproject.project.id)
+
+        projects = Project.objects.all()
+
+        randomlists =[]
+        for oneproject  in projects :
+            if oneproject.level == 'Basic':
+                randomlists.append(oneproject.id)
+
+
+        randomlistinitial = list(set(randomlists))
+
+        randomlist =list(set(randomlistinitial)-set(donelist))
+
+        if len(randomlist) > 0:
+            projectid = random.choice(randomlist)
+        else:
+            projectid = randomlist[0]
+
+        return Project.objects.filter(pk=projectid)
 class SelfverifyProject(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = Projectserializer

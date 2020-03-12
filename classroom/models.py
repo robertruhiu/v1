@@ -6,6 +6,8 @@ from accounts.models import Profile
 class Subject(models.Model):
     name = models.CharField(max_length=30)
     image = models.CharField(max_length=300,blank=True, null=True)
+    syllabus = models.CharField(max_length=1500, null=True, blank=True)
+    provider= models.CharField(max_length=1500, null=True, blank=True)
 
 class Quiz(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='quizzes')

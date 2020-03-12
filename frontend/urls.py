@@ -11,7 +11,7 @@ from frontend.views import home,activity,tracker,update_candidateprojects,\
     editportfolioproject,about,management,grading,storegrades,analytics,ProfileUpdate,Profileget,Talentget,Experienceget,\
     Portfolioget,AllUsers,Userget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
     MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate,\
-    UserListsliced,DevList,RecruiterList,Alldevs,Allrecruiters,Mytestcenters,Talentorder,Timesetemail,Newuser,unsubscribe
+    UserListsliced,DevList,RecruiterList,Alldevs,Allrecruiters,Mytestcenters,Talentorder,Timesetemail,Newuser,unsubscribe,Resourcecreate,Subjectresources,Resourceslikeupdate,Portfoliolikeupdate
 
 from accounts.views import update_profile
 
@@ -91,6 +91,10 @@ urlpatterns = [
     path('newportfolio', Portfoliocreate.as_view()),
     path('updateexperience/<int:pk>', Experienceupdate.as_view()),
     path('newexperience', Experiencecreate.as_view()),
+    path('newresource', Resourcecreate.as_view()),
+    path('subjectresources/<int:subject>', Subjectresources.as_view()),
+    path('resourceslikeupdate/<int:pk>', Resourceslikeupdate.as_view()),
+    path('portfoliolikeupdate/<int:pk>', Portfoliolikeupdate.as_view()),
 
     path('asignproject', ProjectAssignment.as_view()),
     path('createassess',SelfAssesmentCreate.as_view()),
@@ -108,6 +112,14 @@ urlpatterns = [
 ]
 
 from  servermanagement.views import AssessmentJobCreate
+
 urlpatterns += [
     path('schedulejob/', AssessmentJobCreate.as_view()),
+]
+
+# test celery
+from frontend.views import testcelery
+
+urlpatterns += [
+    path('testcelery/', testcelery, name='testcelery'),
 ]

@@ -141,9 +141,9 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -362,15 +362,12 @@ if ENVIRONMENT == 'production':
     CSRF_COOKIE_HTTPONLY = True
     X_FRAME_OPTIONS = 'DENY'
 
-# please learn how to use config variables.... all these are security leaks
-# Celery
 
 
-BROKER_URL = config('BROKER', default='BROKER')
-
-
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['application/json', 'pickle']
+CELERY_TASK_SERIALIZER = 'pickle'
+BROKER_URL = config('REDIS_URL', default='redis://')
+CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://')
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Accra'
 

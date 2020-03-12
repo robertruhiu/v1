@@ -16,7 +16,7 @@ from frontend.serializers import TestCenterSerializer
 from servermanagement.forms import JobForm
 from servermanagement.models import Job
 from frontend.serializers import AssesmentSerializerUpdater
-
+import datetime
 # EnterpriseJob
 # Create your views here.
 
@@ -592,7 +592,7 @@ class AssessmentDetail(APIView):
 
 class TestCenterList(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
-    queryset = TestCenter.objects.all()
+    queryset = TestCenter.objects.filter(start_time__gt=datetime.datetime.now())
     serializer_class = TestCenterSerializer
 
 class manual_test(generics.CreateAPIView):

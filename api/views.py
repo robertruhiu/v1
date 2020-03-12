@@ -197,6 +197,49 @@ def enterprise_test_complete(request, id):
     r = requests.post(url=url, data=json.dumps(payload))
     return HttpResponse(r.status_code)
 
+# create a report
+@api_view(['POST'])
+@permission_classes((permissions.AllowAny,))
+def create_report(request, id):
+    enterprisedev = EnterpriseDeveloper.objects.get(id=id)
+    # requirements = request.data.get('requirements')
+    # competency = request.data.get('competency')
+    # grading = request.data.get('grading')
+    # score = request.data.get('score')
+    # skill = request.data.get('skill')
+
+    requirements = {
+        'Improved UI/UX': 'success',
+        'Sign up for users at your Client\'s company': 'unsuccessful',
+        'Login': 'success',
+        'Persist the market data in a PostgreSQL database': 'success',
+        'Allow users to set up alerts for a certain price point': 'unsuccessful',
+    }
+    grading = {
+        'Tests Passed': 6,
+        'Tests Failed': 6,
+        'Warnings': 6,
+        'Errors': 6,
+        'Lines of Code': 216,
+        'Duplications': '2%',
+        'Classes': 6,
+        'Comments':'5%',
+        'Dependencies': 6,
+        'Runtime': 3.45,
+        'Technical Debt': 'nil',
+        'Quality Gates': 'ok',
+    }
+    key_competencies = {
+         'deliverables': '64%',
+         'error_handling': '64%',
+         'project_security': '64%',
+         'code_readability': '64%',
+         'time_used': '340 mins'
+
+     }
+    report = EnterpriseDeveloperReport.objects.create(requirements=requirements, competency= key_competencies,
+                                                      grading=grading, developer=enterprisedev)
+    return Response('Report saved.')
 
 # IDE should call this url when the developer is done with the project has been analysed
 

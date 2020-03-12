@@ -27,11 +27,12 @@ from transactions.models import Transaction, Candidate,OpenCall,Applications
 from invitations.models import Invitation
 from projects.models import Project, Framework
 from frontend.form import Projectinvite, EditProjectForm,Submissions,Portfolio_form,Experience_Form,About,GradingForm
-from frontend.models import candidatesprojects,submissions,Portfolio,Experience,Report,Assessment
+from frontend.models import candidatesprojects,submissions,Portfolio,Experience,Report,Assessment,Resources
 from classroom.models import TakenQuiz,Quiz
 from marketplace.models import Job,JobApplication
 from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,\
-    ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater,ProfileSerializerUpdater,ProjectSerializerupdater,ExperienceSerializerupdater,AssesmentSerializermini
+    ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater,ProfileSerializerUpdater,ProjectSerializerupdater,ExperienceSerializerupdater,AssesmentSerializermini,ResourceSerializer,\
+    ResourceSerializercreater,ResourceSerializerupdater
 from rest_framework import generics, permissions
 from django.utils.decorators import method_decorator
 from django.db.models import CharField
@@ -69,7 +70,7 @@ def Talentorder(request):
 
 
     combolist = portfoliolist + experiencelist
-    print(combolist)
+
 
     for one_in_combo in combolist:
         if one_in_combo in takenlist:
@@ -104,6 +105,7 @@ def DevList(request):
 
     response = requests.get('https://codelnapi.herokuapp.com/alldevs')
     data = response.json()
+
 
     return render(request, 'frontend/recruiter/devlist.html', {'developers':data})
 
@@ -280,6 +282,28 @@ def unsubscribe(request,token):
 
     return HttpResponse(currentprofile)
 
+class Resourcecreate(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Resources.objects.all()
+    serializer_class = ResourceSerializercreater
+
+class Subjectresources(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ResourceSerializer
+    def get_queryset(self):
+        subject_id = self.kwargs['subject']
+
+        return Resources.objects.select_related('subject').exclude(verified=False).filter(subject__id=subject_id)
+
+class Resourceslikeupdate(generics.RetrieveUpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ResourceSerializerupdater
+    queryset = Resources.objects.all()
+
+class Portfoliolikeupdate(generics.RetrieveUpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProjectSerializerupdater
+    queryset = Portfolio.objects.all()
 
 
 # old code
@@ -1085,4 +1109,14 @@ def analytics(request):
 
     return render(request, 'frontend/recruiter/analytics.html',{'passed':passed,'failed':failed,'alltests':alltests,'developers':developers,
                                                                 'recruiters':recruiters})
+
+
+from .tasks import send_notification
+
+def testcelery(request):
+    send_notification()
+    return HttpResponse('completed')
+
+
+
 

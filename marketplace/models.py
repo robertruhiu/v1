@@ -85,6 +85,9 @@ class JobApplication(models.Model):
     carted = models.BooleanField(default=False)
     type=models.CharField(max_length=500, null=True,default='applied')
     created = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    framework = models.CharField(max_length=500, null=True)
+    teststarttime = models.DateTimeField(null=True, blank=True)
+    testendtime = models.DateTimeField(null=True, blank=True)
 
 
 

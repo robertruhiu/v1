@@ -16,7 +16,7 @@ from ..models import Quiz, TakenQuiz, User,StudentAnswer,Answer,Subject,RandomQu
 import random
 from transactions.models import OpenCall
 from rest_framework import generics
-from ..serializers import QuizSerializer,TakenQuizSerializer,RandomQuizSerializer,QuestionSerializer,StudentAnswerSerializer
+from ..serializers import QuizSerializer,TakenQuizSerializer,RandomQuizSerializer,QuestionSerializer,StudentAnswerSerializer,SubjectSerializer
 from accounts.models import Profile
 from rest_framework.permissions import IsAuthenticated
 class AllQuizzes(generics.ListAPIView):
@@ -74,6 +74,11 @@ class PostAnswer(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = StudentAnswer.objects.all()
     serializer_class = StudentAnswerSerializer
+
+class Subjects(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
 
 
 class UpdateRandomquiz(generics.RetrieveUpdateDestroyAPIView):

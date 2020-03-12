@@ -7,7 +7,7 @@ from django_countries.fields import CountryField
 from projects.models import Language, Framework ,Project
 from transactions.models import Transaction
 from separatedvaluesfield.models import SeparatedValuesField
-
+from classroom.models import Subject
 # Create your models here.
 class candidatesprojects(models.Model):
     TYPE_CHOICES = (
@@ -42,6 +42,10 @@ class Portfolio(models.Model):
     demo_link = models.CharField(null=True, max_length=400)
     verified = models.BooleanField(default=False)
     tech_tags = models.CharField(max_length=500, blank=True, null=True, )
+    csa = models.BooleanField(default=False)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    likes = models.CharField(max_length=900, null=True, blank=True)
+    dislikes = models.CharField(max_length=900, null=True, blank=True)
 
 
 class Experience(models.Model):
@@ -61,6 +65,7 @@ class Report(models.Model):
     grading = SeparatedValuesField(null=True,max_length=150,token=',')
     score = models.IntegerField(null=True)
     github = models.CharField(null=True, max_length=300)
+
 
 # temporary data model for demo
 class TestCenter(models.Model):
@@ -97,6 +102,8 @@ class Assessment(models.Model):
     frameworktested = models.CharField(blank=True,null=True,max_length=500)
     demolink = models.CharField(blank=True,null=True,max_length=100)
     test_center = models.ForeignKey(TestCenter, on_delete=models.CASCADE, blank=True, null=True )
+    csa =models.BooleanField(default=False)
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, blank=True, null=True )
 
     def __str__(self):
         return f'{self.candidate.user.first_name} - {self.test_choice}'
@@ -109,3 +116,21 @@ class AssessmentReport(models.Model):
 
     def __str__(self):
         return f'{self.candidate.user.first_name}: {self.project.name}'
+
+class Cohort(models.Model):
+    name = models.CharField(null=True, max_length=300)
+    discord = models.CharField(null=True, max_length=300)
+    members = models.CharField(null=True, max_length=800)
+    created = models.DateTimeField(auto_now_add=True)
+
+class Resources(models.Model):
+    title = models.CharField(null=True, max_length=300)
+    link = models.CharField(null=True, max_length=300)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE,null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    provider= models.CharField(max_length=300, null=True, blank=True)
+    likes = models.CharField(max_length=900, null=True, blank=True)
+    dislikes = models.CharField(max_length=900, null=True, blank=True)
+    tags = models.CharField(max_length=300, null=True, blank=True)
+    verified =models.BooleanField(default=False)
