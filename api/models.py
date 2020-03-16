@@ -70,6 +70,7 @@ class EnterpriseDeveloper(models.Model):
 
 
 class EnterpriseDeveloperReport(models.Model):
+    code_base = models.URLField(null=True, blank=True)
     requirements = JSONField(null=True,  blank=True)
     competency = JSONField(null=True,  blank=True)
     grading = JSONField(null=True,  blank=True)
@@ -77,6 +78,10 @@ class EnterpriseDeveloperReport(models.Model):
     skill = models.CharField(blank=True, null=True, max_length=100)
     developer = models.ForeignKey(EnterpriseDeveloper, on_delete=models.CASCADE, related_name="report")
     report_ready = models.BooleanField(default=False)
+
+    @property
+    def project_description(self):
+        return self.developer.project.project.description
 
     def __str__(self):
         return f'{self.developer.project.project.name} - {self.developer.username}'

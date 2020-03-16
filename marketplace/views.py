@@ -97,9 +97,12 @@ class JobsListverified(generics.ListCreateAPIView):
     queryset = Job.objects.exclude(verified=False).exclude(published=False).all().order_by('-created')
     serializer_class = JobRequestSerializer
 
+
 class Alljobsdeadlinefilter(generics.ListCreateAPIView):
-    queryset = Job.objects.filter(deadline__gte=datetime.datetime.now()).exclude(verified=False).exclude(published=False).all().order_by('-created')
+    queryset = Job.objects.filter(deadline__gte=datetime.datetime.now()).exclude(verified=False).exclude(
+        published=False).all().order_by('-created')
     serializer_class = JobRequestSerializer
+
 
 class Jobdetails(generics.RetrieveAPIView):
     queryset = Job.objects.all()
@@ -298,6 +301,7 @@ class newjob(generics.RetrieveAPIView):
 
         return Job.objects.all()
 
+
 class recruiterpublished(generics.RetrieveAPIView):
     serializer_class = JobRequestSerializer
 
@@ -314,9 +318,8 @@ class recruiterpublished(generics.RetrieveAPIView):
         to = job.posted_by.email
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
-
-
         return Job.objects.all()
+
 
 class rejectionemail(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
@@ -334,9 +337,8 @@ class rejectionemail(generics.RetrieveAPIView):
         to = application.candidate.user.email
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
-
-
         return Job.objects.all()
+
 
 class projectemail(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
@@ -346,17 +348,16 @@ class projectemail(generics.RetrieveAPIView):
         application = JobApplication.objects.get(id=application_id)
         # candidate project asign  email
 
-        subject = 'Your have been assigned a project under job  under job' +' ' + application.job.title
+        subject = 'Your have been assigned a project under job  under job' + ' ' + application.job.title
         html_message = render_to_string('invitations/email/projectemail.html',
                                         {'application': application})
         plain_message = strip_tags(html_message)
         from_email = 'codeln@codeln.com'
         to = application.candidate.user.email
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
-
-
-
         return Job.objects.all()
+
+
 class timesetemail(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
 
@@ -365,7 +366,7 @@ class timesetemail(generics.RetrieveAPIView):
         application = JobApplication.objects.get(id=application_id)
         # candidate project asign  email
 
-        subject = 'Candidate has set time for project under job'+' '+ application.job.title
+        subject = 'Candidate has set time for project under job' + ' ' + application.job.title
         html_message = render_to_string('invitations/email/jobprojecttime.html',
                                         {'application': application})
         plain_message = strip_tags(html_message)
@@ -373,9 +374,8 @@ class timesetemail(generics.RetrieveAPIView):
         to = 'philisiah@codeln.com'
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
-
-
         return Job.objects.all()
+
 
 class Applicationprofile(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
@@ -447,13 +447,9 @@ class TalentPoolapplications(generics.ListAPIView):
 
 @api_view()
 @permission_classes((permissions.AllowAny,))
-def publishedemails(request,job_id):
+def publishedemails(request, job_id):
     send_email.delay(job_id)
     return Response({"message": "Hello, world!"})
-
-
-
-
 
 
 def job_list(request):

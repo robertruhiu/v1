@@ -51,4 +51,4 @@ class EnterpriseDeveloperReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EnterpriseDeveloperReport
-        fields = ('requirements', 'competency', 'grading', 'score', 'skill',)
+        fields = ('requirements', 'competency', 'grading', 'score', 'skill', 'code_base', 'project_description')

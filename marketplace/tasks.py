@@ -1,6 +1,7 @@
 # Create your tasks here
 from __future__ import absolute_import, unicode_literals
-from celery import shared_task
+# from celery import shared_task
+from codelnmain.celery import app
 from django.core import mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -10,7 +11,8 @@ from decouple import config
 from cryptography.fernet import Fernet
 from datetime import date,datetime,time
 from marketplace.models import JobApplication
-@shared_task
+
+@app.task
 def send_email(job_id):
     job = Job.objects.get(id=job_id)
     skills = job.tech_stack.split(",")
@@ -31,7 +33,7 @@ def send_email(job_id):
         from_email = 'codeln@codeln.com'
         mail.send_mail(subject, plain_message, from_email, to, html_message=html_message)
 
-@shared_task
+@app.task
 def weekly_applicants():
     current_week = datetime.date(datetime.now()).isocalendar()[1]
     current_year = datetime.date(datetime.now()).isocalendar()[0]
