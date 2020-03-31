@@ -45,7 +45,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 CharField.register_lookup(Length, 'length')
 
-filteredcandidates = Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer')
+filteredcandidates = Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).exclude(student=True).filter(user_type='developer')
 candidate_list =[]
 for onecandidate in filteredcandidates:
     candidate_list.append(onecandidate.pk)

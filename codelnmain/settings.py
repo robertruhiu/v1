@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'payments',
     'marketplace',
     'servermanagement',
+    'feedback',
     'crispy_forms',
     'rest_auth',
     'rest_auth.registration',
