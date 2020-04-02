@@ -1,27 +1,33 @@
+from decouple import config
+from django.core.mail import send_mail
 from django.http import HttpResponse
-from django.shortcuts import render
 # Create your views here.
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from accounts.models import Profile
-from feedback.forms import FeedbackForm
-from feedback.models import RecruiterFeedback
+from feedback.models import RecruiterFeedback, SurveyAnswer
 from feedback.serializers import RecruiterFeedbackSerializer
 
 
-def feedback_form(request):
-    if request.method == 'POST':
-        form = FeedbackForm(request.POST)
+def feedback_email(email, slug, job):
+    # url = f'https://codeln.com/feedback/{slug}/'
+    url = f'http://localhost:8081/feedback/{slug}/'
+    subject = f'Feedback on the {job}'
+    message = f'Go to {url} to submit your feedback'
+    email_from = config('EMAIL_HOST_USER')
+    request = [email]
 
-        if form.is_valid():
-            form.save()
-            return HttpResponse('response sent')
-    else:
-        form = FeedbackForm()
-    return render(request, 'feedback/feedback_form.html', {'form': form})
+    send_mail(subject, message, email_from, request)
+    return HttpResponse('OK')
+
+
+def dispatch_feedback_mail(request):
+    feedbacklist = RecruiterFeedback.objects.filter(submitted=False)
+    for feedback in feedbacklist:
+        feedback_email(feedback.customer.user.email, feedback.slug, feedback.job.title)
+    return HttpResponse("emails sent")
 
 
 # def recruiter_feedback(request, id):
@@ -34,14 +40,19 @@ def feedback_form(request):
 
 # todo: change id to slug representing the feedback model
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny, ])
-def recruiter_feedback(request):
+@permission_classes([IsAuthenticated, ])
+def recruiter_feedback(request, slug):
     if request.method == 'GET':
-        recruiter = Profile.objects.get(id=1)
-        recruiter_feedback = RecruiterFeedback.objects.get(customer=recruiter)
+        # recruiter = Profile.objects.get(id=1)
+        recruiter_feedback = RecruiterFeedback.objects.get(slug=slug)
         recruiter_feedback_data = RecruiterFeedbackSerializer(recruiter_feedback).data
         return Response(recruiter_feedback_data)
     else:
-        print(request.data)
+        # recruiter = Profile.objects.get(id=1)
+        recruiter_feedback = RecruiterFeedback.objects.get(slug=slug)
+
+        for feedback in request.data:
+            SurveyAnswer.objects.create(feedback_model=recruiter_feedback, question=feedback.question,
+                                        text=feedback.text, developer=feedback.developer)
         content = {'message': 'feedback submitted'}
         return Response(content, status=status.HTTP_200_OK)

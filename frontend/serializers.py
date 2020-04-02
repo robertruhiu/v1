@@ -2,9 +2,15 @@ from django.contrib.auth.models import User
 from django_countries import Countries
 from rest_framework import serializers
 
-from accounts.models import Profile
+from accounts.models import Profile, Referral, ReferralCode
 from frontend.models import Experience, Portfolio, candidatesprojects, AssessmentReport, Assessment, Report, TestCenter,Resources,Cohort
 from projects.serializers import Projectserializer as MainProjectSerializer
+
+
+class ReferralCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReferralCode
+        fields = ('code',)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,12 +30,11 @@ class SerializableCountryField(serializers.ChoiceField):
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     country = SerializableCountryField(allow_blank=True)
+    referral_code = ReferralCodeSerializer(allow_null=True)
 
     class Meta:
         model = Profile
-        fields = ('id','user','user_type','stage','csa','gender','linkedin_url','github_repo',
-                  'years','about','skills','verified_skills',
-                  'country','availabilty','company','job_role','industry','company_url','file','salary','available','student','notifications')
+        fields = ['id','user','user_type','stage','csa','gender','linkedin_url','github_repo','years','about','skills','verified_skills', 'country','availabilty','company','job_role','industry','company_url','file','salary','available','student','notifications', 'referral_code']
 
 class ProfileSerializerUpdater(serializers.ModelSerializer):
     user = UserSerializer
@@ -41,6 +46,14 @@ class ProfileSerializerUpdater(serializers.ModelSerializer):
                   'years','about','skills','verified_skills',
                   'country','availabilty','company','job_role','industry','company_url','file','salary','available','student','notifications')
 
+
+class ReferralSerializer(serializers.ModelSerializer):
+    referrer = ProfileSerializer()
+    referred = ProfileSerializer()
+
+    class Meta:
+        model = Referral
+        fields = ('referrer', 'referred')
 
 class ExperienceSerializer(serializers.ModelSerializer):
     candidate = ProfileSerializer()

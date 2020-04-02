@@ -117,9 +117,11 @@ urlpatterns += [
     path('schedulejob/', AssessmentJobCreate.as_view()),
 ]
 
-# test celery
-from frontend.views import testcelery
+# referral codes
+from frontend.views import ReferralCreate, ReferralCodeCreate
 
 urlpatterns += [
-    path('testcelery/', testcelery, name='testcelery'),
+    path('getreferral/<int:pk>/', ReferralCodeCreate.as_view(), name='referral'),
+    path('referral/', ReferralCreate.as_view(), name='referral'),
 ]
+

@@ -1,11 +1,21 @@
-from django.db import models
+import random
+import string
+import uuid
 
+from django.db import models
 # Create your models here.
+from django.utils.text import slugify
+
 from accounts.models import Profile
 from marketplace.models import Job, JobApplication
 
 
+def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
 class RecruiterFeedback(models.Model):
+    slug = models.SlugField(default='', editable=False, null=True, blank=True, unique=True)
     customer = models.OneToOneField(Profile, on_delete=models.CASCADE)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
     submitted = models.BooleanField(default=False)
@@ -21,6 +31,14 @@ class RecruiterFeedback(models.Model):
 
     def __str__(self):
         return f'{self.customer.full_name} - {self.job.title} feedback'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+
+            strval = random_string_generator(20)
+            value = f'{uidval}{strval}'
+            self.slug = slugify(value, allow_unicode=True)
+        return super().save(*args, **kwargs)
 
 
 class SurveyQuestion(models.Model):

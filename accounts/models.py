@@ -1,16 +1,25 @@
+import datetime
+import random
+import string
+
+from cloudinary.models import CloudinaryField
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.cache import cache
+from django.core.exceptions import ValidationError
 from django.db import models
-from django_countries.fields import CountryField
-
 # Create your models here.
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from taggit.managers import TaggableManager
-import datetime
-from django.core.cache import cache
+from django.utils.text import slugify
+from django_countries.fields import CountryField
 from separatedvaluesfield.models import SeparatedValuesField
-from cloudinary.models import CloudinaryField
+from taggit.managers import TaggableManager
+
+
+def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
 
 class Profile(models.Model):
     USER_TYPE_CHOICES = (
@@ -103,11 +112,56 @@ class Profile(models.Model):
     def date_joined(self):
         return self.user.date_joined
 
+    @property
+    def referral_code(self):
+        if self.user_type == 'recruiter':
+            return self.referral_code
+        else:
+            return False
+
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            Profile.objects.create(user=instance)
+            new_prof = Profile.objects.create(user=instance)
+            ReferralCode.objects.create(user=new_prof)
 
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
+
+
+class Referral(models.Model):
+    referrer = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='reffereds')
+    referred = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='refferers')
+
+    class Meta:
+        unique_together = (('referrer', 'referred'),)
+
+    def __str__(self):
+        return f'{self.referrer} => {self.referred}'
+
+    def clean(self, *args, **kwargs):
+        if self.referrer == self.referred:
+            raise ValidationError(_('The referrer can not be referred.'))
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super(Referral, self).save(*args, **kwargs)
+
+
+class ReferralCode(models.Model):
+    user = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name='referral_code')
+    code = models.SlugField(default='', null=True, editable=False, unique=True)
+    expired_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(default=datetime.datetime.now)
+
+    def __str__(self):
+        return f'{self.user.full_name} -> {str(self.code)}'
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            strval = random_string_generator(4).upper()
+            name = self.user.user.username[:3].upper()
+            value = f'{name}{strval}'
+            self.code = slugify(value, allow_unicode=True)
+        return super().save(*args, **kwargs)

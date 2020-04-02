@@ -1,48 +1,39 @@
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
-from django.db.models.aggregates import Max
-from django.core.paginator import Paginator
-from collections import Counter
-from django.urls import reverse
-from django.db.models import Count
-from django.db.models.functions import TruncMonth
-import requests
-from datetime import date,datetime,time
-from django.core.mail import send_mail
 import json
+
+import requests
+from cryptography.fernet import Fernet
 from decouple import config
-from rest_framework.permissions import IsAuthenticated
-import base64
-import urllib.parse
-from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core import mail
+from django.core.mail import send_mail
+from django.db.models import Count, CharField
+from django.db.models.functions import TruncMonth, Length
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.html import strip_tags
-from rest_framework.views import APIView
-import cryptography
-from accounts.forms import ProfileTypeForm, DeveloperFillingDetailsForm, RecruiterFillingDetailsForm,Profile
-from transactions.models import Transaction, Candidate,OpenCall,Applications
-from invitations.models import Invitation
-from projects.models import Project, Framework
-from frontend.form import Projectinvite, EditProjectForm,Submissions,Portfolio_form,Experience_Form,About,GradingForm
-from frontend.models import candidatesprojects,submissions,Portfolio,Experience,Report,Assessment,Resources
-from classroom.models import TakenQuiz,Quiz
-from marketplace.models import Job,JobApplication
-from .serializers import UserSerializer,ProfileSerializer,ExperienceSerializer,ProjectSerializer,\
-    ProjectAsign,AssesmentSerializer,AssesmentSerializerUpdater,ProfileSerializerUpdater,ProjectSerializerupdater,ExperienceSerializerupdater,AssesmentSerializermini,ResourceSerializer,\
-    ResourceSerializercreater,ResourceSerializerupdater
 from rest_framework import generics, permissions
-from django.utils.decorators import method_decorator
-from django.db.models import CharField
-from django.db.models.functions import Length
-from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from cryptography.fernet import Fernet
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework import permissions
+
+from accounts.forms import ProfileTypeForm, DeveloperFillingDetailsForm, RecruiterFillingDetailsForm, Profile
+from accounts.models import Referral, ReferralCode
+from classroom.models import TakenQuiz, Quiz
+from frontend.form import Projectinvite, EditProjectForm, Submissions, Portfolio_form, Experience_Form, About, \
+    GradingForm
+from frontend.models import candidatesprojects, submissions, Portfolio, Experience, Report, Assessment, Resources
+from marketplace.models import Job
+from projects.models import Project
+from transactions.models import Transaction, Candidate, OpenCall, Applications
+from .serializers import UserSerializer, ProfileSerializer, ExperienceSerializer, ProjectSerializer, \
+    ProjectAsign, AssesmentSerializer, AssesmentSerializerUpdater, ProfileSerializerUpdater, ProjectSerializerupdater, \
+    ExperienceSerializerupdater, AssesmentSerializermini, ResourceSerializer, \
+    ResourceSerializercreater, ResourceSerializerupdater, ReferralCodeSerializer
+
 CharField.register_lookup(Length, 'length')
 
 filteredcandidates = Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).exclude(student=True).filter(user_type='developer')
@@ -192,6 +183,39 @@ class ProfileUpdate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializerUpdater
+
+
+# class ReferralCodeCreate(APIView):
+#     # permission_classes = (Is,)
+#     queryset = ReferralCode.objects.all()
+#
+#     def get(self, request):
+#         user = Profile.objects.get(id=request.data.get('id'))
+#         new_code = ReferralCode.objects.create(user=user)
+#         return Response({'message': f'Your referral code is {new_code.code}'})
+
+class ReferralCodeCreate(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = ReferralCode.objects.all()
+    serializer_class = ReferralCodeSerializer
+
+    def get(self, request, pk, **kwargs):
+        user = Profile.objects.get(user_id=pk)
+        new_code = ReferralCode.objects.create(user=user)
+        return Response({'message': f'Your referral code is {new_code.code}'})
+
+
+class ReferralCreate(APIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Referral.objects.all()
+
+    def post(self, request):
+        code = request.data.get('referral_code')
+        referred = Profile.objects.get(request.data.get('referred_id'))
+        referrer = ReferralCode.objects.get(code=code).user
+        Referral.objects.create(referrer=referrer, referred=referred)
+        return Response({'message': 'referral code accepted!'})
+
 
 class ProjectAssignment(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)

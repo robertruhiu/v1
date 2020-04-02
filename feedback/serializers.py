@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from feedback.models import RecruiterFeedback, SurveyQuestion, SurveyAnswer, Choice
 from frontend.serializers import ProfileSerializer
-from marketplace.serializers import JobApplicationsRequestSerializer, JobRequestSerializer
+from marketplace.serializers import JobApplicationsRequestSerializer, JobRequestSerializer, \
+    MyapplicantsRequestSerializer
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -27,7 +28,8 @@ class RecruiterFeedbackSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecruiterFeedback
-        fields = ['survey_questions', 'developers',]
+        fields = ('slug','survey_questions', 'developers', )
+        # survey_questions, 'developers',)
 
 
 class SurveyAnswerSerializer(serializers.ModelSerializer):
