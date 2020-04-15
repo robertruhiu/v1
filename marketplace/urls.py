@@ -67,9 +67,9 @@ urlpatterns = [
     path('newjobemail/<int:pk>', newjob.as_view()),
     path('newpick/<int:application_id>', newpick.as_view()),
     path('acceptreject/<int:application_id>', acceptreject.as_view()),
-    path('publishedemails/<int:job_id>', publishedemails, name='publishedemails'),
-    path('recruiterpublished/<int:job_id>', recruiterpublished.as_view, name='recruiterpublished'),
-    path('rejectionemail/<int:application_id>', rejectionemail.as_view, name='rejectionemail'),
+    path('publishedemails/<int:pk>', publishedemails, name='publishedemails'),
+    path('recruiterpublished/<int:pk>', recruiterpublished.as_view(), name='recruiterpublished'),
+    path('rejectionemail/<int:application_id>', rejectionemail.as_view(), name='rejectionemail'),
     path('projectemail/<int:pk>', projectemail.as_view()),
     path('timesetemail/<int:pk>', timesetemail.as_view()),
 

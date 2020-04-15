@@ -303,10 +303,11 @@ class newjob(generics.RetrieveAPIView):
 
 
 class recruiterpublished(generics.RetrieveAPIView):
+
     serializer_class = JobRequestSerializer
 
     def get_queryset(self):
-        job_id = self.kwargs['job_id']
+        job_id = self.kwargs['pk']
         job = Job.objects.get(id=job_id)
         # recruiter notification  email
 
@@ -447,8 +448,9 @@ class TalentPoolapplications(generics.ListAPIView):
 
 @api_view()
 @permission_classes((permissions.AllowAny,))
-def publishedemails(request, job_id):
-    send_email.delay(job_id)
+def publishedemails(request, pk):
+    permission_classes = (IsAuthenticated,)
+    send_email.delay(pk)
     return Response({"message": "Hello, world!"})
 
 
