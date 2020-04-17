@@ -450,7 +450,7 @@ class TalentPoolapplications(generics.ListAPIView):
 @permission_classes((permissions.AllowAny,))
 def publishedemails(request, pk):
     permission_classes = (IsAuthenticated,)
-    send_email.delay(pk)
+    send_email(pk)
     return Response({"message": "Hello, world!"})
 
 
