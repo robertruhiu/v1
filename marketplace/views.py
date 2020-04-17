@@ -207,7 +207,7 @@ class newpick(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
 
     def get_queryset(self):
-        application_id = self.kwargs['application_id']
+        application_id = self.kwargs['pk']
         application = JobApplication.objects.get(id=application_id)
 
         # candidate email
@@ -326,11 +326,11 @@ class rejectionemail(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
 
     def get_queryset(self):
-        application_id = self.kwargs['application_id']
+        application_id = self.kwargs['pk']
         application = JobApplication.objects.get(id=application_id)
         # candidate rejection  email
 
-        subject = application_id.job.title + ' ' + 'Your application under job has been rejected'
+        subject = application.job.title + ' ' + 'Your application under job has been rejected'
         html_message = render_to_string('invitations/email/rejectionemail.html',
                                         {'application': application})
         plain_message = strip_tags(html_message)

@@ -65,11 +65,11 @@ urlpatterns = [
     path('newjobapplication/<int:pk>', newjobapplication.as_view()),
     path('newonsite/<int:pk>', newonsite.as_view()),
     path('newjobemail/<int:pk>', newjob.as_view()),
-    path('newpick/<int:application_id>', newpick.as_view()),
+    path('newpick/<int:pk>', newpick.as_view()),
     path('acceptreject/<int:application_id>', acceptreject.as_view()),
     path('publishedemails/<int:pk>', publishedemails, name='publishedemails'),
     path('recruiterpublished/<int:pk>', recruiterpublished.as_view(), name='recruiterpublished'),
-    path('rejectionemail/<int:application_id>', rejectionemail.as_view(), name='rejectionemail'),
+    path('rejectionemail/<int:pk>', rejectionemail.as_view(), name='rejectionemail'),
     path('projectemail/<int:pk>', projectemail.as_view()),
     path('timesetemail/<int:pk>', timesetemail.as_view()),
 
