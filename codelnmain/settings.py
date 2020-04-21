@@ -125,7 +125,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://www.codeln.com',
     'https://www.codeln.com',
     'https://www.codeln.com/users/',
-    'https://www.codeln.com/users/'
+    'http://www.codeln.com/users/'
 
 )
 
