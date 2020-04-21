@@ -76,7 +76,7 @@ urlpatterns = [
     path('grading/<int:candidate_id>/<int:transaction_id>',grading,name='grading'),
     path('storegrades/<int:candidate_id>/<int:transaction_id>',storegrades,name='storegrades'),
 
-    path('users/', UserList.as_view()),
+    path('qualified', UserList.as_view()),
     path('devlist', DevList, name='devlist'),
     path('recruiterlist', RecruiterList),
     path('userssliced/', UserListsliced.as_view()),
