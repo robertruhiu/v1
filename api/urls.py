@@ -7,7 +7,7 @@ app_name = "api"
 
 urlpatterns = [
     path('projects/', EnterpriseProjects.as_view()),
-    path('schedule_test/', schedule_test, name='schedule_test'),
+    # path('schedule_test/', schedule_test, name='schedule_test'),
     path('scheduledtests/', ScheduledTests.as_view()),
     path('takentests/', TakenTests.as_view()),
     path('report/', developer_report, name='developer_report'),

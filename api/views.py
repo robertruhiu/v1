@@ -16,14 +16,14 @@ from api.serializers import EnterpriseDeveloperReport, \
     EnterpriseProjectSerializer, EnterpriseDeveloperReportSerializer, EnterpriseDeveloperSerializer
 
 
-def setup_finished_mail(recipient, url):
-    url = 'https://philisiah-news-search.codeln.com/'
+def setup_finished_mail(recipient, url, data):
+    email = 'philisiah@codeln.com'
+    # url = 'https://philisiah-news-search.codeln.com/'
     password = 'xjE/lcuUJ0w='
     subject = 'Hi there your test is ready!'
-    message = f'Your Workspace is ready.\n Go to {url} to start project. Your IDE password is {password}'
+    message = f'Endpoint triggered by {recipient}- with arguments {url} - in this loop {data}'
     email_from = config('EMAIL_HOST_USER')
-    request = [recipient]
-
+    request = [email]
     send_mail(subject, message, email_from, request)
     return HttpResponse('OK')
 
@@ -67,7 +67,8 @@ def schedule_test(request):
             dev.save()
             if dev.select_time.hour - datetime.datetime.now().hour < 3:
                 url = f'http://{dev.username}-{project.slug}.codeln.com'
-                setup_finished_mail(dev.email, url)
+                data = 'created loop'
+                setup_finished_mail(dev.email, url, data)
                 return Response('You have successfully scheduled your test. A link will has been sent '
                                 'to your inbox with the workspace and further instructions on how to proceed.')
             elif dev.select_time.hour - datetime.datetime.now().hour > 3:
@@ -80,7 +81,8 @@ def schedule_test(request):
             dev.save()
             if  dev.select_time.hour - datetime.datetime.now().hour < 3:
                 url = f'https://{dev.username}-{project.slug}.codeln.com'
-                setup_finished_mail(dev.email, url)
+                data = 'else loop'
+                setup_finished_mail(dev.email, url, data)
                 return Response('You have successfully updated your time. A link has been sent '
                                 'to your inbox with the workspace and further instructions on how to proceed.')
             elif dev.select_time.hour - datetime.datetime.now().hour > 3 :
