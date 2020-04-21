@@ -88,8 +88,8 @@ class JobApplication(models.Model):
     framework = models.CharField(max_length=500, null=True)
     teststarttime = models.DateTimeField(null=True, blank=True)
     testendtime = models.DateTimeField(null=True, blank=True)
-    rejectionreason=models.CharField(max_length=1500,null=True)
-    rejectioncomment=models.CharField(max_length=1500,null=True)
+    rejectionreason=models.CharField(max_length=1500,null=True,blank=True)
+    rejectioncomment=models.CharField(max_length=1500,null=True, blank=True)
 
 
 

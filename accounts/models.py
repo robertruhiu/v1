@@ -142,7 +142,7 @@ class Referral(models.Model):
 
     def clean(self, *args, **kwargs):
         if self.referrer == self.referred:
-            raise ValidationError(_('The referrer can not be referred.'))
+            raise ValidationError(('The referrer can not be referred.'))
 
     def save(self, *args, **kwargs):
         self.full_clean()

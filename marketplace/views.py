@@ -227,7 +227,7 @@ class acceptreject(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
 
     def get_queryset(self):
-        application_id = self.kwargs['application_id']
+        application_id = self.kwargs['pk']
         application = JobApplication.objects.get(id=application_id)
 
         # candidate email
