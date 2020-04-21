@@ -12,8 +12,7 @@ from feedback.serializers import RecruiterFeedbackSerializer
 
 
 def feedback_email(email, slug, job):
-    # url = f'https://codeln.com/feedback/{slug}/'
-    url = f'http://localhost:8081/feedback/{slug}/'
+    url = f'https://codeln.com/feedback/{slug}/'
     subject = f'Feedback on the {job}'
     message = f'Go to {url} to submit your feedback'
     email_from = config('EMAIL_HOST_USER')
