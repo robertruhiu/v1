@@ -32,6 +32,7 @@ def send_email(job_id):
         plain_message = strip_tags(html_message)
         from_email = 'codeln@codeln.com'
         mail.send_mail(subject, plain_message, from_email, to, html_message=html_message)
+    print('developers matching skills. emails sent')
 
 @app.task
 def weekly_applicants():
@@ -80,6 +81,8 @@ def weekly_applicants():
         plain_message = strip_tags(html_message)
         from_email = 'codeln@codeln.com'
         mail.send_mail(subject, plain_message, from_email, to, html_message=html_message)
+    print('weekly reports sent')
+
 
 
 
