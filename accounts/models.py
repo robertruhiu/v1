@@ -112,18 +112,10 @@ class Profile(models.Model):
     def date_joined(self):
         return self.user.date_joined
 
-    @property
-    def referral_code(self):
-        if self.user_type == 'recruiter':
-            return self.referral_code
-        else:
-            return False
-
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-            new_prof = Profile.objects.create(user=instance)
-            ReferralCode.objects.create(user=new_prof)
+            Profile.objects.create(user=instance)
 
     @receiver(post_save, sender=User)
     def save_user_profile(sender, instance, **kwargs):

@@ -30,11 +30,11 @@ class SerializableCountryField(serializers.ChoiceField):
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     country = SerializableCountryField(allow_blank=True)
-    referral_code = ReferralCodeSerializer(allow_null=True)
+
 
     class Meta:
         model = Profile
-        fields = ['id','user','user_type','stage','csa','gender','linkedin_url','github_repo','years','about','skills','verified_skills', 'country','availabilty','company','job_role','industry','company_url','file','salary','available','student','notifications', 'referral_code']
+        fields = ['id','user','user_type','stage','csa','gender','linkedin_url','github_repo','years','about','skills','verified_skills', 'country','availabilty','company','job_role','industry','company_url','file','salary','available','student','notifications']
 
 class ProfileSerializerUpdater(serializers.ModelSerializer):
     user = UserSerializer
@@ -48,8 +48,8 @@ class ProfileSerializerUpdater(serializers.ModelSerializer):
 
 
 class ReferralSerializer(serializers.ModelSerializer):
-    referrer = ProfileSerializer()
-    referred = ProfileSerializer()
+    referrer = ProfileSerializer
+    referred = ProfileSerializer
 
     class Meta:
         model = Referral

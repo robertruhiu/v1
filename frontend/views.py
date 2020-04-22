@@ -72,7 +72,7 @@ def Talentorder(request):
 
     return HttpResponse(json.dumps(order_list), content_type="application/json")
 class UserList(generics.ListAPIView):
-    permission_classes = (IsAuthenticated,)
+
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
