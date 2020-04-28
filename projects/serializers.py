@@ -11,9 +11,10 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 
 class FrameworkSerializer(serializers.ModelSerializer):
+    language = LanguageSerializer()
     class Meta:
         model = Framework
-        fields = '__all__'
+        fields = ('name', 'language',)
 
 
 class DevtypeSerializer(serializers.ModelSerializer):

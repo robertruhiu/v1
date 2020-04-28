@@ -275,15 +275,21 @@ class Newuser(generics.RetrieveAPIView):
     def get_queryset(self):
         user_id = self.kwargs['pk']
         User = Profile.objects.get(id=user_id)
+        if User.user_type == 'developer':
+            subject = 'Welcome to Codeln'
+            html_message = render_to_string('invitations/email/newusers.html')
+            plain_message = strip_tags(html_message)
+            from_email = 'codeln@codeln.com'
+            to = User.user.email
+            mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+        else:
+            subject = 'Welcome to Codeln'
+            html_message = render_to_string('invitations/email/newuserrecruiter.html')
+            plain_message = strip_tags(html_message)
+            from_email = 'codeln@codeln.com'
+            to = User.user.email
+            mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
-        # recruiter notification  email
-
-        subject = 'Welcome to Codeln'
-        html_message = render_to_string('invitations/email/newusers.html')
-        plain_message = strip_tags(html_message)
-        from_email = 'codeln@codeln.com'
-        to = User.user.email
-        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
         return Assessment.objects.all()
 

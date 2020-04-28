@@ -9,7 +9,8 @@ from separatedvaluesfield.models import SeparatedValuesField
 from django.contrib.postgres.fields import JSONField
 
 
-from accounts.models import Profile
+from accounts.models import Profile, IdeTemporalUser
+from feedback.models import random_string_generator
 from projects.models import Project
 
 
@@ -55,18 +56,27 @@ class EnterpriseProject(models.Model):
 class EnterpriseDeveloper(models.Model):
     username = models.CharField(max_length=500, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
+    temp_user = models.ForeignKey(IdeTemporalUser, null=True, on_delete=models.CASCADE)
     project = models.ForeignKey(EnterpriseProject, on_delete=models.CASCADE, related_name="developers")
     select_time = models.DateTimeField(null=True, blank=True)
     project_completed = models.BooleanField(default=False)
     time_completed = models.DateTimeField(null=True, blank=True)
     metadata = JSONField(null=True, blank=True)
+    slug = models.SlugField(default='', editable=False, null=True, blank=True, unique=True)
 
     @property
     def report(self):
         return self.report.all()
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            strval = random_string_generator(20)
+            value = f'{strval}'
+            self.slug = slugify(value, allow_unicode=True)
+        return super().save(*args, **kwargs)
+
     def __str__(self):
-        return f'{self.username} - {self.email} '
+        return f'{self.username} - {self.email}- {self.slug} '
 
 
 class EnterpriseDeveloperReport(models.Model):

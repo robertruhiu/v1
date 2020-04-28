@@ -340,6 +340,21 @@ class rejectionemail(generics.RetrieveAPIView):
 
         return Job.objects.all()
 
+class pickedcandidateemail(generics.RetrieveAPIView):
+    serializer_class = JobApplicationsRequestSerializer
+
+    def get_queryset(self):
+        application_id = self.kwargs['pk']
+        application = JobApplication.objects.get(id=application_id)
+
+        subject = 'Shortlisted for job'
+        html_message = render_to_string('invitations/email/accepted.html',
+                                        {'dev': application.candidate.user, 'application': application})
+        plain_message = strip_tags(html_message)
+        from_email = 'codeln@codeln.com'
+        to = [application.candidate.user.email]
+        mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+        return Job.objects.all()
 
 class projectemail(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer

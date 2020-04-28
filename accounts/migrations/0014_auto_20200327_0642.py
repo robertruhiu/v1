@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='referralcode',
             name='code',
-            field=models.UUIDField(default='', editable=False, null=True, unique=True),
+            field=models.SlugField(default='', editable=False, null=True, unique=True),
         ),
     ]

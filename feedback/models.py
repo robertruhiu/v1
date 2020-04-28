@@ -34,7 +34,6 @@ class RecruiterFeedback(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-
             strval = random_string_generator(20)
             value = f'{strval}'
             self.slug = slugify(value, allow_unicode=True)

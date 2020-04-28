@@ -3,15 +3,17 @@ from rest_framework import serializers
 from api.models import Enterprise, EnterpriseAPIKey, EnterpriseProject, EnterpriseDeveloper, EnterpriseDeveloperReport
 from frontend.serializers import ProfileSerializer
 from projects.models import Project
+from projects.serializers import FrameworkSerializer
 
 
 class EnterpriseIntermediateProjectSerializer(serializers.ModelSerializer):
+    framework = FrameworkSerializer()
     class Meta:
         model = Project
         fields = ('id', 'name', 'brief', 'description', 'level', 'concept', 'tags',
                   'projectimage1', 'projectimage2', 'projectimage3', 'projectimage4', 'projectimage5',
                   'requirement1', 'requirement2', 'requirement3', 'requirement4', 'requirement5',
-                  'duration',)
+                  'duration', 'framework',)
 
 
 class EnterpriseSerializer(serializers.ModelSerializer):

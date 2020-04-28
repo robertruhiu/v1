@@ -9,7 +9,7 @@ from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import models
 # Create your models here.
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete, post_delete
 from django.dispatch import receiver
 from django.utils.text import slugify
 from django_countries.fields import CountryField
@@ -43,15 +43,13 @@ class Profile(models.Model):
         ('4-above', '4-above'),
     )
 
-
-
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     user_type = models.CharField(choices=USER_TYPE_CHOICES, null=True, blank=True, max_length=30)
     stage = models.CharField(choices=STAGE_CHOICES, default='profile_type_selection', max_length=100)
     profile_photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True, null=True)
     csa = models.BooleanField(default=False)
     available = models.BooleanField(default=True)
-    student =models.BooleanField(default=False)
+    student = models.BooleanField(default=False)
     gender = models.CharField(choices=GENDER_CHOICES, null=True, blank=True, max_length=30)
     phone_number = models.CharField(null=True, max_length=30)
     # developer profile
@@ -66,7 +64,7 @@ class Profile(models.Model):
     skills = models.CharField(max_length=900, null=True, blank=True)
     verified_skills = models.CharField(max_length=900, null=True, blank=True)
     country = CountryField(null=True, max_length=30)
-    availabilty = models.CharField(null=True, max_length=100,blank=True)
+    availabilty = models.CharField(null=True, max_length=100, blank=True)
     notifications = models.BooleanField(default=True)
 
     # years = models.CharField(max_length=30, choices=YEARS_ACTIVE_CHOICES, null=True, blank=True),
@@ -157,3 +155,36 @@ class ReferralCode(models.Model):
             value = f'{name}{strval}'
             self.code = slugify(value, allow_unicode=True)
         return super().save(*args, **kwargs)
+
+
+class IdeTemporalUser(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+    username = models.CharField(max_length=50)
+    email = models.EmailField(blank=True, null=True)
+    password = models.CharField(max_length=50)
+
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            username = self.username
+            if User.objects.filter(username=self.username).exists():
+                username += str(random.choice(range(1000)))
+                self.username = username
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.username}-{self.password}'
+
+
+@receiver(post_save, sender=IdeTemporalUser)
+def create_ide_user(sender, instance, created, **kwargs):
+    if created:
+        new_ide_user = User.objects.create(username=instance.username, email=instance.email, password=instance.password)
+        instance.user = new_ide_user
+        instance.save()
+    pass
+
+
+@receiver(post_delete, sender=IdeTemporalUser)
+def delete_ide_user(sender, instance, **kwargs):
+    instance.user.delete()
+

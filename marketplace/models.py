@@ -68,7 +68,7 @@ class JobApplication(models.Model):
     job = models.ForeignKey(Job, related_name='job_applications', on_delete=models.CASCADE)
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='devs')
     selected = models.BooleanField(default=False)
-    stage =models.CharField(max_length=500, null=True)
+    stage = models.CharField(max_length=500, null=True)
     interviewstarttime = models.DateTimeField(null=True,blank=True)
     interviewendtime = models.DateTimeField(null=True, blank=True)
     notes = models.CharField(max_length=1500,null=True)
