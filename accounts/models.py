@@ -66,6 +66,8 @@ class Profile(models.Model):
     country = CountryField(null=True, max_length=30)
     availabilty = models.CharField(null=True, max_length=100, blank=True)
     notifications = models.BooleanField(default=True)
+    remote_entry = models.BooleanField(default=False)
+    remote_verified = models.BooleanField(default=False)
 
     # years = models.CharField(max_length=30, choices=YEARS_ACTIVE_CHOICES, null=True, blank=True),
 
@@ -178,7 +180,7 @@ class IdeTemporalUser(models.Model):
 @receiver(post_save, sender=IdeTemporalUser)
 def create_ide_user(sender, instance, created, **kwargs):
     if created:
-        new_ide_user = User.objects.create(username=instance.username, email=instance.email, password=instance.password)
+        new_ide_user = User.objects.create_user(username=instance.username, email=instance.email, password=instance.password)
         instance.user = new_ide_user
         instance.save()
     pass

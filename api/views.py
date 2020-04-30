@@ -11,12 +11,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from accounts.models import random_string_generator, IdeTemporalUser
 from api.models import EnterpriseAPIKey, EnterpriseProject, EnterpriseDeveloper, WebHookSubscriber
 from api.serializers import EnterpriseDeveloperReport, \
     EnterpriseProjectSerializer, EnterpriseDeveloperReportSerializer, EnterpriseDeveloperSerializer, \
     EnterpriseIntermediateProjectSerializer
-
-from accounts.models import random_string_generator, IdeTemporalUser
 
 
 def setup_finished_mail(recipient, url, ide_password, data):
@@ -24,11 +23,11 @@ def setup_finished_mail(recipient, url, ide_password, data):
     # url = 'https://philisiah-news-search.codeln.com/'
     password = 'xjE/lcuUJ0w='
     subject = 'Hi there your test is ready!'
-    message = f'Endpoint triggered by {recipient}- with arguments {url} - in this loop {data}'
+    # message = f'Endpoint triggered by {recipient}- with arguments {url} - in this loop {data}'
     # message = f'Endpoint triggered by {recipient}- with url:=>  {url} - password {ide_password}'
-    # message = f'Follow the link to access your workspace {url} Login credentials are {email} - password {ide_password}'
+    message = f'Follow the link to access your workspace {url} Login credentials are {recipient} - password {ide_password}'
     email_from = config('EMAIL_HOST_USER')
-    request = [email]
+    request = [recipient]
     send_mail(subject, message, email_from, request)
     return HttpResponse('OK')
 
@@ -67,14 +66,17 @@ def schedule_test(request):
         select_time = date1.replace(tzinfo=pytz.UTC)
         project = EnterpriseProject.objects.get(project_id=project_id)
         ide_password = random_string_generator(10)
-        temp_user = IdeTemporalUser.objects.create(username=username, email=email, password=ide_password)
-        dev, created = EnterpriseDeveloper.objects.get_or_create(username=username, email=email, temp_user=temp_user,
-                                                                 project=project, metadata=metadata)
+        dev, created = EnterpriseDeveloper.objects.get_or_create(username=username, email=email, project=project)
         if created:
+            temp_user = IdeTemporalUser.objects.create(username=username, email=email, password=ide_password)
+            dev.username = username
+            dev.email = email
+            dev.temp_user = temp_user
+            dev.metadata = metadata
             dev.select_time = select_time
             dev.save()
             if dev.select_time.hour - datetime.datetime.now().hour < 3:
-                url = f'http://{dev.username}-{project.slug}.codeln.com'
+                url = f'http://demeide.goodtalent.dev?id={dev.slug}'
                 password = ide_password
                 data = 'created loop'
                 setup_finished_mail(dev.email, url, ide_password, data)
@@ -89,7 +91,7 @@ def schedule_test(request):
             dev.select_time = select_time
             dev.save()
             if dev.select_time.hour - datetime.datetime.now().hour < 3:
-                url = f'https://{dev.username}-{project.slug}.codeln.com'
+                url = f'http://demeide.goodtalent.dev?id={dev.slug}'
                 setup_finished_mail(dev.email, url, ide_password, data='else loop')
                 return Response('You have successfully updated your time. A link has been sent '
                                 'to your inbox with the workspace and further instructions on how to proceed.')
@@ -181,6 +183,7 @@ class AllReports(generics.ListAPIView):
     # permission_classes = [HasAPIKey]
     serializer_class = EnterpriseDeveloperReport
 
+
 # create a report function for demo purposes
 def create_report(slug):
     enterprisedev = EnterpriseDeveloper.objects.get(slug=slug)
@@ -223,6 +226,7 @@ def create_report(slug):
                                                       grading=grading, developer=enterprisedev)
     return 'Report saved.'
 
+
 # IDE should call this url when the developer is done with the project
 
 @api_view(['GET'])
@@ -247,8 +251,7 @@ def enterprise_test_complete(request, slug):
     }
     r = requests.post(url=url, data=json.dumps(payload))
     # create_report(slug)
-    return HttpResponse(r.status_code)
-
+    return Response('test_completed')
 
 
 @api_view(['GET'])
@@ -321,7 +324,7 @@ def enterprise_report_ready(request, slug):
     }
     r = requests.post(url=url, data=json.dumps(payload))
     print(r.status_code)
-    return HttpResponse(r.status_code)
+    return Response('Report ready')
 
 
 def create_ide_user(request):
