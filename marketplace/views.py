@@ -21,7 +21,7 @@ from classroom.models import TakenQuiz
 from frontend.form import Portfolio_form, Experience_Form, CvForm
 from frontend.models import Experience, Portfolio, Assessment
 from rest_framework.decorators import api_view
-from .models import Job, JobApplication, DevRequest
+from .models import Job, JobApplication, DevRequest,DeveloperReport
 from .forms import JobForm
 from accounts.models import Profile
 from django.utils.safestring import mark_safe
@@ -30,7 +30,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import DevRequestSerializer, JobRequestSerializer, JobApplicationsRequestSerializer, \
     JobApplicationsUpdaterSerializer, \
     DevRequestUpdaterSerializer, MyapplicantsRequestSerializer, MyapplicantsRequestSerializersliced, \
-    JobApplicationsRequestSerializerspecific, DevRequestSerializersimple
+    JobApplicationsRequestSerializerspecific, DevRequestSerializersimple,DeveloperReportSerilizer,DeveloperReportCreatorSerilizer
 from frontend.serializers import ProfileSerializer
 from rest_framework import generics
 from frontend.serializers import AssesmentSerializer
@@ -94,7 +94,7 @@ class JobsList(generics.ListCreateAPIView):
 
 
 class JobsListverified(generics.ListCreateAPIView):
-    queryset = Job.objects.exclude(verified=False).exclude(published=False).all().order_by('-created')
+    queryset = Job.objects.exclude(published=False).all().order_by('-created')
     serializer_class = JobRequestSerializer
 
 
@@ -172,6 +172,17 @@ class JobCreate(generics.CreateAPIView):
     def get_queryset(self):
         return Job.objects.all()
 
+class ReportCreate(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = DeveloperReportCreatorSerilizer
+
+    def get_queryset(self):
+        return DeveloperReport.objects.all()
+
+
+class ReportGet(generics.RetrieveAPIView):
+    queryset = DeveloperReport.objects.all()
+    serializer_class = DeveloperReportSerilizer
 
 class newonsite(generics.RetrieveAPIView):
     serializer_class = AssesmentSerializer
@@ -745,10 +756,7 @@ def add_dev_to_wish_list(request):
             dev_count = {
                 'dev_count': count
             }
-
             return JsonResponse(dev_count)
-
-
     else:
         return HttpResponse("Request method is not a GET")
 

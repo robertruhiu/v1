@@ -39,7 +39,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['id','user','user_type','stage','csa','gender','linkedin_url','github_repo','years','about','skills','verified_skills', 'country','availabilty',
-                  'company','job_role','industry','company_url','file','salary','available','student','notifications','remote_entry','remote_verified']
+                  'company','job_role','industry','company_url','file','salary','available','student','notifications','remote_entry','remote_verified','phone_number']
 
 class ProfileSerializerUpdater(serializers.ModelSerializer):
     user = UserSerializer
@@ -50,7 +50,7 @@ class ProfileSerializerUpdater(serializers.ModelSerializer):
         fields = ('id', 'user', 'user_type', 'stage', 'csa', 'gender', 'linkedin_url', 'github_repo',
                   'years', 'about', 'skills', 'verified_skills',
                   'country', 'availabilty', 'company', 'job_role', 'industry', 'company_url', 'file', 'salary',
-                  'available', 'student', 'notifications','remote_entry','remote_verified')
+                  'available', 'student', 'notifications','remote_entry','remote_verified','phone_number')
 
 
 class ReferralSerializer(serializers.ModelSerializer):

@@ -9,13 +9,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+import datetime
 import os
 from builtins import bool
-import datetime
+
 import dj_database_url
 import django_heroku
-from decouple import config
 from celery.schedules import crontab
+from decouple import config
+
+ENVIRONMENT = config('ENVIRONMENT', default='ENVIRONMENT')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,9 +30,8 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = config('SECRET_KEY', default='SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ENVIRONMENT = config('ENVIRONMENT', default='local')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 INSTALLED_APPS = [
@@ -84,57 +86,7 @@ INSTALLED_APPS = [
     'django_celery_beat'
 
 ]
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-    ],
 
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
-}
-
-JWT_AUTH = {
-    'JWT_VERIFY': True,
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_LEEWAY': 0,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=86400),
-    'JWT_ALLOW_REFRESH': True,
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
-}
-
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://127.0.0.1:8080',
-    'http://localhost:8080',
-    'http://localhost:8081',
-    'http://localhost:8082',
-    'https://mulan.herokuapp.com',
-    'https://leanapp.herokuapp.com',
-    'http://mulan.herokuapp.com',
-    'http://leanapp.herokuapp.com',
-    'https://codelnalpha.herokuapp.com',
-    'http://codelnalpha.herokuapp.com',
-    'http://codeln.com',
-    'https://codeln.com',
-    'http://www.codeln.com',
-    'https://www.codeln.com',
-
-
-)
-
-REST_USE_JWT = True
-
-REST_AUTH_SERIALIZERS = {
-    'PASSWORD_RESET_SERIALIZER':
-        'rest_auth.serializers.PasswordResetSerializer',
-}
-# Application definition
 SITE_ID = 1
 
 MIDDLEWARE = [
@@ -149,7 +101,43 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:8080',
+    'http://localhost:8080',
+    'http://127.0.0.1:4200',
+    'http://localhost:4200',
+    'http://localhost:8081',
+    'http://localhost:8082',
+    'https://mulan.herokuapp.com',
+    'https://leanapp.herokuapp.com',
+    'http://mulan.herokuapp.com',
+    'http://leanapp.herokuapp.com',
+    'https://codelnalpha.herokuapp.com',
+    'http://codelnalpha.herokuapp.com',
+    'http://codeln.com',
+    'https://codeln.com',
+    'http://www.codeln.com',
+    'https://www.codeln.com',
+    'http://165.22.27.68:3000',
+    'http://165.22.27.68',
+
+    'http://clide.codeln.com:3000',
+    'http://clide.codeln.com',
+
+)
+
+
+
 ROOT_URLCONF = 'codelnmain.urls'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 TEMPLATES = [
     {
@@ -168,11 +156,6 @@ TEMPLATES = [
         },
     },
 ]
-
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
 
 WSGI_APPLICATION = 'codelnmain.wsgi.application'
 
@@ -244,6 +227,53 @@ STATICFILES_DIRS = [
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+JWT_AUTH = {
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_LEEWAY': 0,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=86400),
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+}
+
+REST_AUTH_SERIALIZERS = {
+    'PASSWORD_RESET_SERIALIZER': 'rest_auth.serializers.PasswordResetSerializer',
+    'USER_DETAILS_SERIALIZER': 'rest_auth.serializers.UserDetailsSerializer',
+    'JWT_SERIALIZER': 'rest_auth.serializers.JWTSerializer',
+}
+
+REST_USE_JWT = True
+
+# REST_AUTH_REGISTER_SERIALIZERS = {
+#     'REGISTER_SERIALIZER': 'api.serializers.RegisterSerializer',
+# }
+
+if ENVIRONMENT == 'production':
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_SSL_REDIRECT = True
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_HTTPONLY = True
+    X_FRAME_OPTIONS = 'DENY'
+
+# Application definition
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # email settings
@@ -256,7 +286,7 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='EMAIL_HOST_PASSWORD')
 
 # allauth settings
-ACCOUNT_AUTHENTICATION_METHOD = ('email')
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_SIGNUP_PASSWORD_VERIFICATION = False
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 ACCOUNT_UNIQUE_EMAIL = True
@@ -355,24 +385,9 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-ENVIRONMENT = config('ENVIRONMENT', default='ENVIRONMENT')
-if ENVIRONMENT == 'production':
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_SSL_REDIRECT = True
-    CSRF_COOKIE_SECURE = True
-    CSRF_COOKIE_HTTPONLY = True
-    X_FRAME_OPTIONS = 'DENY'
-
-
-
 CELERY_ACCEPT_CONTENT = ['application/json', 'pickle']
 CELERY_TASK_SERIALIZER = 'pickle'
 BROKER_URL = config('REDIS_URL', default='redis://')
 CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://')
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Accra'
-
-
-
-

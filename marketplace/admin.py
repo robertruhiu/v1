@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from marketplace.models import Job, JobApplication, DevRequest
+from marketplace.models import Job, JobApplication, DevRequest,DeveloperReport
 
 
 @admin.register(Job)
@@ -15,4 +15,7 @@ class JobApplicationAdmin(admin.ModelAdmin):
 
 @admin.register(DevRequest)
 class DevRequestAdmin(admin.ModelAdmin):
+    pass
+@admin.register(DeveloperReport)
+class DeveloperReportAdmin(admin.ModelAdmin):
     pass

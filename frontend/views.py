@@ -26,7 +26,7 @@ from classroom.models import TakenQuiz, Quiz
 from frontend.form import Projectinvite, EditProjectForm, Submissions, Portfolio_form, Experience_Form, About, \
     GradingForm
 from frontend.models import candidatesprojects, submissions, Portfolio, Experience, Report, Assessment, Resources
-from marketplace.models import Job
+from marketplace.models import Job, DeveloperReport
 from projects.models import Project
 from transactions.models import Transaction, Candidate, OpenCall, Applications
 from .serializers import UserSerializer, ProfileSerializer, ExperienceSerializer, ProjectSerializer, \
@@ -36,32 +36,56 @@ from .serializers import UserSerializer, ProfileSerializer, ExperienceSerializer
 
 CharField.register_lookup(Length, 'length')
 
+# filteredcandidates = []
 filteredcandidates = Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).exclude(student=True).filter(user_type='developer')
+
 candidate_list =[]
 for onecandidate in filteredcandidates:
     candidate_list.append(onecandidate.pk)
 
-taken = TakenQuiz.objects.select_related('student').filter(pk__in=candidate_list)
-portfolio = Portfolio.objects.select_related('candidate').filter(pk__in=candidate_list)
-experience = Experience.objects.select_related('candidate').filter(pk__in=candidate_list)
-takenlist =[]
-portfoliolist=[]
-experiencelist=[]
+# taken = []
+# portfolio = []
+# experience = []
+taken = TakenQuiz.objects.select_related('student').filter(student__in=candidate_list)
+portfolio = Portfolio.objects.select_related('candidate').filter(candidate__in=candidate_list)
+experience = Experience.objects.select_related('candidate').filter(candidate__in=candidate_list)
+takenlist = []
+portfoliolist = []
+experiencelist = []
 for onetaken in taken:
     takenlist.append(onetaken.student.id)
 for oneportfolio in portfolio:
     portfoliolist.append(oneportfolio.candidate.id)
 for oneexperience in experience:
     experiencelist.append(oneexperience.candidate.id)
-candidateslist = list(set(portfoliolist+experiencelist+takenlist))
+candidateslist = list(set(portfoliolist + experiencelist + takenlist))
 
 
 def Talentorder(request):
-    order_list =[]
+    filteredcandidates = Profile.objects.select_related('user').exclude(about__isnull=True).exclude(
+        skills__isnull=True).exclude(student=True).filter(user_type='developer')
 
+    candidate_list = []
+    for onecandidate in filteredcandidates:
+        candidate_list.append(onecandidate.pk)
+
+    taken = TakenQuiz.objects.select_related('student').filter(pk__in=candidate_list)
+    portfolio = Portfolio.objects.select_related('candidate').filter(candidate__in=candidate_list)
+    experience = Experience.objects.select_related('candidate').filter(candidate__in=candidate_list)
+    takenlist = []
+    portfoliolist = []
+    experiencelist = []
+    for onetaken in taken:
+        takenlist.append(onetaken.student.id)
+    for oneportfolio in portfolio:
+        portfoliolist.append(oneportfolio.candidate.id)
+    for oneexperience in experience:
+        experiencelist.append(oneexperience.candidate.id)
+
+
+    order_list = []
 
     combolist = portfoliolist + experiencelist
-
 
     for one_in_combo in combolist:
         if one_in_combo in takenlist:
@@ -69,65 +93,76 @@ def Talentorder(request):
 
         order_list = combolist + takenlist
 
-
     return HttpResponse(json.dumps(order_list), content_type="application/json")
+
+
 class UserList(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
 
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
+        return Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(
+            user_type='developer')
 
-        return Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(user_type='developer')
 
 class Alldevs(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
         return Profile.objects.select_related('user').filter(user_type='developer').order_by('-user__date_joined')
+
 
 class Allrecruiters(generics.ListAPIView):
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
         return Profile.objects.select_related('user').filter(user_type='recruiter').order_by('-user__date_joined')
+
+
 @login_required
 def DevList(request):
+    permission_classes = (IsAuthenticated,)
 
     response = requests.get('https://codelnapi.herokuapp.com/alldevs')
     data = response.json()
 
+    return render(request, 'frontend/recruiter/devlist.html', {'developers': data})
 
-    return render(request, 'frontend/recruiter/devlist.html', {'developers':data})
 
 @login_required
 def RecruiterList(request):
+    permission_classes = (IsAuthenticated,)
+
     response = requests.get('https://codelnapi.herokuapp.com/allrecruiters')
     data = response.json()
 
     return render(request, 'frontend/recruiter/recruiterslist.html', {'payers': data})
 
 
-
-
 class UserListsliced(generics.ListAPIView):
-
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
-        customlist =config('TOPTIER', default='TOPTIER').split(",")
+        customlist = config('TOPTIER', default='TOPTIER').split(",")
 
-        return Profile.objects.exclude(about__isnull=True).exclude(skills__isnull=True).filter(about__length__gt=100).filter(user_type='developer').filter(pk__in=customlist)
+        return Profile.objects.exclude(about__isnull=True).exclude(skills__isnull=True).filter(
+            about__length__gt=100).filter(user_type='developer').filter(pk__in=customlist)
+
+
 class AllUsers(generics.ListAPIView):
-
     serializer_class = UserSerializer
 
     def get_queryset(self):
-
         return User.objects.all()
 
+
 class Talentget(generics.RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+
 
 class Portfolioget(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -138,45 +173,52 @@ class Portfolioget(generics.ListAPIView):
         user = Profile.objects.get(id=candidate_id)
         return Portfolio.objects.select_related('candidate').filter(candidate_id=user)
 
+
 class Portfoliocreate(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Portfolio.objects.all()
     serializer_class = ProjectSerializerupdater
+
 
 class Portfolioupdate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Portfolio.objects.all()
     serializer_class = ProjectSerializerupdater
 
+
 class Experienceget(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ExperienceSerializer
 
     def get_queryset(self):
-
         candidate_id = self.kwargs['candidate_id']
         user = Profile.objects.get(id=candidate_id)
         return Experience.objects.select_related('candidate').filter(candidate=user)
+
 
 class Experiencecreate(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Experience.objects.all()
     serializer_class = ExperienceSerializerupdater
 
+
 class Experienceupdate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Experience.objects.all()
     serializer_class = ExperienceSerializerupdater
+
 
 class Profileget(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
+
 class Userget(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
 
 class ProfileUpdate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
@@ -221,35 +263,45 @@ class ProjectAssignment(generics.CreateAPIView):
     queryset = candidatesprojects.objects.all()
     serializer_class = ProjectAsign
 
+
 class SelfAssesmentCreate(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Assessment.objects.all()
     serializer_class = AssesmentSerializerUpdater
 
+
 class MySelfAssesments(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = AssesmentSerializermini
+
     def get_queryset(self):
         candidate_id = self.kwargs['candidate_id']
 
-        return Assessment.objects.select_related('project').exclude(project__isnull=True).filter(candidate_id=candidate_id)
+        return Assessment.objects.select_related('project').exclude(project__isnull=True).filter(
+            candidate_id=candidate_id)
+
+
 class Mytestcenters(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = AssesmentSerializermini
+
     def get_queryset(self):
         candidate_id = self.kwargs['candidate_id']
 
         return Assessment.objects.select_related('project').filter(candidate_id=candidate_id)
+
 
 class MySelfAssesmentsproject(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Assessment.objects.all()
     serializer_class = AssesmentSerializer
 
+
 class MySelfAssesmentsprojectupdater(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Assessment.objects.all()
     serializer_class = AssesmentSerializerUpdater
+
 
 class Timesetemail(generics.RetrieveAPIView):
     serializer_class = AssesmentSerializer
@@ -269,6 +321,8 @@ class Timesetemail(generics.RetrieveAPIView):
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
         return Assessment.objects.all()
+
+
 class Newuser(generics.RetrieveAPIView):
     serializer_class = ProfileSerializer
 
@@ -290,12 +344,12 @@ class Newuser(generics.RetrieveAPIView):
             to = User.user.email
             mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
-
         return Assessment.objects.all()
+
 
 @api_view()
 @permission_classes((permissions.AllowAny,))
-def unsubscribe(request,token):
+def unsubscribe(request, token):
     key = config('KEY', default='KEY').encode()
     # message = "1".encode()
     # print(type(str(token[2:-1]).encode()))
@@ -308,26 +362,30 @@ def unsubscribe(request,token):
     currentprofile.notifications = False
     currentprofile.save()
 
-
     return HttpResponse(currentprofile)
+
 
 class Resourcecreate(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Resources.objects.all()
     serializer_class = ResourceSerializercreater
 
+
 class Subjectresources(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ResourceSerializer
+
     def get_queryset(self):
         subject_id = self.kwargs['subject']
 
         return Resources.objects.select_related('subject').exclude(verified=False).filter(subject__id=subject_id)
 
+
 class Resourceslikeupdate(generics.RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ResourceSerializerupdater
     queryset = Resources.objects.all()
+
 
 class Portfoliolikeupdate(generics.RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -427,31 +485,37 @@ def index(request):
 def home(request):
 
 
-    return render(request, 'frontend/landing.html')
 
+
+
+
+
+    return render(request, 'frontend/landing.html')
 
 
 @login_required
 def activity(request):
     if request.user.is_authenticated:
         transactions = Transaction.objects.filter(user=request.user)
-        opencalls =OpenCall.objects.filter(recruiter=request.user)
-        alltransactions =[]
-        allopencalls =[]
+        opencalls = OpenCall.objects.filter(recruiter=request.user)
+        alltransactions = []
+        allopencalls = []
         for transaction in transactions:
             alltransactions.append(transaction.id)
         for opencall in opencalls:
             allopencalls.append(opencall.transaction.id)
 
-        res=set(alltransactions)-set(allopencalls)
+        res = set(alltransactions) - set(allopencalls)
 
-        closedprojects =list(res)
-
+        closedprojects = list(res)
 
         if request.user.profile.user_type == 'recruiter':
-            return render(request, 'frontend/recruiter/my-activity.html', {'transactions': transactions,'closedprojects':closedprojects,'allopencalls':allopencalls})
+            return render(request, 'frontend/recruiter/my-activity.html',
+                          {'transactions': transactions, 'closedprojects': closedprojects,
+                           'allopencalls': allopencalls})
         elif request.user.profile.user_type == 'developer':
             return render(request, 'frontend/developer/my-activity.html', {'transactions': transactions})
+
 
 @login_required
 def tracker(request, id):
@@ -459,23 +523,23 @@ def tracker(request, id):
     candidates = candidatesprojects.objects.filter(transaction=id).order_by('-stage')
     submitted = submissions.objects.filter(transaction=id).all()
     readyreports = Report.objects.filter(transaction_id=id)
-    reports=[]
+    reports = []
 
     for on in readyreports:
         reports.append(on.candidate_id)
-    allcandidates=[]
+    allcandidates = []
     for one in candidates:
         allcandidates.append(one.candidate_id)
     withoutreports = list(set(allcandidates) - set(reports))
-    candswithreports =Report.objects.filter(transaction_id=id).order_by('-score')
+    candswithreports = Report.objects.filter(transaction_id=id).order_by('-score')
 
-    candwithoutreports=candidatesprojects.objects.filter(candidate_id__in=withoutreports,transaction_id=id).order_by('-stage')
+    candwithoutreports = candidatesprojects.objects.filter(candidate_id__in=withoutreports, transaction_id=id).order_by(
+        '-stage')
 
-
-
-
-    return render(request, 'frontend/recruiter/tracker.html', {'candswithreports': candswithreports,'candwithoutreports': candwithoutreports, 'project': project,'submitted':submitted,'readyreports':readyreports,
-                                                               'cands':candidates})
+    return render(request, 'frontend/recruiter/tracker.html',
+                  {'candswithreports': candswithreports, 'candwithoutreports': candwithoutreports, 'project': project,
+                   'submitted': submitted, 'readyreports': readyreports,
+                   'cands': candidates})
 
 
 @login_required
@@ -493,16 +557,18 @@ def invites(request):
 
 @login_required
 def projectdetails(request, id):
-    form=Submissions()
-    transaction=candidatesprojects.objects.get(id=id)
+    form = Submissions()
+    transaction = candidatesprojects.objects.get(id=id)
     projectinvite = Projectinvite()
-    if Applications.objects.filter(candidate_id=request.user.id).filter(transaction_id=transaction.transaction_id).exists():
-        opencall =Applications.objects.filter(candidate_id=request.user.id).filter(transaction_id=transaction.transaction_id).get()
+    if Applications.objects.filter(candidate_id=request.user.id).filter(
+            transaction_id=transaction.transaction_id).exists():
+        opencall = Applications.objects.filter(candidate_id=request.user.id).filter(
+            transaction_id=transaction.transaction_id).get()
     else:
-        opencall=None
+        opencall = None
     project = candidatesprojects.objects.get(id=id)
     return render(request, 'frontend/developer/projectdetails.html',
-                  {'project': project, 'projectinvite': projectinvite,'opencall':opencall,'form':form})
+                  {'project': project, 'projectinvite': projectinvite, 'opencall': opencall, 'form': form})
 
 
 @login_required
@@ -512,6 +578,7 @@ def pendingproject(request, transaction_id):
 
     return render(request, 'frontend/developer/pendingproject.html',
                   {'transaction': transaction, 'acceptedinvites': acceptedinvites})
+
 
 @login_required
 def projectinvites(request, transaction_id):
@@ -523,6 +590,7 @@ def projectinvites(request, transaction_id):
     acceptedinvite.save()
     return redirect('frontend:buildproject')
 
+
 @login_required
 def update_candidateprojects(request, candidateproject_id, transaction_id):
     transaction = Transaction.objects.get(id=transaction_id)
@@ -530,6 +598,7 @@ def update_candidateprojects(request, candidateproject_id, transaction_id):
     candidatesproject.stage = 'project-in-progress'
     candidatesproject.save()
     return HttpResponseRedirect('/projectdetails/%s' % candidateproject_id)
+
 
 @login_required
 def update_finished(request, candidateproject_id, transaction_id):
@@ -539,6 +608,7 @@ def update_finished(request, candidateproject_id, transaction_id):
     candidatesproject.save()
     return HttpResponseRedirect('/projectdetails/%s' % candidateproject_id)
 
+
 @login_required
 def update_finishedopencall(request, project_id, transaction_id):
     if request.method == 'POST':
@@ -547,10 +617,11 @@ def update_finishedopencall(request, project_id, transaction_id):
             transaction = Transaction.objects.get(id=transaction_id)
 
             subject = 'Project submission'
-            repo=submission_form.cleaned_data['repositorylink']
+            repo = submission_form.cleaned_data['repositorylink']
             demo = submission_form.cleaned_data['demolink']
             html_message = render_to_string('invitations/email/submissions.html',
-                                            {'dev': request.user, 'transaction': transaction,'demo':demo,'repo':repo})
+                                            {'dev': request.user, 'transaction': transaction, 'demo': demo,
+                                             'repo': repo})
             plain_message = strip_tags(html_message)
             from_email = 'codeln@codeln.com'
             to = 'dennis@codeln.com'
@@ -559,9 +630,10 @@ def update_finishedopencall(request, project_id, transaction_id):
             candidatesproject = candidatesprojects.objects.get(id=project_id)
             candidatesproject.stage = 'project-completed'
             candidatesproject.save()
-            submit = submissions(candidate=request.user,transaction=transaction,demo=demo,repo=repo)
+            submit = submissions(candidate=request.user, transaction=transaction, demo=demo, repo=repo)
             submit.save()
     return HttpResponseRedirect('/projectdetails/%s' % project_id)
+
 
 def pricing(request):
     return render(request, 'frontend/pricing.html')
@@ -571,35 +643,36 @@ def dev(request):
     return render(request, 'frontend/dev.html')
 
 
-
 def passedquizzes(request):
     taken = TakenQuiz.objects.all()
-    return render(request, 'frontend/recruiter/takenquizzes.html',{'taken':taken})
+    return render(request, 'frontend/recruiter/takenquizzes.html', {'taken': taken})
+
+
 def failedquizzes(request):
     taken = TakenQuiz.objects.all()
-    return render(request, 'frontend/recruiter/failed.html',{'taken':taken})
+    return render(request, 'frontend/recruiter/failed.html', {'taken': taken})
+
 
 def howitworks(request):
     return render(request, 'frontend/how.html')
 
 
-def report(request,candidate_id,transaction_id):
+def report(request, candidate_id, transaction_id):
     user = User.objects.get(id=candidate_id)
-    report =Report.objects.get(candidate_id=candidate_id,transaction_id=transaction_id)
+    report = Report.objects.get(candidate_id=candidate_id, transaction_id=transaction_id)
     transaction = Transaction.objects.get(id=transaction_id)
     print(type(report.keycompitency[0]))
-    return render(request, 'frontend/recruiter/report.html', {'user': user, 'transaction': transaction,'report':report})
+    return render(request, 'frontend/recruiter/report.html',
+                  {'user': user, 'transaction': transaction, 'report': report})
+
 
 @login_required
 def onboarddevs(request):
-
-
     return redirect(reverse('frontend:seedevs'))
+
 
 @login_required
 def onboardrecruiters(request):
-
-
     return redirect(reverse('frontend:seerecruiters'))
 
 
@@ -619,39 +692,39 @@ def sample(request):
     return render(request, 'frontend/sample.html')
 
 
-def page_404(request,exception=None):
+def page_404(request, exception=None):
     return render(request, 'frontend/error_pages/404.html')
 
 
 def page_500(request):
     return render(request, 'frontend/error_pages/500.html')
 
+
 @login_required
 def seedevs(request):
-
-    developers=User.objects.filter(profile__user_type='developer').order_by('-date_joined')
-
+    developers = User.objects.filter(profile__user_type='developer').order_by('-date_joined')
 
     return render(request, 'frontend/recruiter/devlist.html', {'developers': developers})
 
 
 @login_required
 def seerecruiters(request):
-
     recruiters = User.objects.filter(profile__user_type='recruiter').order_by('-date_joined')
 
-
     return render(request, 'frontend/recruiter/recruiterslist.html', {'payers': recruiters})
+
 
 @login_required
 def manageprojects(request):
     projects = Project.objects.all()
     return render(request, 'frontend/recruiter/projects.html', {'projects': projects})
 
+
 @login_required
 def managetransactions(request):
     transactions = Transaction.objects.all()
     return render(request, 'frontend/recruiter/transactions.html', {'transactions': transactions})
+
 
 @login_required
 def editproject(request, project_id):
@@ -665,10 +738,13 @@ def editproject(request, project_id):
     return render(request, 'frontend/recruiter/editproject.html',
                   {'project': project, 'form': form})
 
+
 @login_required
 def deleteproject(request, project_id):
     Project.objects.filter(id=project_id).delete()
     return redirect('frontend:manageprojects')
+
+
 @login_required
 def addproject(request):
     form = EditProjectForm(request.POST or None)
@@ -676,64 +752,74 @@ def addproject(request):
         form.save()
         return redirect('frontend:manageprojects')
     return render(request, 'frontend/recruiter/addproject.html',
-                  { 'form': form})
+                  {'form': form})
+
 
 @login_required
 def edittransactions(request, transaction_id):
     transaction = Transaction.objects.get(id=transaction_id)
-    candidates =candidatesprojects.objects.filter(transaction_id=transaction_id).order_by('-stage')
-    withreports=Report.objects.filter(transaction_id=transaction_id)
-    reports=[]
-    without=[]
+    candidates = candidatesprojects.objects.filter(transaction_id=transaction_id).order_by('-stage')
+    withreports = Report.objects.filter(transaction_id=transaction_id)
+    reports = []
+    without = []
     for onewithreport in withreports:
         reports.append(onewithreport.candidate_id)
     for all in candidates:
         without.append(all.candidate_id)
 
-    withoutreportslist=list(set(without)-set(reports))
-    withoutreport=candidatesprojects.objects.filter(candidate_id__in=withoutreportslist,transaction_id=transaction_id).order_by('-stage')
-    return render(request, 'frontend/recruiter/edittransaction.html',{'transaction':transaction,'candidates':withreports,'withoutreport':withoutreport})
+    withoutreportslist = list(set(without) - set(reports))
+    withoutreport = candidatesprojects.objects.filter(candidate_id__in=withoutreportslist,
+                                                      transaction_id=transaction_id).order_by('-stage')
+    return render(request, 'frontend/recruiter/edittransaction.html',
+                  {'transaction': transaction, 'candidates': withreports, 'withoutreport': withoutreport})
+
+
 @login_required
-def deletetransaction(request,transaction_id):
+def deletetransaction(request, transaction_id):
     OpenCall.objects.filter(transaction_id=transaction_id).delete()
     Transaction.objects.filter(id=transaction_id).delete()
     Candidate.objects.filter(transaction_id=transaction_id).delete()
     return redirect('frontend:managetransactions')
-def closetransaction(request,transaction_id):
+
+
+def closetransaction(request, transaction_id):
     project = Transaction.objects.get(id=transaction_id)
     project.closed = True
     project.save()
     return redirect('frontend:managetransactions')
+
+
 @login_required
 def buildproject(request):
     return render(request, 'classroom/students/worldprojects.html')
+
+
 @login_required
 def calltoapply(request):
-    alltransactions=Transaction.objects.filter(stage='complete').filter(closed=False)
-    complete=[]
+    alltransactions = Transaction.objects.filter(stage='complete').filter(closed=False)
+    complete = []
     for onetransaction in alltransactions:
         complete.append(onetransaction)
 
     allopencalls = OpenCall.objects.all()
-    opencalls=[]
+    opencalls = []
     for oneopencall in allopencalls:
         opencalls.append(oneopencall.transaction)
 
-    payedopencalls = set(complete)&set(opencalls)
+    payedopencalls = set(complete) & set(opencalls)
     payed = list(payedopencalls)
 
     opencallapplied = Applications.objects.filter(candidate=request.user)
-    applied=[]
+    applied = []
     for opencall in opencallapplied:
         applied.append(opencall.transaction)
-    opportunities=list(set(payed)-set(applied))
+    opportunities = list(set(payed) - set(applied))
 
     student = Profile.objects.get(id=request.user.id)
     takenquizzes = TakenQuiz.objects.filter(student_id=student)
-    allquizid=[]
+    allquizid = []
     for two in takenquizzes:
         allquizid.append(two.quiz.id)
-
 
     allsubjectstaken = []
     for onequiz in takenquizzes:
@@ -747,38 +833,39 @@ def calltoapply(request):
         for onestudentquiz in allstudentquizzes:
             langs[onestudentquiz.quiz.subject.name] = onestudentquiz.quiz.subject.name
     passedquizzes = TakenQuiz.objects.filter(score__gte=50).filter(student_id=student)
-    passedquizid=[]
+    passedquizid = []
     for one in passedquizzes:
         passedquizid.append(one.quiz.id)
     quizzes = Quiz.objects.all()
     qualified = {}
-    unqualified ={}
+    unqualified = {}
     for onepassedquiz in passedquizzes:
         for opportunity in opportunities:
             if opportunity.framework.name == onepassedquiz.quiz.name:
-                qualified[opportunity]=onepassedquiz
-    qualifiedtransactions=[]
-    for key,value in qualified.items():
+                qualified[opportunity] = onepassedquiz
+    qualifiedtransactions = []
+    for key, value in qualified.items():
         qualifiedtransactions.append(key)
-    unqualifiedtransactions =list(set(opportunities)-set(qualified))
+    unqualifiedtransactions = list(set(opportunities) - set(qualified))
 
-    openopportunities ={}
+    openopportunities = {}
     for oneunqualified in unqualifiedtransactions:
         for quizmoja in quizzes:
             if oneunqualified.framework.name == quizmoja.name:
-                openopportunities[oneunqualified]=quizmoja
+                openopportunities[oneunqualified] = quizmoja
+
+    return render(request, 'classroom/students/opencalls.html', {'opportunities': opportunities,
+                                                                 'opencallapplied': opencallapplied,
+                                                                 'langs': langs, 'quizzes': quizzes,
+                                                                 'passedquizzes': passedquizzes, 'qualified': qualified,
+                                                                 'unqualifiedtransactions': openopportunities})
 
 
-    return render(request, 'classroom/students/opencalls.html',{'opportunities':opportunities,
-                                                                'opencallapplied':opencallapplied,
-                                                                'langs':langs,'quizzes':quizzes,'passedquizzes':passedquizzes,'qualified':qualified,
-                                                                'unqualifiedtransactions':openopportunities})
 @login_required
-def apply(request,opportunity_id):
-    language =OpenCall.objects.get(transaction=opportunity_id)
+def apply(request, opportunity_id):
+    language = OpenCall.objects.get(transaction=opportunity_id)
     student = Profile.objects.get(id=request.user.id)
     passedquizz = TakenQuiz.objects.filter(score__gte=50).filter(student_id=student)
-
 
     allsubjectspassed = []
     for d in passedquizz:
@@ -786,43 +873,45 @@ def apply(request,opportunity_id):
 
     uniquesubjects = list(set(allsubjectspassed))
 
-
     for pa in uniquesubjects:
-        blu=TakenQuiz.objects.filter(quiz__subject=pa).filter(student_id=student)
-        doublequizzes =[]
+        blu = TakenQuiz.objects.filter(quiz__subject=pa).filter(student_id=student)
+        doublequizzes = []
         for paz in blu:
             doublequizzes.append(paz.score)
 
-
         if pa.name == language.transaction.framework.name:
-            qualifiedcandidate = Applications(recruiter=language.recruiter,transaction=language.transaction,
-                                              project=language.project,candidate=request.user,stage='application sent',score=max(doublequizzes))
+            qualifiedcandidate = Applications(recruiter=language.recruiter, transaction=language.transaction,
+                                              project=language.project, candidate=request.user,
+                                              stage='application sent', score=max(doublequizzes))
 
             qualifiedcandidate.save()
 
-
-
-
     return redirect('frontend:calltoapply')
+
+
 @login_required
-def opencalltracker(request,trans_id):
+def opencalltracker(request, trans_id):
     candidatespicked = Candidate.objects.filter(transaction_id=trans_id)
 
     candidates = Applications.objects.filter(transaction=trans_id).order_by('-score')
-    return render(request,'frontend/recruiter/opencall.html',{'candidates':candidates,'trans_id':trans_id,'picked':candidatespicked})
+    return render(request, 'frontend/recruiter/opencall.html',
+                  {'candidates': candidates, 'trans_id': trans_id, 'picked': candidatespicked})
+
+
 @login_required
-def pickcandidates(request,trans_id,candidate_id):
-    candidate =User.objects.get(id=candidate_id)
-    transaction =Transaction.objects.get(id=trans_id)
-    application= Applications.objects.filter(transaction = trans_id).filter(candidate_id=candidate_id).get()
+def pickcandidates(request, trans_id, candidate_id):
+    candidate = User.objects.get(id=candidate_id)
+    transaction = Transaction.objects.get(id=trans_id)
+    application = Applications.objects.filter(transaction=trans_id).filter(candidate_id=candidate_id).get()
     application.stage = 'accepted'
-    newcandidate=Candidate(email=application.candidate.email,first_name=application.candidate.first_name,last_name=application.candidate.last_name,transaction=transaction)
+    newcandidate = Candidate(email=application.candidate.email, first_name=application.candidate.first_name,
+                             last_name=application.candidate.last_name, transaction=transaction)
     newcandidate.save()
     application.save()
 
     subject = 'Accepted for next stage'
     html_message = render_to_string('invitations/email/opencallaccepted.html',
-                                    {'dev': candidate,'company':transaction})
+                                    {'dev': candidate, 'company': transaction})
     plain_message = strip_tags(html_message)
     from_email = 'codeln@codeln.com'
     to = candidate.email
@@ -852,6 +941,7 @@ def portfolio(request):
                    'experiences': experiences,
                    'skills': skills, 'about_form': about_form})
 
+
 @login_required
 def newproject(request):
     if request.method == 'POST':
@@ -861,10 +951,10 @@ def newproject(request):
             description = myprojects.cleaned_data['description']
             repo = myprojects.cleaned_data['repository_link']
             demo = myprojects.cleaned_data['demo_link']
-            newprojo =Portfolio(candidate=request.user,demo_link=demo,repository_link=repo,title=title,description=description)
+            newprojo = Portfolio(candidate=request.user, demo_link=demo, repository_link=repo, title=title,
+                                 description=description)
             newprojo.save()
     return redirect(reverse('frontend:portfolio'))
-
 
 
 @login_required
@@ -877,17 +967,18 @@ def experience(request):
             description = new_experience.cleaned_data['description']
             location = new_experience.cleaned_data['location']
             duration = new_experience.cleaned_data['duration']
-            experience = Experience(candidate=request.user,title=title,description=description,company=company,location=location,duration=duration)
+            experience = Experience(candidate=request.user, title=title, description=description, company=company,
+                                    location=location, duration=duration)
             experience.save()
             return redirect(reverse('frontend:portfolio'))
         else:
             return redirect(reverse('frontend:portfolio'))
 
-
     return redirect(reverse('frontend:portfolio'))
 
+
 @login_required
-def editportfolioproject(request,project_id):
+def editportfolioproject(request, project_id):
     instance = get_object_or_404(Portfolio, id=project_id)
     project = Portfolio.objects.get(id=project_id)
     form = Portfolio_form(request.POST or None, instance=instance)
@@ -895,42 +986,42 @@ def editportfolioproject(request,project_id):
         form.save()
         return redirect('frontend:portfolio')
 
-    return render(request, 'frontend/developer/editproject.html',{'project': project,'form':form})
-
-
+    return render(request, 'frontend/developer/editproject.html', {'project': project, 'form': form})
 
 
 def competitions(request):
-    qualifys={}
+    qualifys = {}
     try:
-        transaction =Transaction.objects.get(user_id=760)
+        transaction = Transaction.objects.get(user_id=760)
         if request.user.is_authenticated:
             try:
                 hi = Applications.objects.get(candidate=request.user, transaction_id=transaction.id)
-                qualifys=hi
+                qualifys = hi
             except Applications.DoesNotExist:
                 qualifys = None
     except Transaction.DoesNotExist:
-        transaction=None
+        transaction = None
     quiz = Quiz.objects.get(id=12)
-    passedquizzes={}
+    passedquizzes = {}
     if request.user.is_authenticated:
 
-        if request.user.profile.user_type=='developer':
+        if request.user.profile.user_type == 'developer':
             student = Profile.objects.get(id=request.user.id)
             try:
-                passedquizzes = TakenQuiz.objects.get(score__gte=50,student_id=student.id,quiz_id=12)
+                passedquizzes = TakenQuiz.objects.get(score__gte=50, student_id=student.id, quiz_id=12)
             except TakenQuiz.DoesNotExist:
-                passedquizzes=None
+                passedquizzes = None
 
-    return render(request, 'frontend/recruiter/competitions.html',{'transaction':transaction,
-                                                                   'qualify':qualifys,'passedquizzes':passedquizzes,'quiz':quiz})
+    return render(request, 'frontend/recruiter/competitions.html', {'transaction': transaction,
+                                                                    'qualify': qualifys, 'passedquizzes': passedquizzes,
+                                                                    'quiz': quiz})
+
+
 @login_required
-def placeapplication(request,transaction_id):
-    language =OpenCall.objects.get(transaction=transaction_id)
+def placeapplication(request, transaction_id):
+    language = OpenCall.objects.get(transaction=transaction_id)
     student = Profile.objects.get(id=request.user.id)
     passedquizz = TakenQuiz.objects.filter(score__gte=50).filter(student_id=student)
-
 
     allsubjectspassed = []
     for d in passedquizz:
@@ -938,16 +1029,16 @@ def placeapplication(request,transaction_id):
 
     uniquesubjects = list(set(allsubjectspassed))
 
-
     for pa in uniquesubjects:
-        blu=TakenQuiz.objects.filter(quiz__subject=pa).filter(student_id=student)
-        doublequizzes =[]
+        blu = TakenQuiz.objects.filter(quiz__subject=pa).filter(student_id=student)
+        doublequizzes = []
         for paz in blu:
             doublequizzes.append(paz.score)
 
-
-        if pa.name == language.transaction.framework.language.name or  pa.name == language.transaction.framework.name:  #TODO: let it be explcitly for framework if pa.name==language.project.framework
-            qualifiedcandidate = Applications(recruiter=language.recruiter,transaction=language.transaction,project=language.project,candidate=request.user,stage='application sent',score=max(doublequizzes))
+        if pa.name == language.transaction.framework.language.name or pa.name == language.transaction.framework.name:  # TODO: let it be explcitly for framework if pa.name==language.project.framework
+            qualifiedcandidate = Applications(recruiter=language.recruiter, transaction=language.transaction,
+                                              project=language.project, candidate=request.user,
+                                              stage='application sent', score=max(doublequizzes))
 
             qualifiedcandidate.save()
             subject = 'Application received'
@@ -960,28 +1051,36 @@ def placeapplication(request,transaction_id):
             send_mail(subject, message, email_from, [to])
 
     return redirect('frontend:competitions')
+
+
 def about(request):
-    instance = get_object_or_404(Profile,user_id=request.user.id)
-    if request.method =='POST':
-        new_about = About(request.POST or None,instance=instance)
+    instance = get_object_or_404(Profile, user_id=request.user.id)
+    if request.method == 'POST':
+        new_about = About(request.POST or None, instance=instance)
         if new_about.is_valid():
             new_about.save()
             return redirect('frontend:portfolio')
     return redirect(reverse('frontend:portfolio'))
+
+
 @login_required
 def management(request):
-    jobs=Job.objects.all()
+    jobs = Job.objects.all()
 
-    return render(request, 'frontend/recruiter/management.html',{'jobs':jobs})
+    return render(request, 'frontend/recruiter/management.html', {'jobs': jobs})
+
+
 @login_required
-def grading(request,candidate_id,transaction_id):
+def grading(request, candidate_id, transaction_id):
     candidate = User.objects.get(id=candidate_id)
     transaction = Transaction.objects.get(id=transaction_id)
     gradingform = GradingForm()
-    return render(request, 'frontend/recruiter/grading.html',{'candidate':candidate,'transaction':transaction,'form':gradingform })
+    return render(request, 'frontend/recruiter/grading.html',
+                  {'candidate': candidate, 'transaction': transaction, 'form': gradingform})
+
 
 @login_required
-def storegrades(request,candidate_id,transaction_id):
+def storegrades(request, candidate_id, transaction_id):
     candidate = User.objects.get(id=candidate_id)
     transaction = Transaction.objects.get(id=transaction_id)
     requirements = []
@@ -1049,103 +1148,96 @@ def storegrades(request,candidate_id,transaction_id):
         score = request.POST.get('score', False);
         print(score)
         obj = Report(candidate=candidate, transaction=transaction, requirements=requirements,
-                     keycompitency=keycompitency, grading=grading, score=score,github=github)
+                     keycompitency=keycompitency, grading=grading, score=score, github=github)
         obj.save()
 
-
     return redirect('frontend:edittransactions', transaction_id)
+
+
 @login_required
 def analytics(request):
     passedtests = TakenQuiz.objects.filter(score__gte=50).annotate(month=TruncMonth('date')).values(
         'month').annotate(
         total=Count('student_id'))
-    faileddataset=[]
-    passeddatasets=[]
-    alltestdataset=[]
-    developersdataset=[]
-    recruitersdataset=[]
+    faileddataset = []
+    passeddatasets = []
+    alltestdataset = []
+    developersdataset = []
+    recruitersdataset = []
     for one in passedtests:
-        timevalue=''
-        totalvalue=''
+        timevalue = ''
+        totalvalue = ''
         for key, value in one.items():
-            if key =='month':
-                timevalue=value
-            if key =='total':
-                totalvalue=value
-        passeddatasets.append([timevalue.year,timevalue.month,totalvalue])
-    passed=(sorted(passeddatasets))
+            if key == 'month':
+                timevalue = value
+            if key == 'total':
+                totalvalue = value
+        passeddatasets.append([timevalue.year, timevalue.month, totalvalue])
+    passed = (sorted(passeddatasets))
 
-
-
-
-
-
-
-    failedtests= TakenQuiz.objects.filter(score__lt=50).annotate(month=TruncMonth('date')).values('month').annotate(
+    failedtests = TakenQuiz.objects.filter(score__lt=50).annotate(month=TruncMonth('date')).values('month').annotate(
         total=Count('student_id'))
     for one in failedtests:
-        timevalue=''
-        totalvalue=''
+        timevalue = ''
+        totalvalue = ''
         for key, value in one.items():
-            if key =='month':
-                timevalue=value
-            if key =='total':
-                totalvalue=value
-        faileddataset.append([timevalue.year,timevalue.month,totalvalue])
-    failed=(sorted(faileddataset))
-
+            if key == 'month':
+                timevalue = value
+            if key == 'total':
+                totalvalue = value
+        faileddataset.append([timevalue.year, timevalue.month, totalvalue])
+    failed = (sorted(faileddataset))
 
     alltested = TakenQuiz.objects.annotate(month=TruncMonth('date')).values('month').annotate(
         total=Count('student_id'))
     for one in alltested:
-        timevalue=''
-        totalvalue=''
+        timevalue = ''
+        totalvalue = ''
         for key, value in one.items():
-            if key =='month':
-                timevalue=value
-            if key =='total':
-                totalvalue=value
-        alltestdataset.append([timevalue.year,timevalue.month,totalvalue])
-    alltests=(sorted(alltestdataset))
+            if key == 'month':
+                timevalue = value
+            if key == 'total':
+                totalvalue = value
+        alltestdataset.append([timevalue.year, timevalue.month, totalvalue])
+    alltests = (sorted(alltestdataset))
 
-
-    alldevelopers=User.objects.filter(profile__user_type='developer').annotate(month=TruncMonth('date_joined')).values('month').annotate(
+    alldevelopers = User.objects.filter(profile__user_type='developer').annotate(
+        month=TruncMonth('date_joined')).values('month').annotate(
         total=Count('id'))
     for one in alldevelopers:
-        timevalue=''
-        totalvalue=''
+        timevalue = ''
+        totalvalue = ''
         for key, value in one.items():
-            if key =='month':
-                timevalue=value
-            if key =='total':
-                totalvalue=value
-        developersdataset.append([timevalue.year,timevalue.month,totalvalue])
-    developers=(sorted(developersdataset))
+            if key == 'month':
+                timevalue = value
+            if key == 'total':
+                totalvalue = value
+        developersdataset.append([timevalue.year, timevalue.month, totalvalue])
+    developers = (sorted(developersdataset))
 
-    allrecruiters = User.objects.filter(profile__user_type='recruiter').annotate(month=TruncMonth('date_joined')).values(
+    allrecruiters = User.objects.filter(profile__user_type='recruiter').annotate(
+        month=TruncMonth('date_joined')).values(
         'month').annotate(
         total=Count('id'))
     for one in allrecruiters:
-        timevalue=''
-        totalvalue=''
+        timevalue = ''
+        totalvalue = ''
         for key, value in one.items():
-            if key =='month':
-                timevalue=value
-            if key =='total':
-                totalvalue=value
-        recruitersdataset.append([timevalue.year,timevalue.month,totalvalue])
-    recruiters=(sorted(recruitersdataset))
+            if key == 'month':
+                timevalue = value
+            if key == 'total':
+                totalvalue = value
+        recruitersdataset.append([timevalue.year, timevalue.month, totalvalue])
+    recruiters = (sorted(recruitersdataset))
 
-    return render(request, 'frontend/recruiter/analytics.html',{'passed':passed,'failed':failed,'alltests':alltests,'developers':developers,
-                                                                'recruiters':recruiters})
+    return render(request, 'frontend/recruiter/analytics.html',
+                  {'passed': passed, 'failed': failed, 'alltests': alltests, 'developers': developers,
+                   'recruiters': recruiters})
 
 
 from .tasks import send_notification
 
+
 def testcelery(request):
     send_notification()
     return HttpResponse('completed')
-
-
-
-

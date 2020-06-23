@@ -50,6 +50,10 @@ class EnterpriseDeveloperSerializer(serializers.ModelSerializer):
 
 
 class EnterpriseDeveloperReportSerializer(serializers.ModelSerializer):
+    project_description = serializers.SerializerMethodField()
+
+    def get_project_description(self, obj:EnterpriseDeveloperReport):
+        return obj.developer.project.project.description
 
     class Meta:
         model = EnterpriseDeveloperReport

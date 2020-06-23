@@ -10,9 +10,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='profile',
-            name='salary',
-            field=models.IntegerField(null=True),
-        ),
+
     ]

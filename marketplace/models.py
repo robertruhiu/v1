@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from separatedvaluesfield.models import SeparatedValuesField
 import uuid
 from projects.models import Project
-
+from django.contrib.postgres.fields import JSONField
 
 
 class Job(models.Model):
@@ -36,6 +36,11 @@ class Job(models.Model):
         ('Mid-Level', 'Mid-Level'),
         ('Senior', 'Senior'),
     )
+    YEARS_ACTIVE_CHOICES = (
+        ('0-1', '0-1'),
+        ('1-3', '1-3'),
+        ('3-above', '3-above'),
+    )
     company = models.CharField(max_length=300)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
@@ -53,8 +58,12 @@ class Job(models.Model):
     position_filled = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
+    terms = models.BooleanField(default=False)
     deadline = models.DateTimeField(null=True, blank=True)
     tag = models.TextField(null=True, blank=True)
+    commission = models.IntegerField(default=500)
+    years_experience= models.CharField(max_length=30, choices=YEARS_ACTIVE_CHOICES, default='1-3')
+    transaction_id = models.CharField(max_length=900, null=True, blank=True)
 
 
     class Meta:
@@ -63,6 +72,14 @@ class Job(models.Model):
     def __str__(self):
         return self.title
 
+class DeveloperReport(models.Model):
+    code_base = models.URLField(null=True, blank=True)
+    requirements = JSONField(null=True,  blank=True)
+    competency = JSONField(null=True,  blank=True)
+    grading = JSONField(null=True, blank=True)
+    score = models.IntegerField(null=True, blank=True)
+    skill = models.CharField(blank=True, null=True, max_length=100)
+    report_ready = models.BooleanField(default=False)
 
 class JobApplication(models.Model):
     job = models.ForeignKey(Job, related_name='job_applications', on_delete=models.CASCADE)
@@ -75,7 +92,7 @@ class JobApplication(models.Model):
     recruiter = models.ForeignKey(Profile, related_name='jobrecruiter', on_delete=models.CASCADE,null=True,blank=True)
     test_stage = models.CharField(max_length=500, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE,null=True)
-    report = models.CharField(max_length=500, null=True)
+    report = models.ForeignKey(DeveloperReport, on_delete=models.CASCADE,null=True, blank=True)
     interviewstatus = models.CharField(max_length=500, null=True)
     eventcolor = models.CharField(max_length=100, null=True,default='blue')
     projectstarttime = models.DateTimeField(null=True, blank=True)
@@ -103,7 +120,7 @@ class DevRequest(models.Model):
     notes = models.CharField(max_length=1500, null=True)
     test_stage = models.CharField(max_length=500, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE,null=True)
-    report = models.CharField(max_length=500, null=True)
+    report = models.ForeignKey(DeveloperReport, on_delete=models.CASCADE,null=True, blank=True)
     interviewstatus = models.CharField(max_length=500, null=True)
     eventcolor = models.CharField(max_length=100, null=True, default='blue')
     projectstarttime = models.DateTimeField(null=True, blank=True)
@@ -111,6 +128,9 @@ class DevRequest(models.Model):
     offerletter = models.CharField(max_length=500, null=True)
     demolink = models.CharField(blank=True, null=True, max_length=100)
     created = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+
+
+
 
 
 

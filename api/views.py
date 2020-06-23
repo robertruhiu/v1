@@ -14,22 +14,126 @@ from rest_framework.response import Response
 from accounts.models import random_string_generator, IdeTemporalUser
 from api.models import EnterpriseAPIKey, EnterpriseProject, EnterpriseDeveloper, WebHookSubscriber
 from api.serializers import EnterpriseDeveloperReport, \
-    EnterpriseProjectSerializer, EnterpriseDeveloperReportSerializer, EnterpriseDeveloperSerializer, \
+    EnterpriseProjectSerializer, EnterpriseDeveloperSerializer, \
     EnterpriseIntermediateProjectSerializer
 
 
-def setup_finished_mail(recipient, url, ide_password, data):
-    email = 'philisiah@codeln.com'
-    # url = 'https://philisiah-news-search.codeln.com/'
-    password = 'xjE/lcuUJ0w='
-    subject = 'Hi there your test is ready!'
-    # message = f'Endpoint triggered by {recipient}- with arguments {url} - in this loop {data}'
-    # message = f'Endpoint triggered by {recipient}- with url:=>  {url} - password {ide_password}'
-    message = f'Follow the link to access your workspace {url} Login credentials are {recipient} - password {ide_password}'
-    email_from = config('EMAIL_HOST_USER')
-    request = [recipient]
-    send_mail(subject, message, email_from, request)
+def setup_finished_mail(dev_email, dev_password, dev_slug, ide_url, project_name, time_set):
+    auth = (config('GOOD_TALENT_MJ_APIKEY_PUBLIC'), config('GOOD_TALENT_MJ_APIKEY_PRIVATE'))
+    url = 'https://api.mailjet.com/v3.1/send'
+    headers = {'Content-Type': 'application/json'}
+    data = {"Messages": [
+        {
+            "From": {
+                "Email": config('GOOD_TALENT_TEST_ADMIN'),
+                "Name": "Good Talent Testing"
+            },
+            "To": [
+                {
+                    "Email": config('TEST_ADMIN'),
+                    "Name": config('TEST_ADMIN_USER')
+                }
+            ],
+            "Subject": "New Good Talent Assessment Scheduled",
+            "TextPart": f"The following user : {dev_email} has scheduled a test at {time_set}\r\n "
+                        f"for the project {project_name} and project_id is {dev_slug}"
+                        f"The user password is {dev_password}\r\n "
+                        f"Dev url is {ide_url}\r\n",
+        }
+    ]}
+    req = requests.post(url=url, auth=auth, headers=headers, data=json.dumps(data))
     return HttpResponse('OK')
+
+
+def setup_reschedule_mail(dev_email, dev_password, dev_slug, ide_url, project_name, time_set):
+    auth = (config('GOOD_TALENT_MJ_APIKEY_PUBLIC'), config('GOOD_TALENT_MJ_APIKEY_PRIVATE'))
+    url = 'https://api.mailjet.com/v3.1/send'
+    headers = {'Content-Type': 'application/json'}
+    data = {"Messages": [
+        {
+            "From": {
+                "Email": config('GOOD_TALENT_TEST_ADMIN'),
+                "Name": "Good Talent Testing"
+            },
+            "To": [
+                {
+                    "Email": config('TEST_ADMIN'),
+                    "Name": config('TEST_ADMIN_USER')
+                }
+            ],
+            "Subject": "Good Talent Assessment Rescheduled",
+            "TextPart": f"The following user : {dev_email} has rescheduled a test to {time_set}\r\n "
+                        f"for the project {project_name} and project_id is {dev_slug}"
+                        f"The user password is {dev_password}\r\n "
+                        f"Dev url is {ide_url}\r\n",
+        }
+    ]}
+    req = requests.post(url=url, auth=auth, headers=headers, data=json.dumps(data))
+    return HttpResponse('OK')
+
+
+def goodtalent_mail(recipient, name, date):
+    auth = (config('GOOD_TALENT_MJ_APIKEY_PUBLIC'), config('GOOD_TALENT_MJ_APIKEY_PRIVATE'))
+    url = 'https://api.mailjet.com/v3.1/send'
+    headers = {'Content-Type': 'application/json'}
+    data = {"Messages": [
+        {
+            "From": {
+                "Email": config('GOOD_TALENT_TEST_ADMIN'),
+                "Name": "Good Talent Testing"
+            },
+            "To": [
+                {
+                    "Email": recipient,
+                    "Name": name
+                }
+            ],
+            "Bcc": [
+                {
+                    "Email": config('TEST_ADMIN')
+                }
+            ],
+            "Subject": "Assessment Successfully Scheduled",
+            "TextPart": f"Dear {name}, you have successfully scheduled an assessment on {date}.\r\n"
+                        "15 minutes to the set time you will receive a link to your workspace in your inbox.\r\n"
+                        "Feel free to reach out if you have any questions!!\r\n"
+                        "Kind regards, Good Talent.\r\n",
+        }
+    ]}
+    req = requests.post(url=url, auth=auth, headers=headers, data=json.dumps(data))
+    return HttpResponse("Good talent email sent!")
+
+
+def goodtalent_reschedule_mail(recipient, name, date):
+    auth = (config('GOOD_TALENT_MJ_APIKEY_PUBLIC'), config('GOOD_TALENT_MJ_APIKEY_PRIVATE'))
+    url = 'https://api.mailjet.com/v3.1/send'
+    headers = {'Content-Type': 'application/json'}
+    data = {"Messages": [
+        {
+            "From": {
+                "Email": config('GOOD_TALENT_TEST_ADMIN'),
+                "Name": "Good Talent Testing"
+            },
+            "To": [
+                {
+                    "Email": recipient,
+                    "Name": name
+                }
+            ],
+            "Bcc": [
+                {
+                    "Email": config('TEST_ADMIN')
+                }
+            ],
+            "Subject": "Assessment Rescheduled",
+            "TextPart": f"Dear {name}, you have successfully rescheduled an assessment to {date}.\r\n"
+                        "15 minutes to the set time you will receive a link to your workspace in your inbox.\r\n"
+                        "Feel free to reach out if you have any questions!!\r\n"
+                        "Kind regards, Good Talent.\r\n",
+        }
+    ]}
+    req = requests.post(url=url, auth=auth, headers=headers, data=json.dumps(data))
+    return HttpResponse("Good talent email sent!")
 
 
 # Create your views here.
@@ -69,33 +173,38 @@ def schedule_test(request):
         dev, created = EnterpriseDeveloper.objects.get_or_create(username=username, email=email, project=project)
         if created:
             temp_user = IdeTemporalUser.objects.create(username=username, email=email, password=ide_password)
+            dev_password = temp_user.password
             dev.username = username
             dev.email = email
             dev.temp_user = temp_user
             dev.metadata = metadata
             dev.select_time = select_time
             dev.save()
+            url = f'http://clide.goodtalent.dev?id={dev.slug}'
             if dev.select_time.hour - datetime.datetime.now().hour < 3:
-                url = f'http://demeide.goodtalent.dev?id={dev.slug}'
-                password = ide_password
-                data = 'created loop'
-                setup_finished_mail(dev.email, url, ide_password, data)
+                goodtalent_mail(dev.email, dev.username, dev.select_time)
+                setup_finished_mail(dev.email, dev_password, dev.slug, url, project.project.name, dev.select_time)
                 return Response('You have successfully scheduled your test. A link will has been sent '
                                 'to your inbox with the workspace and further instructions on how to proceed.')
             elif dev.select_time.hour - datetime.datetime.now().hour > 3:
+                goodtalent_mail(dev.email, dev.username, dev.select_time)
+                setup_finished_mail(dev.email, dev_password, dev.slug, url, project.project.name, dev.select_time)
                 return Response('You have successfully scheduled your test. At the selected time a link will be sent '
                                 'to your inbox with the workspace url and access and further instructions on how to '
                                 'proceed.')
         else:
-            # add job to poll for email
+            dev_password = dev.temp_user.password
             dev.select_time = select_time
             dev.save()
+            url = f'http://demeide.goodtalent.dev?id={dev.slug}'
             if dev.select_time.hour - datetime.datetime.now().hour < 3:
-                url = f'http://demeide.goodtalent.dev?id={dev.slug}'
-                setup_finished_mail(dev.email, url, ide_password, data='else loop')
+                goodtalent_reschedule_mail(dev.email, dev.username, dev.select_time)
+                setup_reschedule_mail(dev.email, dev_password, dev.slug, url, project.project.name, dev.select_time)
                 return Response('You have successfully updated your time. A link has been sent '
                                 'to your inbox with the workspace and further instructions on how to proceed.')
             elif dev.select_time.hour - datetime.datetime.now().hour > 3:
+                goodtalent_reschedule_mail(dev.email, dev.username, dev.select_time)
+                setup_reschedule_mail(dev.email, dev_password, dev.slug, url, project.project.name, dev.select_time)
                 return Response('You have successfully updated your time. At the selected time a link will be sent '
                                 'to your inbox with the workspace url and access and further instructions on how to '
                                 'proceed.')
@@ -162,21 +271,21 @@ class TakenTests(generics.ListAPIView):
         return Response(serializer.data)
 
 
-@api_view(['POST'])
-@permission_classes([AllowAny, ])
-def developer_report(request):
-    if request.method == 'POST':
-        key = request.headers.get('Api-Key')
-        key_prefix, _, _ = key.split('.')
-        enterprise_api_key = EnterpriseAPIKey.objects.get_usable_keys().get(prefix=key_prefix)
-        enterprise = enterprise_api_key.enterprise
-
-        email = request.data.get('email')
-        project_id = request.data.get('project_id')
-        project = EnterpriseProject.objects.get(id=project_id)
-        dev_report = EnterpriseDeveloperReport.objects.get(developer__email=email, developer__project=project)
-        serializer = EnterpriseDeveloperReportSerializer(dev_report)
-        return Response(serializer.data)
+# @api_view(['POST'])
+# @permission_classes([AllowAny, ])
+# def developer_report(request):
+#     if request.method == 'POST':
+#         key = request.headers.get('Api-Key')
+#         key_prefix, _, _ = key.split('.')
+#         enterprise_api_key = EnterpriseAPIKey.objects.get_usable_keys().get(prefix=key_prefix)
+#         enterprise = enterprise_api_key.enterprise
+#
+#         email = request.data.get('email')
+#         project_id = request.data.get('project_id')
+#         project = EnterpriseProject.objects.get(id=project_id)
+#         dev_report = EnterpriseDeveloperReport.objects.get(developer__email=email, developer__project=project)
+#         serializer = EnterpriseDeveloperReportSerializer(dev_report)
+#         return Response(serializer.data)
 
 
 class AllReports(generics.ListAPIView):
@@ -249,7 +358,8 @@ def enterprise_test_complete(request, slug):
             'time_completed': str(enterprisedeveloper.time_completed),
         }
     }
-    r = requests.post(url=url, data=json.dumps(payload))
+    headers = {'content-type': 'application/json'}
+    r = requests.post(url=url, data=json.dumps(payload), headers=headers)
     # create_report(slug)
     return Response('test_completed')
 
@@ -263,7 +373,7 @@ def create_report(request, slug):
     # grading = request.data.get('grading')
     # score = request.data.get('score')
     # skill = request.data.get('skill')
-
+    code_base = 'https://github.com/kamranahmedse/developer-roadmap.git'
     requirements = {
         'Improved UI/UX': 'success',
         'Sign up for users at your Client\'s company': 'unsuccessful',
@@ -293,8 +403,9 @@ def create_report(request, slug):
         'time_used': '340 mins'
 
     }
-    report = EnterpriseDeveloperReport.objects.create(requirements=requirements, competency=key_competencies,
-                                                      grading=grading, developer=enterprisedev)
+    report, created = EnterpriseDeveloperReport.objects.get_or_create(code_base=code_base, requirements=requirements,
+                                                                      competency=key_competencies, grading=grading,
+                                                                      developer=enterprisedev)
     return Response('Report saved.')
 
 
@@ -314,6 +425,7 @@ def enterprise_report_ready(request, slug):
     payload = {
         "event": 'on_report_ready',
         "data": {
+            'code_base': enterprisedevreport.code_base,
             'requirements': enterprisedevreport.requirements,
             'competency': enterprisedevreport.competency,
             'grading': enterprisedevreport.grading,
@@ -322,7 +434,8 @@ def enterprise_report_ready(request, slug):
             'time_completed': str(enterprisedevreport.time_completed),
         }
     }
-    r = requests.post(url=url, data=json.dumps(payload))
+    headers = {'content-type': 'application/json'}
+    r = requests.post(url=url, data=json.dumps(payload), headers=headers)
     print(r.status_code)
     return Response('Report ready')
 
