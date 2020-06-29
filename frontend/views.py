@@ -107,7 +107,7 @@ class UserList(generics.ListAPIView):
 
 
 class Alldevs(generics.ListAPIView):
-    permission_classes = (IsAuthenticated,)
+
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
@@ -123,9 +123,8 @@ class Allrecruiters(generics.ListAPIView):
 
 @login_required
 def DevList(request):
-    permission_classes = (IsAuthenticated,)
 
-    response = requests.get('https://codelnapi.herokuapp.com/alldevs')
+    response = requests.get('http://codelnapi.herokuapp.com/alldevs')
     data = response.json()
 
     return render(request, 'frontend/recruiter/devlist.html', {'developers': data})
@@ -133,7 +132,7 @@ def DevList(request):
 
 @login_required
 def RecruiterList(request):
-    permission_classes = (IsAuthenticated,)
+
 
     response = requests.get('https://codelnapi.herokuapp.com/allrecruiters')
     data = response.json()
