@@ -11,7 +11,8 @@ from frontend.views import home,activity,tracker,update_candidateprojects,\
     editportfolioproject,about,management,grading,storegrades,analytics,ProfileUpdate,Profileget,Talentget,Experienceget,\
     Portfolioget,AllUsers,Userget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
     MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate,\
-    UserListsliced,DevList,RecruiterList,Alldevs,Allrecruiters,Mytestcenters,Talentorder,Timesetemail,Newuser,unsubscribe,Resourcecreate,Subjectresources,Resourceslikeupdate,Portfoliolikeupdate
+    UserListsliced,DevList,RecruiterList,Alldevs,Allrecruiters,Mytestcenters,Talentorder,Timesetemail,Newuser,unsubscribe,\
+    Resourcecreate,Subjectresources,Resourceslikeupdate,Portfoliolikeupdate,Wote,Wotelist
 
 from accounts.views import update_profile
 
@@ -48,6 +49,7 @@ urlpatterns = [
     path('onboardrecruiters',onboardrecruiters,name='onboardrecruiters'),
     path('seedevs',DevList,name='seedevs'),
     path('seerecruiters',RecruiterList,name='seerecruiters'),
+    path('wotelist', Wotelist, name='wotelist'),
     path('manageprojects',manageprojects,name='manageprojects'),
     path('managetransactions',managetransactions,name='managetransactions'),
     path('editproject/<int:project_id>',editproject,name='editproject'),
@@ -105,6 +107,7 @@ urlpatterns = [
     path('newselfverify/<int:pk>',Timesetemail.as_view()),
     path('newuser/<int:pk>',Newuser.as_view()),
     path('alldevs',Alldevs.as_view()),
+    path('wote',Wote.as_view()),
     path('allrecruiters',Allrecruiters.as_view()),
     path('talentorder', Talentorder, name='Talentorder'),
     path('unsubscribe/<str:token>',unsubscribe,name='unsubscribe'),
