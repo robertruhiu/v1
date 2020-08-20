@@ -110,6 +110,38 @@ class Taken(generics.ListCreateAPIView):
         student = Profile.objects.get(id=candidate_id)
         return TakenQuiz.objects.filter(student=student)
 
+class DeleteQuizAnswer(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = StudentAnswerSerializer
+
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate']
+        quiz_id = self.kwargs['quiz']
+        StudentAnswer.objects.filter(quiz_id=quiz_id, student_id=candidate_id).delete()
+
+        return StudentAnswer.objects.filter(student_id=candidate_id)
+
+
+class DeleteQuizTaken(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = TakenQuizSerializer
+
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate']
+        quiz_id = self.kwargs['quiz']
+        TakenQuiz.objects.filter(quiz_id=quiz_id,student_id=candidate_id).delete()
+
+        return TakenQuiz.objects.filter(student_id=candidate_id)
+class DeleteQuizRandom(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = RandomQuizSerializer
+
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate']
+        quiz_id = self.kwargs['quiz']
+        RandomQuiz.objects.filter(quiz_id=quiz_id,student_id=candidate_id).delete()
+
+        return RandomQuiz.objects.filter(student_id=candidate_id)
 
 
 

@@ -1,7 +1,7 @@
 from django.urls import include, path
 
 from .views import students, teachers
-from classroom.views.students import AllQuizzes,TakeQuiz,QuizQuestions,PostAnswer,UpdateRandomquiz,CalculateScore,Taken,Subjects
+from classroom.views.students import AllQuizzes,TakeQuiz,QuizQuestions,PostAnswer,UpdateRandomquiz,CalculateScore,Taken,Subjects,DeleteQuizAnswer,DeleteQuizRandom,DeleteQuizTaken
 urlpatterns = [
     path('allquizzes', AllQuizzes.as_view()),
     path('takequiz/<int:candidate>/<int:quiz>', TakeQuiz.as_view()),
@@ -11,6 +11,9 @@ urlpatterns = [
     path('score/<int:candidate>/<int:quiz>', CalculateScore.as_view()),
     path('taken/<int:candidate>', Taken.as_view()),
     path('subjects', Subjects.as_view()),
+    path('deletequizanswer/<int:candidate>/<int:quiz>',DeleteQuizAnswer.as_view()),
+    path('deleterquizrandom/<int:candidate>/<int:quiz>',DeleteQuizRandom.as_view()),
+    path('deletequiztaken/<int:candidate>/<int:quiz>',DeleteQuizTaken.as_view()),
 
 
 

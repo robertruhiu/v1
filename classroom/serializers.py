@@ -48,5 +48,6 @@ class StudentAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentAnswer
-        fields = '__all__'
+        fields = ['id','quiz','student','answer']
+
 
