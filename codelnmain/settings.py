@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import datetime
 import os
+from urllib import parse
 from builtins import bool
 
 import dj_database_url
@@ -27,13 +28,13 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-
-# SECURITY WARNING: keep the secret key used in production secret!
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,31 +44,31 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'django.contrib.admindocs',
     'accounts',
     'projects',
     'frontend',
     'taggit',
     'classroom',
     'blog',
-    'django.contrib.admindocs',
-    'cloudinary_storage',
-    'cloudinary',
     'cart',
     'transactions',
     'payments',
     'marketplace',
     'servermanagement',
     'feedback',
-    'crispy_forms',
     'rest_auth',
     'rest_auth.registration',
-
+    'remote_codeln',
     # third party libs
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
 
     # 'django_filters',
+    'cloudinary_storage',
+    'cloudinary',
+    'crispy_forms',
     'invitations',
     'allauth.socialaccount.providers.linkedin',
     'storages',
@@ -101,6 +102,73 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+ROOT_URLCONF = 'codelnmain.urls'
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'rest_auth/templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media'
+            ],
+            'debug': DEBUG,
+        },
+    },
+]
+
+WSGI_APPLICATION = 'codelnmain.wsgi.application'
+
+# Database
+# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
+
+parse.uses_netloc.append("postgres")
+
+DEFAULT_DATABASE = parse.urlparse(config('DATABASE_URL'))
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': DEFAULT_DATABASE.path[1:],
+        'USER': DEFAULT_DATABASE.username,
+        'PASSWORD': DEFAULT_DATABASE.password,
+        'HOST': DEFAULT_DATABASE.hostname,
+        'PORT': DEFAULT_DATABASE.port,
+    },
+}
+
+# Change 'default' database configuration with $DATABASE_URL.
+DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Allow all host headers
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [
+    s.strip() for s in v.split(',')], default='*')
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.0/howto/static-files/
+
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+STATIC_URL = '/static/'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_ROOT, 'static'),
+]
+
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# thirdparty app configurations
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
@@ -127,56 +195,12 @@ CORS_ORIGIN_WHITELIST = (
 
     'http://clide.codeln.com:3000',
     'http://clide.codeln.com',
-
 )
-
-
-
-ROOT_URLCONF = 'codelnmain.urls'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'rest_auth/templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media'
-            ],
-            'debug': DEBUG,
-        },
-    },
-]
-
-WSGI_APPLICATION = 'codelnmain.wsgi.application'
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd2crlmu5kuvt7f',
-        'USER': 'mheusicbswonlr',
-        'PASSWORD': config('PASSWORD', default='PASSWORD'),
-        'HOST': 'ec2-54-227-251-33.compute-1.amazonaws.com',
-        'PORT': '5432',
-    }
-}
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -201,31 +225,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
-# Change 'default' database configuration with $DATABASE_URL.
-DATABASES['default'].update(dj_database_url.config(conn_max_age=500, ssl_require=True))
-
-# Honor the 'X-Forwarded-Proto' header for request.is_secure()
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# Allow all host headers
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [
-    s.strip() for s in v.split(',')], default='*')
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-STATIC_URL = '/static/'
-
-# Extra places for collectstatic to find static files.
-STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, 'static'),
-]
-
-# Simplified static file serving.
-# https://warehouse.python.org/project/whitenoise/
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 JWT_AUTH = {
     'JWT_VERIFY': True,

@@ -36,29 +36,29 @@ from .serializers import UserSerializer, ProfileSerializer, ExperienceSerializer
 
 CharField.register_lookup(Length, 'length')
 
-# filteredcandidates = []
-filteredcandidates = Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).exclude(student=True).filter(user_type='developer')
-
-candidate_list =[]
-for onecandidate in filteredcandidates:
-    candidate_list.append(onecandidate.pk)
-
-# taken = []
-# portfolio = []
-# experience = []
-taken = TakenQuiz.objects.select_related('student').filter(student__in=candidate_list)
-portfolio = Portfolio.objects.select_related('candidate').filter(candidate__in=candidate_list)
-experience = Experience.objects.select_related('candidate').filter(candidate__in=candidate_list)
-takenlist = []
-portfoliolist = []
-experiencelist = []
-for onetaken in taken:
-    takenlist.append(onetaken.student.id)
-for oneportfolio in portfolio:
-    portfoliolist.append(oneportfolio.candidate.id)
-for oneexperience in experience:
-    experiencelist.append(oneexperience.candidate.id)
-candidateslist = list(set(portfoliolist + experiencelist + takenlist))
+# # filteredcandidates = []
+# filteredcandidates = Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).exclude(student=True).filter(user_type='developer')
+#
+# candidate_list =[]
+# for onecandidate in filteredcandidates:
+#     candidate_list.append(onecandidate.pk)
+#
+# # taken = []
+# # portfolio = []
+# # experience = []
+# taken = TakenQuiz.objects.select_related('student').filter(student__in=candidate_list)
+# portfolio = Portfolio.objects.select_related('candidate').filter(candidate__in=candidate_list)
+# experience = Experience.objects.select_related('candidate').filter(candidate__in=candidate_list)
+# takenlist = []
+# portfoliolist = []
+# experiencelist = []
+# for onetaken in taken:
+#     takenlist.append(onetaken.student.id)
+# for oneportfolio in portfolio:
+#     portfoliolist.append(oneportfolio.candidate.id)
+# for oneexperience in experience:
+#     experiencelist.append(oneexperience.candidate.id)
+# candidateslist = list(set(portfoliolist + experiencelist + takenlist))
 
 
 def Talentorder(request):
