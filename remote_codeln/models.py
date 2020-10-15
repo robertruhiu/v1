@@ -18,7 +18,8 @@ class RemoteProject(models.Model):
     title = models.CharField(max_length=120)
     description = models.TextField(blank=True)
     slug = models.SlugField(blank=True, max_length=200)
-    client = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='client' , blank=True, null=True)
+    tools = models.TextField(null=True, blank=True)
+    client = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='client', blank=True, null=True)
     posted_by = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
     project_type = models.CharField(max_length=40, choices=PROJECT_TYPE, default='website')
     team_size = models.CharField(max_length=20, choices=(
@@ -78,6 +79,7 @@ class Bid(models.Model):
     developer = models.ForeignKey(RemoteDeveloper, on_delete=models.CASCADE, blank=True, null=True)
     project = models.ForeignKey(RemoteProject, on_delete=models.CASCADE, blank=True, null=True)
     timeline = models.DurationField(default=timedelta(days=14))
+    tools = models.TextField(null=True, blank=True)
     shortlisted = models.BooleanField(default=False)
     accepted = models.BooleanField(default=False)
 
