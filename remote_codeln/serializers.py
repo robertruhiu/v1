@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from remote_codeln.models import RemoteProject, Bid, EscrowPayment
+from remote_codeln.models import RemoteProject, Bid, EscrowPayment, Issue
 
 
 class RemoteProjectSerializer(serializers.ModelSerializer):
@@ -17,3 +17,7 @@ class BidSerializer(serializers.ModelSerializer):
 class EscrowPaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = EscrowPayment
+
+class IssueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Issue
