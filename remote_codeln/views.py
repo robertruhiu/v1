@@ -32,6 +32,10 @@ class CreateBidView(generics.CreateAPIView):
     def get_queryset(self):
         return Bid.objects.all()
 
+class BidUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    pass
+
+
 
 class BidsListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, ]

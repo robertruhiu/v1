@@ -14,7 +14,7 @@ urlpatterns = [
                 path('create/', views.CreateBidView.as_view()),
                 # TODO: view for single bid view
                 path('all/', views.BidsListView.as_view()),
-                path('update/', views.BidView.as_view()),
+                path('update/', views.BidUpdateView.as_view()),
 
             ])),
             path('contract/', include([
