@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from remote_codeln.models import RemoteProject, Bid, EscrowPayment, \
-    Issue,ProjectFeature,FeatureStory,Tasks,Comments,RemoteDeveloper,Team,Files
+    Issue,ProjectFeature,FeatureStory,Tasks,Comments,RemoteDeveloper,Team,Files,Signatures
 from frontend.serializers import ProfileSerializer
 
 class RemoteProjectSerializer(serializers.ModelSerializer):
@@ -89,4 +89,9 @@ class TeamSerializer(serializers.ModelSerializer):
 class FilesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Files
+        fields = '__all__'
+
+class SignaturesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Signatures
         fields = '__all__'

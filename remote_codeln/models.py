@@ -33,11 +33,15 @@ class RemoteProject(models.Model):
     stage =models.TextField(null=True, blank=True)
     assigned_to = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='developer', blank=True, null=True)
     verified = models.BooleanField(default=False)
+    sign_date = models.DateTimeField(blank=True, null=True)
 
 
 class RemoteDeveloper(models.Model):
     project = models.ForeignKey(RemoteProject, on_delete=models.CASCADE)
     developer = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
+class Signatures(models.Model):
+    signature = models.TextField(blank=True)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
 
 
 class ProjectFeature(models.Model):

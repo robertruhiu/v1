@@ -79,6 +79,11 @@ urlpatterns = [
                 path('fetchfiles/<int:project_id>', views.ProjectFilesGet.as_view()),
                 path('updatefile/<int:pk>', views.ProjectFilesUpdate.as_view()),
 
+            ])),
+            path('signatures/', include([
+                path('create/', views.CreateSignatureEntryView.as_view()),
+                path('fetchsignature/<int:owner>', views.SignatureGet.as_view()),
+                path('updatesignature/<int:pk>', views.SignatureUpdate.as_view()),
 
             ])),
             path('contract/', include([

@@ -9,10 +9,10 @@ from rest_framework import generics
 # Create your views here.
 from accounts.models import Profile
 from remote_codeln.models import RemoteProject, Bid, Issue, EscrowPayment,FeatureStory,ProjectFeature,Tasks,Comments,\
-    RemoteDeveloper,Team,Files
+    RemoteDeveloper,Team,Files,Signatures
 from remote_codeln.serializers import RemoteProjectSerializer, BidSerializer ,EscrowPaymentSerializer, \
     IssueSerializer,FeatureSerializer,StorySerializer,BidSerializerBasic,TaskSerializer,CommentSerializer\
-    ,CommentSerializerBasic,RemoteDeveloperSerializer,IssueSerializerDetail,TeamSerializer,TaskSerializerUpdater,FilesSerializer
+    ,CommentSerializerBasic,RemoteDeveloperSerializer,IssueSerializerDetail,TeamSerializer,TaskSerializerUpdater,FilesSerializer,SignaturesSerializer
 from frontend.serializers import UserSerializer
 from django.contrib.auth.models import User
 # project
@@ -363,6 +363,26 @@ class ProjectFilesUpdate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Files.objects.all()
     serializer_class = FilesSerializer
+# signatures
+class CreateSignatureEntryView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = SignaturesSerializer
+
+    def get_queryset(self):
+        return Signatures.objects.all()
+
+class SignatureGet(generics.RetrieveAPIView):
+    queryset = Signatures.objects.all()
+    lookup_field = 'owner'
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = SignaturesSerializer
+
+
+
+class SignatureUpdate(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Signatures.objects.all()
+    serializer_class = SignaturesSerializer
 
 class CreateContractView(generics.CreateAPIView):
     pass
