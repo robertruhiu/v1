@@ -195,6 +195,8 @@ CORS_ORIGIN_WHITELIST = (
 
     'http://clide.codeln.com:3000',
     'http://clide.codeln.com',
+    'https://remotestaging.herokuapp.com',
+    'http://remotestaging.herokuapp.com'
 )
 
 AUTHENTICATION_BACKENDS = (
