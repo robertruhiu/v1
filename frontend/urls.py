@@ -1,23 +1,24 @@
 from django.urls import path
 
 from frontend.views import index, UserList
-from frontend.views import home,activity,tracker,update_candidateprojects,\
-    sample,inprogress,projectinvites,update_finished,invites,\
-    projectdetails,pendingproject,terms,dev,pricing,howitworks,privacy,\
-    report,credits,onboarddevs,onboardrecruiters,seedevs,seerecruiters,manageprojects,managetransactions,\
-    editproject,deleteproject,addproject,edittransactions\
-    ,deletetransaction,buildproject,calltoapply,apply,opencalltracker,competitions,newproject,\
-    passedquizzes,failedquizzes,pickcandidates,update_finishedopencall,portfolio,experience,closetransaction,\
-    editportfolioproject,about,management,grading,storegrades,analytics,ProfileUpdate,Profileget,Talentget,Experienceget,\
-    Portfolioget,AllUsers,Userget,ProjectAssignment,SelfAssesmentCreate,MySelfAssesments,\
-    MySelfAssesmentsproject,MySelfAssesmentsprojectupdater,Portfoliocreate,Portfolioupdate,Experiencecreate,Experienceupdate,\
-    UserListsliced,DevList,RecruiterList,Alldevs,Allrecruiters,Mytestcenters,Talentorder,Timesetemail,Newuser,unsubscribe,Resourcecreate,Subjectresources,Resourceslikeupdate,Portfoliolikeupdate
+from frontend.views import home, activity, tracker, update_candidateprojects, \
+    sample, inprogress, projectinvites, update_finished, invites, \
+    projectdetails, pendingproject, terms, dev, pricing, howitworks, privacy, \
+    report, credits, onboarddevs, onboardrecruiters, seedevs, seerecruiters, manageprojects, managetransactions, \
+    editproject, deleteproject, addproject, edittransactions \
+    , deletetransaction, buildproject, calltoapply, apply, opencalltracker, competitions, newproject, \
+    passedquizzes, failedquizzes, pickcandidates, update_finishedopencall, portfolio, experience, closetransaction, \
+    editportfolioproject, about, management, grading, storegrades, analytics, ProfileUpdate, Profileget, Talentget, \
+    Experienceget, \
+    Portfolioget, AllUsers, Userget, ProjectAssignment, SelfAssesmentCreate, MySelfAssesments, \
+    MySelfAssesmentsproject, MySelfAssesmentsprojectupdater, Portfoliocreate, Portfolioupdate, Experiencecreate, \
+    Experienceupdate, \
+    UserListsliced, DevList, RecruiterList, Alldevs, Allrecruiters, Mytestcenters, Talentorder, Timesetemail, Newuser, \
+    unsubscribe, Resourcecreate, Subjectresources, Resourceslikeupdate, Portfoliolikeupdate,RemoteDevList
 
 from accounts.views import update_profile
 
 app_name = 'frontend'
-
-
 
 urlpatterns = [
     path('', index, name='index'),
@@ -44,39 +45,40 @@ urlpatterns = [
          name='update_finishedopencall'),
     path('update_candidateprojects/<int:candidateproject_id>/<int:transaction_id>', update_candidateprojects,
          name='update_candidateprojects'),
-    path('onboarddevs',onboarddevs,name='onboarddevs'),
-    path('onboardrecruiters',onboardrecruiters,name='onboardrecruiters'),
-    path('seedevs',DevList,name='seedevs'),
-    path('seerecruiters',RecruiterList,name='seerecruiters'),
-    path('manageprojects',manageprojects,name='manageprojects'),
-    path('managetransactions',managetransactions,name='managetransactions'),
-    path('editproject/<int:project_id>',editproject,name='editproject'),
-    path('deleteproject/<int:project_id>',deleteproject,name='deleteproject'),
-    path('edittransactions/<int:transaction_id>',edittransactions,name='edittransactions'),
-    path('deletetransaction/<int:transaction_id>',deletetransaction,name='deletetransaction'),
-    path('closetransaction/<int:transaction_id>',closetransaction,name='closetransaction'),
-    path('addproject',addproject,name='addproject'),
-    path('calltoapply',calltoapply,name='calltoapply'),
-    path('buildproject',buildproject,name='buildproject'),
-    path('passedquizzes',passedquizzes,name='passedquizzes'),
-    path('failedquizzes',failedquizzes,name='failedquizzes'),
-    path('competitions',competitions,name='competitions'),
-    path('apply/<int:opportunity_id>',apply,name='apply'),
-    path('opencalltracker/<int:trans_id>',opencalltracker,name='opencalltracker'),
-    path('pickcandidates/<int:trans_id>/<int:candidate_id>',pickcandidates,name='pickcandidates'),
+    path('onboarddevs', onboarddevs, name='onboarddevs'),
+    path('onboardrecruiters', onboardrecruiters, name='onboardrecruiters'),
+    path('seedevs', DevList, name='seedevs'),
+    path('seerecruiters', RecruiterList, name='seerecruiters'),
+    path('manageprojects', manageprojects, name='manageprojects'),
+    path('managetransactions', managetransactions, name='managetransactions'),
+    path('editproject/<int:project_id>', editproject, name='editproject'),
+    path('deleteproject/<int:project_id>', deleteproject, name='deleteproject'),
+    path('edittransactions/<int:transaction_id>', edittransactions, name='edittransactions'),
+    path('deletetransaction/<int:transaction_id>', deletetransaction, name='deletetransaction'),
+    path('closetransaction/<int:transaction_id>', closetransaction, name='closetransaction'),
+    path('addproject', addproject, name='addproject'),
+    path('calltoapply', calltoapply, name='calltoapply'),
+    path('buildproject', buildproject, name='buildproject'),
+    path('passedquizzes', passedquizzes, name='passedquizzes'),
+    path('failedquizzes', failedquizzes, name='failedquizzes'),
+    path('competitions', competitions, name='competitions'),
+    path('apply/<int:opportunity_id>', apply, name='apply'),
+    path('opencalltracker/<int:trans_id>', opencalltracker, name='opencalltracker'),
+    path('pickcandidates/<int:trans_id>/<int:candidate_id>', pickcandidates, name='pickcandidates'),
 
-    path('portfolio',portfolio,name='portfolio'),
-    path('analytics',analytics,name='analytics'),
+    path('portfolio', portfolio, name='portfolio'),
+    path('analytics', analytics, name='analytics'),
 
-    path('newproject',newproject,name='newproject'),
-    path('experience',experience,name='experience'),
-    path('editportfolioproject/<int:project_id>',editportfolioproject,name='editportfolioproject'),
-    path('about',about,name='about'),
-    path('management',management,name='management'),
-    path('grading/<int:candidate_id>/<int:transaction_id>',grading,name='grading'),
-    path('storegrades/<int:candidate_id>/<int:transaction_id>',storegrades,name='storegrades'),
+    path('newproject', newproject, name='newproject'),
+    path('experience', experience, name='experience'),
+    path('editportfolioproject/<int:project_id>', editportfolioproject, name='editportfolioproject'),
+    path('about', about, name='about'),
+    path('management', management, name='management'),
+    path('grading/<int:candidate_id>/<int:transaction_id>', grading, name='grading'),
+    path('storegrades/<int:candidate_id>/<int:transaction_id>', storegrades, name='storegrades'),
 
     path('qualified', UserList.as_view()),
+    path('remotedevs', RemoteDevList.as_view()),
     path('devlist', DevList, name='devlist'),
     path('recruiterlist', RecruiterList),
     path('userssliced/', UserListsliced.as_view()),
@@ -97,21 +99,21 @@ urlpatterns = [
     path('portfoliolikeupdate/<int:pk>', Portfoliolikeupdate.as_view()),
 
     path('asignproject', ProjectAssignment.as_view()),
-    path('createassess',SelfAssesmentCreate.as_view()),
-    path('myprojects/<int:candidate_id>',MySelfAssesments.as_view()),
-    path('mytestcenters/<int:candidate_id>',Mytestcenters.as_view()),
-    path('myprojectdetails/<int:pk>',MySelfAssesmentsproject.as_view()),
-    path('myprojectdetailsupdater/<int:pk>',MySelfAssesmentsprojectupdater.as_view()),
-    path('newselfverify/<int:pk>',Timesetemail.as_view()),
-    path('newuser/<int:pk>',Newuser.as_view()),
-    path('alldevs',Alldevs.as_view()),
-    path('allrecruiters',Allrecruiters.as_view()),
+    path('createassess', SelfAssesmentCreate.as_view()),
+    path('myprojects/<int:candidate_id>', MySelfAssesments.as_view()),
+    path('mytestcenters/<int:candidate_id>', Mytestcenters.as_view()),
+    path('myprojectdetails/<int:pk>', MySelfAssesmentsproject.as_view()),
+    path('myprojectdetailsupdater/<int:pk>', MySelfAssesmentsprojectupdater.as_view()),
+    path('newselfverify/<int:pk>', Timesetemail.as_view()),
+    path('newuser/<int:pk>', Newuser.as_view()),
+    path('alldevs', Alldevs.as_view()),
+    path('allrecruiters', Allrecruiters.as_view()),
     path('talentorder', Talentorder, name='Talentorder'),
-    path('unsubscribe/<str:token>',unsubscribe,name='unsubscribe'),
+    path('unsubscribe/<str:token>', unsubscribe, name='unsubscribe'),
     # path('selfprojectmanger')
 ]
 
-from  servermanagement.views import AssessmentJobCreate
+from servermanagement.views import AssessmentJobCreate
 
 urlpatterns += [
     path('schedulejob/', AssessmentJobCreate.as_view()),
@@ -124,4 +126,3 @@ urlpatterns += [
     path('getreferral/<int:pk>/', ReferralCodeCreate.as_view(), name='referral'),
     path('referral/', ReferralCreate.as_view(), name='referral'),
 ]
-

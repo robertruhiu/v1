@@ -105,6 +105,14 @@ class UserList(generics.ListAPIView):
         return Profile.objects.select_related('user').exclude(about__isnull=True).exclude(skills__isnull=True).filter(
             user_type='developer')
 
+class RemoteDevList(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+
+    serializer_class = ProfileSerializer
+
+    def get_queryset(self):
+        return Profile.objects.select_related('user').filter(user_type='developer').filter(remote_entry=True)
+
 
 class Alldevs(generics.ListAPIView):
 
