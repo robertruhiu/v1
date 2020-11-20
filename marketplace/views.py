@@ -15,6 +15,7 @@ from django.urls import reverse
 from django.core import mail, serializers
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from classroom.models import TakenQuiz
@@ -137,6 +138,18 @@ class Jobsapplicants(generics.ListAPIView):
         job_id = self.kwargs['job']
         job = Job.objects.get(id=job_id)
         return JobApplication.objects.select_related('job').filter(job=job)
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+class JobsapplicantsAdmin(generics.ListAPIView):
+    serializer_class = MyapplicantsRequestSerializer
+    pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        return JobApplication.objects.select_related('job').all()
 
 
 class Specificjob(generics.RetrieveAPIView):

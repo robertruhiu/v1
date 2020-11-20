@@ -81,7 +81,7 @@ class JobApplicationsRequestSerializerspecific(serializers.ModelSerializer):
                   'offerletter','demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','created']
 
 class MyapplicantsRequestSerializer(serializers.ModelSerializer):
-    job = JobRequestSerializer()
+    job = JobRequestSerializer
     candidate = ProfileSerializer
     recruiter = ProfileSerializer
     project = Projectserializer
