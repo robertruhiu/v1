@@ -96,7 +96,9 @@ sendbird_headers = {'Content-Type': 'application/json', 'Api-Token': config('Sen
                     'charset': 'utf8'}
 def chats(request):
     conversations = []
-    for chat in Chat.objects.filter(users__overlap=[request.user.username]).order_by('-updated'):
+    user = request.GET.get('user')
+    # for chat in Chat.objects.filter(users__overlap=[request.user.username]).order_by('-updated'):
+    for chat in Chat.objects.filter(users__overlap=[user]).order_by('-updated'):
         try:
             if len(chat.messages) > 10:  # "[]" is less than 10
                 other_user = ''
@@ -108,7 +110,7 @@ def chats(request):
                     last_message = '...'
 
                 for username in chat.users:
-                    if username != request.user.username:
+                    if username != user:
                         other_user = User.objects.get(username=username)
                 conversations.append(
                     {'avatar': other_user.profile.thumbnail, 'name': str(other_user.profile),
@@ -120,7 +122,7 @@ def chats(request):
         'chats': True,
         'conversations': json.dumps(conversations)
     }
-    return JsonResponse(request, data=context)
+    return JsonResponse(data=context)
 
 
 
@@ -133,8 +135,8 @@ def chat_with(request):
     cur_user = User.objects.get(username=user)
     other_user = User.objects.get(username=other_user)
     chat, created = Chat.objects.get_or_create(
-        users=sorted([user.username, other_user.username]),
-        ids=','.join(sorted([user.username, other_user.username])))
+        users=sorted([cur_user.username, other_user.username]),
+        ids=','.join(sorted([cur_user.username, other_user.username])))
 
     def __create_channel(chat):
         chat.name = "Chat between {} and {}".format(cur_user.get_full_name(),
@@ -163,8 +165,10 @@ def chat_with(request):
         chat.save()
 
     if created:
+        chat
         __create_channel(chat)
     else:
+        chat
         res = requests.get(
             f'https://api-{config("SendBird_APP_ID", default="SendBird_APP_ID")}.sendbird.com/v3/group_channels/{chat.channel_url}',
             headers=sendbird_headers)
@@ -188,6 +192,7 @@ def chat_with(request):
     }
     return JsonResponse(request, data='context')
 
+@csrf_exempt
 def send_message(request, user, other_user, channel_url):
     if request.method == 'POST':
         cur_user = User.objects.get(username=user)
