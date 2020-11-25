@@ -1,10 +1,3 @@
-import json
-import datetime
-
-
-import requests
-from decouple import config
-from django.utils.html import urlize
 from django.db import models
 from datetime import timedelta
 from django.utils.text import slugify
@@ -21,7 +14,7 @@ class RemoteProject(models.Model):
         ('website', 'Website'),
         ('android-App', 'Android App'),
         ('ios-App', 'Ios App'),
-        ('Desktop-App', 'Desktop Application'),
+        ('desktop-App', 'Desktop Application'),
     )
 
     title = models.CharField(max_length=120)
@@ -34,10 +27,15 @@ class RemoteProject(models.Model):
     team_size = models.CharField(max_length=20, choices=(
         ('single_dev', 'Single Developer'),
         ('team', 'Multiple Developers')), default='single_dev')
-    budget = models.IntegerField(default=15)
+    budget = models.IntegerField(default=1000)
+    designbudget = models.IntegerField(default=0)
     timeline = models.DurationField(default=timedelta(days=14))
     created_ts = models.DateTimeField(auto_now_add=True)
     updated_ts = models.DateTimeField(auto_now=True)
+    stage =models.TextField(null=True, blank=True)
+    assigned_to = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='developer', blank=True, null=True)
+    verified = models.BooleanField(default=False)
+    sign_date = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -52,6 +50,9 @@ class RemoteProject(models.Model):
 class RemoteDeveloper(models.Model):
     project = models.ForeignKey(RemoteProject, on_delete=models.CASCADE)
     developer = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
+class Signatures(models.Model):
+    signature = models.TextField(blank=True)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
 
 
 class ProjectFeature(models.Model):
@@ -59,9 +60,12 @@ class ProjectFeature(models.Model):
     project = models.ForeignKey(RemoteProject, on_delete=models.CASCADE)
     slug = models.SlugField(blank=True, max_length=200)
     amount = models.IntegerField(default=15)
-    due_date = models.DateTimeField()
+    due_date = models.DateTimeField(blank=True, null=True)
     assigned_to = models.ForeignKey(RemoteDeveloper, on_delete=models.CASCADE, blank=True, null=True)
     escrow_disbursed = models.BooleanField(default=False)
+    stage = models.TextField(blank=True)
+    developer_note = models.TextField(blank=True)
+
 
     def __str__(self):
         return self.name
@@ -79,15 +83,15 @@ class FeatureStory(models.Model):
 
 class Tasks(models.Model):
     STAGE = (
-        ('backlog', 'Backlog'),
-        ('in-progress', 'In Progress'),
-        ('completed', 'Completed'),
+        ('todo', 'Todo'),
+        ('inprogress', 'In Progress'),
+        ('done', 'Done'),
 
     )
     feature = models.ForeignKey(ProjectFeature, on_delete=models.CASCADE)
     description = models.TextField(blank=True)
-    stage = models.CharField(max_length=40, choices=STAGE, default='backlog')
-    assigned_to = models.ForeignKey(RemoteDeveloper, on_delete=models.CASCADE, blank=True, null=True)
+    stage = models.CharField(max_length=40, choices=STAGE, default='todo')
+    assigned_to = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
 
 
 class EscrowPayment(models.Model):
@@ -102,20 +106,24 @@ class EscrowPayment(models.Model):
 
 class Bid(models.Model):
     budget = models.IntegerField(default=15, null=True, blank=True)
-    developer = models.ForeignKey(RemoteDeveloper, on_delete=models.CASCADE, blank=True, null=True)
+    developer = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
     project = models.ForeignKey(RemoteProject, on_delete=models.CASCADE, blank=True, null=True)
     timeline = models.DurationField(default=timedelta(days=14))
     tools = models.TextField(null=True, blank=True)
     shortlisted = models.BooleanField(default=False)
     accepted = models.BooleanField(default=False)
+    proposal = models.TextField(blank=True)
+    withdraw = models.BooleanField(default=False)
 
 
 class Issue(models.Model):
     feature = models.ForeignKey(ProjectFeature, on_delete=models.CASCADE)
-    title = models.CharField(max_length=120)
+    title = models.CharField(max_length=120,default='myteam')
     description = models.TextField(blank=True)
     arbitration_required = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
+    tag = models.CharField(max_length=120,blank=True)
+
     slug = models.SlugField(blank=True, null=True)
 
     def __str__(self):
@@ -126,10 +134,24 @@ class Issue(models.Model):
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
-
-class Comment(models.Model):
+class Comments(models.Model):
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     text = models.TextField(blank=True)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True,blank=True, null=True)
+
+class Team(models.Model):
+    name = models.CharField(max_length=120,default='myteam')
+    lead = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
+    members = models.TextField(blank=True)
+    project = models.ForeignKey(RemoteProject, on_delete=models.CASCADE, blank=True, null=True)
+    pending = models.TextField(blank=True)
+
+class Files(models.Model):
+    description = models.TextField(blank=True)
+    files = models.TextField(blank=True)
+    project = models.ForeignKey(RemoteProject, on_delete=models.CASCADE, blank=True, null=True)
+
 
 headers = {'Content-Type': 'application/json', 'Api-Token': config('SendBird_API_TOKEN', default='default'),
                'charset': 'utf8'}
