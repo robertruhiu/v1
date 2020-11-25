@@ -1,5 +1,10 @@
 import json
+import datetime
 
+
+import requests
+from decouple import config
+from django.utils.html import urlize
 from django.db import models
 from datetime import timedelta
 from django.utils.text import slugify
@@ -125,6 +130,9 @@ class Issue(models.Model):
 class Comment(models.Model):
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     text = models.TextField(blank=True)
+
+headers = {'Content-Type': 'application/json', 'Api-Token': config('SendBird_API_TOKEN', default='default'),
+               'charset': 'utf8'}
 
 class Chat(models.Model):
     ids = models.CharField(max_length=300, blank=True)

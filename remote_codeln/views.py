@@ -113,7 +113,7 @@ def chats(request):
                     if username != user:
                         other_user = User.objects.get(username=username)
                 conversations.append(
-                    {'avatar': other_user.profile.thumbnail, 'name': str(other_user.profile),
+                    { 'name': str(other_user.profile),
                      'username': other_user.username,
                      'lastMessage': last_message})
         except:
@@ -122,7 +122,7 @@ def chats(request):
         'chats': True,
         'conversations': json.dumps(conversations)
     }
-    return JsonResponse(data=context)
+    return JsonResponse(data=context, safe=False)
 
 
 
@@ -184,21 +184,25 @@ def chat_with(request):
         chat.messages = json.dumps([])
         chat.save()
     context = {
-        'other_user': other_user,
-        'chat': chat,
+        'other_user': other_user.username,
+        'chat': chat.messages,
         'chat_with': True,
         'UNIQUE_HANDLER_ID': str(uuid.uuid4()),
         # 'attachments_form': AttachmentForm()
     }
-    return JsonResponse(request, data='context')
+    return JsonResponse(data=context, safe=False)
 
 @csrf_exempt
 def send_message(request, user, other_user, channel_url):
     if request.method == 'POST':
+        encoding = 'utf-8'
+        # b'hello'.decode(encoding)
         cur_user = User.objects.get(username=user)
+        message = request.body.decode(encoding)
         res = Chat.send_message(sender=cur_user.username,
                                 receiver=other_user,
-                                channel_url=channel_url, message=request.POST['message'])
+                                channel_url=channel_url, message=message)
+
         return JsonResponse(
-            {'messageId': int(res['message_id']), 'tempId': request.POST['tempId'], 'messages': res['messages']})
+            {'messageId': int(res['message_id']), 'messages': res['messages']})
 
