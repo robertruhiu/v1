@@ -1,5 +1,12 @@
+import datetime
+import json
+
+import requests
+from decouple import config
 from django.db import models
 from datetime import timedelta
+
+from django.utils.html import urlize
 from django.utils.text import slugify
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.contrib.auth.models import User
