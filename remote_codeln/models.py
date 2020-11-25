@@ -1,11 +1,20 @@
+import datetime
+import json
+
+import requests
+from decouple import config
 from django.db import models
 from datetime import timedelta
-from django.contrib.postgres.fields import JSONField
+
+from django.utils.html import urlize
+from django.utils.text import slugify
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.contrib.auth.models import User
 
 # Create your models here.
 from accounts.models import Profile
 
+import uuid
 
 class RemoteProject(models.Model):
     PROJECT_TYPE = (
@@ -35,6 +44,15 @@ class RemoteProject(models.Model):
     verified = models.BooleanField(default=False)
     sign_date = models.DateTimeField(blank=True, null=True)
 
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            name = f'{self.title}-{uuid.uuid4()}'
+            self.slug = slugify(name)
+        super().save(*args, **kwargs)
+
 
 class RemoteDeveloper(models.Model):
     project = models.ForeignKey(RemoteProject, on_delete=models.CASCADE)
@@ -55,6 +73,14 @@ class ProjectFeature(models.Model):
     stage = models.TextField(blank=True)
     developer_note = models.TextField(blank=True)
 
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class FeatureStory(models.Model):
@@ -105,7 +131,15 @@ class Issue(models.Model):
     closed = models.BooleanField(default=False)
     tag = models.CharField(max_length=120,blank=True)
 
+    slug = models.SlugField(blank=True, null=True)
 
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
 class Comments(models.Model):
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
@@ -125,3 +159,68 @@ class Files(models.Model):
     files = models.TextField(blank=True)
     project = models.ForeignKey(RemoteProject, on_delete=models.CASCADE, blank=True, null=True)
 
+
+headers = {'Content-Type': 'application/json', 'Api-Token': config('SendBird_API_TOKEN', default='default'),
+               'charset': 'utf8'}
+
+class Chat(models.Model):
+    ids = models.CharField(max_length=300, blank=True)
+    users = ArrayField(models.CharField(max_length=140), size=3, blank=True, null=True, unique=True)
+    channel_url = models.CharField(max_length=300, null=True, blank=True, editable=False)
+    messages = JSONField(null=True, blank=True, default=dict)
+    name = models.CharField(max_length=140, blank=True)
+    unread_counts = JSONField(null=True, blank=True, default=dict)
+    created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+    @staticmethod
+    def send_message(sender, receiver, channel_url, message, has_attachment=False):
+        chat = Chat.objects.get(channel_url=channel_url)
+        if len(message) == 0 and has_attachment:
+            message = 'Find attached ...'
+        sendbird_message = {
+            "message_type": "MESG",
+            "user_id": sender,
+            "message": message
+        }
+        sendbird_res = requests.post(
+            'https://api-{}.sendbird.com/v3/group_channels/{}/messages'.format(
+                config("SendBird_APP_ID", default="SendBird_APP_ID"),
+                chat.channel_url),
+            headers=headers,
+            data=json.dumps(sendbird_message))
+        message_id = json.loads(sendbird_res.content)['message_id']
+
+        message_obj = {
+            'message': urlize(message, nofollow=True).replace('rel="nofollow"',
+                                                              'target="_blank" rel="noopener noreferrer"'),
+            'messageId': message_id,
+            'messageType': 'MESG',
+            '_sender': {
+                'userId': sender,
+                'nickname': str(User.objects.get(username=sender).profile)
+            },
+            'created': str(datetime.datetime.now())
+        }
+        if chat.messages == "[]":
+            chat.messages = json.dumps([message_obj])
+            chat.save()
+        else:
+            new_chat_messages = json.loads(chat.messages)
+            new_chat_messages.append(message_obj)
+            chat.messages = json.dumps(new_chat_messages)
+            chat.save()
+        return {'message_id': message_id, 'messages': chat.messages}
+
+
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def get_messages(self):
+        return json.loads(self.messages)
+
+    @property
+    def all_users(self):
+        return [User.objects.get(username=username) for username in self.users]

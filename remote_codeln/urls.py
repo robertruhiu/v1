@@ -102,6 +102,11 @@ urlpatterns = [
                 # TODO: view for single issue view
                 path('all/', views.PaymentListView.as_view()),
             ])),
+            path('chat/', include([
+                path('all/', views.chats, name='chats'),
+                path('with/', views.chat_with, name='with'),
+                path('send_message/<str:user>/<str:other_user>/<str:channel_url>/', views.send_message, name='chat_message'),
+            ])),
         ])),
     ])),
 ]
