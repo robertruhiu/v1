@@ -20,7 +20,7 @@ from rest_framework import generics
 from django.contrib.auth.models import User
 from accounts.models import Profile
 from remote_codeln.models import RemoteProject, Bid, Issue, EscrowPayment,FeatureStory,ProjectFeature,Tasks,Comments,\
-    RemoteDeveloper,Team,Files,Signatures
+    RemoteDeveloper,Team,Files,Signatures,Chat
 from remote_codeln.serializers import RemoteProjectSerializer, BidSerializer ,EscrowPaymentSerializer, \
     IssueSerializer,FeatureSerializer,StorySerializer,BidSerializerBasic,TaskSerializer,CommentSerializer\
     ,CommentSerializerBasic,RemoteDeveloperSerializer,IssueSerializerDetail,TeamSerializer,TaskSerializerUpdater,FilesSerializer,SignaturesSerializer

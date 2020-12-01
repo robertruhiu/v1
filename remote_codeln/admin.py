@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from remote_codeln.models import RemoteProject, EscrowPayment, Bid, Issue, Comment, Chat
+from remote_codeln.models import RemoteProject, EscrowPayment, Bid, Issue, Comments, Chat
 
 @admin.register(RemoteProject)
 class RemoteProject(admin.ModelAdmin):
@@ -20,7 +20,7 @@ class BidAdmin(admin.ModelAdmin):
 class IssueAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(Comment)
+@admin.register(Comments)
 class CommentAdmin(admin.ModelAdmin):
     pass
 
