@@ -65,7 +65,7 @@ class JobApplicationsRequestSerializer(serializers.ModelSerializer):
         fields = ['id','job','candidate','selected','stage','interviewstarttime','interviewendtime',
                   'notes','recruiter','test_stage','project',
                   'report','interviewstatus','eventcolor','projectstarttime','offerstatus','offerletter',
-                  'demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment']
+                  'demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','relevance']
 class JobApplicationsRequestSerializerspecific(serializers.ModelSerializer):
     job = JobRequestSerializer
     candidate = ProfileSerializer()
@@ -78,10 +78,10 @@ class JobApplicationsRequestSerializerspecific(serializers.ModelSerializer):
         fields = ['id','job','candidate','selected','stage','interviewstarttime','interviewendtime',
                   'notes','recruiter','test_stage','project',
                   'report','interviewstatus','eventcolor','projectstarttime','offerstatus',
-                  'offerletter','demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','created']
+                  'offerletter','demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','created','relevance']
 
 class MyapplicantsRequestSerializer(serializers.ModelSerializer):
-    job = JobRequestSerializer()
+    job = JobRequestSerializer
     candidate = ProfileSerializer
     recruiter = ProfileSerializer
     project = Projectserializer
@@ -92,7 +92,7 @@ class MyapplicantsRequestSerializer(serializers.ModelSerializer):
         fields = ['id','job','candidate','selected','stage','interviewstarttime','interviewendtime',
                   'notes','recruiter','test_stage','project',
                   'report','interviewstatus','eventcolor','projectstarttime','offerstatus',
-                  'offerletter','demolink','carted','type','framework','teststarttime','testendtime','rejectionreason','rejectioncomment']
+                  'offerletter','demolink','carted','type','framework','teststarttime','testendtime','rejectionreason','rejectioncomment','relevance']
 class MyapplicantsRequestSerializersliced(serializers.ModelSerializer):
     job = JobRequestSerializer
     candidate = ProfileSerializer
@@ -105,7 +105,7 @@ class MyapplicantsRequestSerializersliced(serializers.ModelSerializer):
         fields = ['id','job','candidate','selected','stage','interviewstarttime','interviewendtime',
                   'notes','recruiter','test_stage','project',
                   'report','interviewstatus','eventcolor','projectstarttime','offerstatus','offerletter','demolink',
-                  'carted','type''framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment']
+                  'carted','type''framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','relevance']
 
 
 class JobApplicationsUpdaterSerializer(serializers.ModelSerializer):
@@ -121,7 +121,7 @@ class JobApplicationsUpdaterSerializer(serializers.ModelSerializer):
         fields = ['id', 'job', 'candidate', 'selected', 'stage', 'interviewstarttime', 'interviewendtime',
                   'notes', 'recruiter', 'test_stage', 'project',
                   'report', 'interviewstatus', 'eventcolor','projectstarttime','offerstatus',
-                  'offerletter','demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment']
+                  'offerletter','demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','relevance']
 
 
 

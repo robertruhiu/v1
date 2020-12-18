@@ -41,18 +41,18 @@ class Job(models.Model):
         ('1-3', '1-3'),
         ('3-above', '3-above'),
     )
-    company = models.CharField(max_length=300)
+    company = models.CharField(max_length=300,null=True, blank=True)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255,null=True, blank=True)
     city = models.CharField(max_length=255,null=True, blank=True)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     job_role = models.CharField(max_length=30, choices=JOB_ROLE, default='Full Stack Developer')
     dev_experience = models.CharField(max_length=30, choices=DEV_EXPERIENCE, default='Mid-Level')
     engagement_type = models.CharField(max_length=30, choices=ENGAGEMENT_TYPE, default='Full-time')
-    tech_stack = models.CharField(max_length=500)
+    tech_stack = models.CharField(max_length=500,null=True, blank=True)
     num_devs_wanted = models.IntegerField(default=1)
     location = CountryField(null=True, max_length=30)
-    remuneration = models.CharField(max_length=45, help_text='in dollars ($)')
+    remuneration = models.CharField(max_length=45, help_text='in dollars ($)',null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     position_filled = models.BooleanField(default=False)
@@ -88,7 +88,7 @@ class JobApplication(models.Model):
     stage = models.CharField(max_length=500, null=True)
     interviewstarttime = models.DateTimeField(null=True,blank=True)
     interviewendtime = models.DateTimeField(null=True, blank=True)
-    notes = models.CharField(max_length=1500,null=True)
+    notes =  models.TextField(null=True, blank=True)
     recruiter = models.ForeignKey(Profile, related_name='jobrecruiter', on_delete=models.CASCADE,null=True,blank=True)
     test_stage = models.CharField(max_length=500, null=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE,null=True)
@@ -107,6 +107,7 @@ class JobApplication(models.Model):
     testendtime = models.DateTimeField(null=True, blank=True)
     rejectionreason=models.CharField(max_length=1500,null=True,blank=True)
     rejectioncomment=models.CharField(max_length=1500,null=True, blank=True)
+    relevance = models.IntegerField(default=0)
 
 
 

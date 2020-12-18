@@ -1,5 +1,7 @@
 import json
-
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.response import Response
+from django.core.cache import cache
 import requests
 from cryptography.fernet import Fernet
 from decouple import config
@@ -16,6 +18,7 @@ from django.urls import reverse
 from django.utils.html import strip_tags
 from rest_framework import generics, permissions
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -95,10 +98,14 @@ def Talentorder(request):
 
     return HttpResponse(json.dumps(order_list), content_type="application/json")
 
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 class UserList(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
-
+    pagination_class = StandardResultsSetPagination
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
