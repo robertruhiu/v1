@@ -14,7 +14,7 @@ from frontend.views import home, activity, tracker, update_candidateprojects, \
     MySelfAssesmentsproject, MySelfAssesmentsprojectupdater, Portfoliocreate, Portfolioupdate, Experiencecreate, \
     Experienceupdate, \
     UserListsliced, DevList, RecruiterList, Alldevs, Allrecruiters, Mytestcenters, Talentorder, Timesetemail, Newuser, \
-    unsubscribe, Resourcecreate, Subjectresources, Resourceslikeupdate, Portfoliolikeupdate,RemoteDevList
+    unsubscribe, Resourcecreate, Subjectresources, Resourceslikeupdate, Portfoliolikeupdate,RemoteDevList,Wote,Wotelist
 
 from accounts.views import update_profile
 
@@ -76,7 +76,8 @@ urlpatterns = [
     path('management', management, name='management'),
     path('grading/<int:candidate_id>/<int:transaction_id>', grading, name='grading'),
     path('storegrades/<int:candidate_id>/<int:transaction_id>', storegrades, name='storegrades'),
-
+    path('wote',Wote.as_view()),
+    path('wotelist', Wotelist, name='wotelist'),
     path('qualified', UserList.as_view()),
     path('remotedevs', RemoteDevList.as_view()),
     path('devlist', DevList, name='devlist'),

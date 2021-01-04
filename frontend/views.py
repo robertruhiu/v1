@@ -144,6 +144,21 @@ def DevList(request):
 
     return render(request, 'frontend/recruiter/devlist.html', {'developers': data})
 
+class Wote(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return User.objects.all()
+
+
+
+@login_required
+def Wotelist(request):
+
+    response = requests.get('http://codelnapi.herokuapp.com/wote')
+    data = response.json()
+
+    return render(request, 'frontend/recruiter/allusers.html', {'developers': data})
 
 @login_required
 def RecruiterList(request):
