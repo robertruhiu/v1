@@ -9,7 +9,8 @@ from marketplace.views import job_list, job_details, apply_for_job, manage_poste
     TalentPoolapplications, Applicationprofile, CandidateManagerInfo, JobManagerView, TalentPickedManagerView, \
     Myjobsrequestssliced, \
     JobsListverified, DevRequestssimple, newjobapplication, newjob, newonsite, newpick, acceptreject, publishedemails,\
-    Alljobsdeadlinefilter,recruiterpublished,rejectionemail,projectemail,timesetemail,pickedcandidateemail,ReportCreate,ReportGet,JobGetIncomplete,JobsapplicantsAdmin
+    Alljobsdeadlinefilter,recruiterpublished,rejectionemail,projectemail,timesetemail,pickedcandidateemail,ReportCreate,ReportGet,\
+    JobGetIncomplete,JobsapplicantsAdmin
 
 app_name = 'marketplace'
 

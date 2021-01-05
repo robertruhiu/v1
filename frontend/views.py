@@ -187,6 +187,14 @@ class AllUsers(generics.ListAPIView):
         return User.objects.all()
 
 
+class AllProfiles(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = (IsAuthenticated,)
+    def get_queryset(self):
+        return Profile.objects.all()
+
+
+
 class Talentget(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Profile.objects.all()
