@@ -1,0 +1,98 @@
+{% extends 'base4.html' %}
+{% block content %}
+    <div class="w3-containe w3-margi">
+        <section class="hero is-info is-small">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        Search for Developers by Name, Email, Skills ...
+                    </h1>
+                    <form action="." method="get">
+                        <div class="field">
+                            <div class="control">
+
+
+                                <input class="input is-large" name="q" type="text" placeholder="Search...">
+
+                                {#                                <input type="submit" value="Search" class="button">#}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="w3-container">
+        <v-card id="all__jobs__card" elevation="0" class="mt-5">
+
+
+            <v-card id="job_card" class="mb-5  pa-5" :ripple="false" color="white" flat>
+                <v-expansion-panels focusable>
+
+                    {% for dev in devs %}
+                        <v-expansion-panel class="w3-row-padding">
+
+                            <v-expansion-panel-header>
+                                <div>
+                                    <h5><strong>Name</strong></h5>
+                                    <br>
+                                    <p>{{ dev.user.first_name }} {{ dev.user.last_name }}</p>
+                                </div>
+                                <div>
+                                    <h5><strong>Email</strong></h5>
+                                    <br>
+                                    <p>{{ dev.user.email }}</p>
+                                </div>
+                                <div>
+                                    <h5><strong>Experience</strong></h5>
+                                    <br>
+                                    <p> {{ dev.user.years }}</p>
+                                </div>
+                                <div>
+                                    <h5><strong>Skills</strong></h5>
+                                    <br>
+                                    <p>{{ dev.skills }}</p>
+                                </div>
+                                <div>
+                                    <h5><strong>Framework</strong></h5>
+                                    <br>
+                                    <p>{{ dev.framework }}</p>
+                                </div>
+                                <div>
+                                    <h5><strong>Availability</strong></h5>
+                                    <br>
+                                    <p>{{ dev.availabilty }}</p>
+                                </div>
+                                <div>
+                                    <v-btn color="blue lighten-2" dark href="{% url 'frontend:cv' %}">View CV</v-btn>
+                                </div>
+                                <div>
+                                    <v-btn color="blue lighten-2" dark href="{% url 'frontend:add_to_list' dev.id %}">
+                                        Add to list
+                                    </v-btn>
+                                </div>
+                            </v-expansion-panel-header>
+                            <v-expansion-panel-content class="w3-padding">
+                                {% for exp in dev.candidateexperience.all %}
+                                    <div class="text--primary">
+                                        <h5><strong>Work History</strong></h5>
+                                        {{ exp.title }} <br>
+                                        {{ exp.company }}
+                                        {{ exp.description }}
+                                        {{ exp.duration }}
+                                        {{ exp.techtags }}
+                                    </div>
+                                {% endfor %}
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+
+                    {% endfor %}
+    </div>
+    </v-card>
+    </v-card>
+    </div>
+    </div>
+
+    </div>
+
+{% endblock %}

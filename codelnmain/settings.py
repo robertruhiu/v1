@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_api_key',
     'api',
+    'account_manager',
     'corsheaders',
     'django_celery_beat'
 
@@ -169,32 +170,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # thirdparty app configurations
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://127.0.0.1:8080',
-    'http://localhost:8080',
-    'http://127.0.0.1:4200',
-    'http://localhost:4200',
-    'http://localhost:8081',
-    'http://localhost:8082',
-    'https://mulan.herokuapp.com',
-    'https://leanapp.herokuapp.com',
     'http://mulan.herokuapp.com',
-    'http://leanapp.herokuapp.com',
-    'https://codelnalpha.herokuapp.com',
-    'http://codelnalpha.herokuapp.com',
     'http://codeln.com',
     'https://codeln.com',
     'http://www.codeln.com',
     'https://www.codeln.com',
-    'http://165.22.27.68:3000',
-    'http://165.22.27.68',
-
-    'http://clide.codeln.com:3000',
-    'http://clide.codeln.com',
 )
 
 AUTHENTICATION_BACKENDS = (
