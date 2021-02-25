@@ -52,6 +52,11 @@ urlpatterns = [
 #     cart
     path('cart/', include('cart.urls')),
 ]
+# no indexing
+from django.views.generic import TemplateView
+urlpatterns += [
+    path('robots.txt', TemplateView.as_view(template_name="frontend/robots.txt", content_type='text/plain')),
+]
 
 
 if settings.DEBUG:
