@@ -13,7 +13,8 @@
 
     <script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.2.17/dist/vuetify.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'cbulma/css/style.min.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
@@ -36,7 +37,8 @@
         <nav class="navbar w3-padding is-info" role="navigation"
              aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item" href="/">
+{#                <a class="navbar-item" href="{% url 'account_manager:devs' %}">#}
+                <a class="navbar-item">
                     <strong class="trans-400 w3-text-black">Codeln</strong>
                 </a>
 
@@ -51,11 +53,11 @@
             <div id="navbarBasicExample" class="navbar-menu">
                 <div class="navbar-start w3-center my-auto px-10">
                     {% if request.user.is_authenticated %}
-                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'frontend:jobs' %}">Jobs
+                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'account_manager:jobs' %}">Jobs
                         </v-btn>
-                        {#                     <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'frontend:devs' %}">Developers</v-btn>#}
+{#                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'account_manager:devs' %}">Developers</v-btn>#}
                         <v-btn text rounded class="navbar-item w3-padding-large"
-                               href="{% url 'frontend:all_shortlist' %}">
+                               href="{% url 'account_manager:all_shortlist' %}">
                             Shortlists
                         </v-btn>
                     {% endif %}

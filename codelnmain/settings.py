@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
     'remote_codeln',
+    'api',
+    'account_manager',
     # third party libs
     'allauth',
     'allauth.account',
@@ -82,11 +84,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_api_key',
-    'api',
-    'account_manager',
     'corsheaders',
-    'django_celery_beat'
-
+    'django_celery_beat',
+    'bulma',
 ]
 
 SITE_ID = 1
@@ -233,7 +233,6 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
-
 
 }
 

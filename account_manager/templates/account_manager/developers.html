@@ -1,0 +1,151 @@
+{% extends 'base4.html' %}
+{% load bulma_tags %}
+
+{% block content %}
+
+    <div class="w3-container w3-margin">
+        <div class="columns">
+            <div class="column is-2">
+                <aside class="menu">
+                    {#                    <p class="menu-label">#}
+                    {#                        General#}
+                    {#                    </p>#}
+                    <ul class="menu-list">
+                        <li></li>
+                        <li></li>
+                        <li><a>Home</a></li>
+                        <li><a></a></li>
+                    </ul>
+
+                    <ul class="menu-list">
+                        <li>
+                            <a class="is-info">Recruiters</a>
+                            <ul>
+                                <li><a>New</a></li>
+                                <li><a>All Recruiters</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="menu-list">
+                        <li>
+                            <a class="is-active" href="{% url 'frontend:devs' %}">Developers</a>
+                            <ul>
+                                <li><a>New</a></li>
+                                <li><a>Incomplete Profiles</a></li>
+                                <li><a>Verified Devs</a></li>
+                                <li>
+                                    <a href="{% url 'frontend:devs' %}?gender=female&framework=&skills=&verified_skills=&availabilty=">Female
+                                        Devs</a></li>
+                                <li>
+                                    <a href="{% url 'frontend:devs' %}?gender=male&framework=&skills=&verified_skills=&availabilty=">Male
+                                        Devs</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="menu-list">
+                        <li>
+                            <a class="is-active" href="{% url 'frontend:jobs' %}">Jobs</a>
+                            <ul>
+                                <li><a>New</a></li>
+                                <li><a>Pending</a></li>
+                                <li><a>Fulfilled</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="menu-list">
+                        <li>
+                            <a class="is-active" href="{% url 'frontend:all_shortlist' %}">Shortlists</a>
+                            <ul>
+                                <li><a>Frontend Verified</a></li>
+                                <li><a>Backend Verified</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </aside>
+            </div>
+
+            <div class="column is-10">
+
+                <v-card id="all__jobs__card" elevation="0" class="mt-5">
+                    <v-card-title class="mb-5">
+                        Developers
+                    </v-card-title>
+                    {#        todo: add a search bar for developer search#}
+                <v-card class="ma-5 pa-5">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input name="email" type="text" placeholder="Search...">
+                             <div class="filter-option">
+                                    <v-btn class="filter-btn" color="#007bff" dark small type="submit">Submit</v-btn>
+                                </div>
+                        </form>
+                </v-card>
+                    <v-card class="ma-5 pa-5">
+                        <form method="get">
+
+                            <div class="filter">
+                                <div class="filter-option">
+                                    <p class="mb-1">GENDER</p>
+                                    {{ devs_filter.form.gender }}
+                                </div>
+                                <div class="filter-option">
+                                    <p class="mb-1">FRAMEWORK</p>
+                                    {{ devs_filter.form.framework }}
+                                </div>
+                                <div class="filter-option">
+                                    <p class="mb-1">SKILLS</p>
+                                    {{ devs_filter.form.skills }}
+                                </div>
+                                <div class="filter-option">
+                                    <p class="mb-1">VERIFIED SKILLS</p>
+                                    {{ devs_filter.form.verified_skills }}
+                                </div>
+
+                                <div class="filter-option">
+                                    <p class="mb-1">AVAILABILITY</p>
+                                    {{ devs_filter.form.availabilty }}
+                                </div>
+                                <div class="filter-option">
+                                    <v-btn class="filter-btn" color="#007bff" dark small type="submit">Filter</v-btn>
+                                </div>
+                            </div>
+                        </form>
+                    </v-card>
+
+                    <v-card id="job_card" :ripple="false" color="white" flat>
+
+                        <div class="table-container">
+                            <table class="table is-fullwidth is-hoverable is-narrow">
+                                <thead>
+                                <tr>
+                                    <th>Firstname</th>
+                                    <th>Lastname</th>
+                                    <th>Gender</th>
+                                    <th>Experience</th>
+                                    <th>CV</th>
+                                </tr>
+                                </thead>
+                                <t-body>
+                                    {% for dev in devs%}
+                                        <tr>
+                                            <td>{{ dev.user.first_name }}</td>
+                                            <td>{{ dev.user.last_name }}</td>
+                                            <td>{{ dev.gender }}</td>
+                                            <td>{{ dev.experience }}</td>
+                                            <td>
+                                                <v-btn small dark color="#007bff"
+                                                       href="{% url 'frontend:mydev' dev.id %}">View Dev
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </t-body>
+                            </table>
+                        </div>
+                    </v-card>
+                </v-card>
+            </div>
+        </div>
+
+{% endblock %}

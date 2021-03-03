@@ -1,0 +1,26 @@
+{% extends 'base2.html' %}
+{% load bulma_tags %}
+{% block content %}
+
+    <div class="modal is-active">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <section class="modal-card-body">
+                <p class="panel-tabs">
+                    <a class="is-active title">Select List</a>
+                </p>
+                <form action="" method="post">
+                {% csrf_token %}
+                    {% for list in list_form.lists %}
+                        <label class="panel-block">
+                            {{ list }}
+                        </label>
+                    {% endfor %}
+                    <label>
+                        <button type="submit" class=" button is-info"> Save</button>
+                    </label>
+                </form>
+            </section>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base4.html' %}
+{% load bulma_tags %}
+
+{% block content %}
+    <div class="w3-container">
+        <div class="columns">
+            <v-card-text class="column is-8 is-offset-2">
+                <v-card id="all__jobs__card" elevation="0" class="mt-5">
+
+                    <v-card-title class="mb-5">
+                        {% if object  %}
+                            Edit {{ object }}
+                        {% else %}
+                            Add New Shortlist
+                        {% endif %}
+                    </v-card-title>
+                    <v-card-text>
+
+                            {% csrf_token %}
+
+                            {{ form | bulma }}
+
+                            <button type="submit" class=" button is-info"> Submit</button>
+
+                        </form>
+                    </v-card-text>
+                </v-card>
+            </div>
+        </div>
+    </div>
+{% endblock %}
