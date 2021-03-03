@@ -29,7 +29,7 @@
             <v-card id="job_card" class="mb-5  pa-5" :ripple="false" color="white" flat>
                 <v-expansion-panels focusable>
 
-                    {% for dev in devs %}
+                    {% for dev in page_obj %}
                         <v-expansion-panel class="w3-row-padding">
 
                             <v-expansion-panel-header>
@@ -64,10 +64,12 @@
                                     <p>{{ dev.availabilty }}</p>
                                 </div>
                                 <div>
-                                    <v-btn color="blue lighten-2" dark href="{% url 'account_manager:cv' %}">View CV</v-btn>
+                                    <v-btn color="blue lighten-2" dark href="{% url 'account_manager:cv' %}">View CV
+                                    </v-btn>
                                 </div>
                                 <div>
-                                    <v-btn color="blue lighten-2" dark href="{% url 'account_manager:add_to_list' dev.id %}">
+                                    <v-btn color="blue lighten-2" dark
+                                           href="{% url 'account_manager:add_to_list' dev.id %}">
                                         Add to list
                                     </v-btn>
                                 </div>
@@ -87,9 +89,40 @@
                         </v-expansion-panel>
 
                     {% endfor %}
+                </v-expansion-panels>
+            </v-card>
+            <nav class="pagination" role="navigation" aria-label="pagination">
+                <ul class="pagination-list">
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a class="pagination-link" aria-label="Goto page 1" href="?page=1"> Page 1</a>
+                        </li>
+                        <li>
+                            <a class="pagination-previous" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a class="pagination-next" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        <li>
+                            <a class="pagination-link" aria-label="Last"
+                               href="?page={{ page_obj.paginator.num_pages }}">Last Page</a>
+                        </li>
+                    {% endif %}
+                    </span>
+                </ul>
+            </nav>
+
+        </v-card>
+
     </div>
-    </v-card>
-    </v-card>
+
     </div>
     </div>
 

@@ -20,19 +20,38 @@ from account_manager.forms import ShortlistCreateUpdateForm, ListForm
 
 # Create your views here.
 # dashboard
+from django.core.paginator import Paginator
 @login_required
 def index(request):
     query = request.GET.get('q', None)
     lists = Shortlist.objects.all()
     if not query:
-        devs = Profile.objects.filter(user_type='developer')
-        devs_filter = DevFilter(request.GET, queryset=devs)
-        devs = DevFilter(request.GET, queryset=devs).qs
-        return render(request, 'account_manager/dashboard.html', {'devs_filter': devs_filter,
-                                                                           'devs': devs, 'lists': lists})
+        all_devs = Profile.objects.filter(user_type='developer')
+        print(all_devs.count())
+        paginator = Paginator(all_devs, 25)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        # devs_filter = DevFilter(request.GET, queryset=devs)
+        # devs = DevFilter(request.GET, queryset=devs).qs
+        return render(request, 'account_manager/dashboard.html', {'page_obj': page_obj})
     else:
         devs = Profile.objects.search(query)
         return render(request, 'account_manager/dashboard.html', {'devs': devs, 'lists': lists})
+
+# @login_required
+# def index(request):
+#     query = request.GET.get('q', None)
+#     lists = Shortlist.objects.all()
+#     if not query:
+#         devs = Profile.objects.filter(user_type='developer')
+#         print(devs.count())
+#         devs_filter = DevFilter(request.GET, queryset=devs)
+#         devs = DevFilter(request.GET, queryset=devs).qs
+#         return render(request, 'account_manager/dashboard.html', {'devs_filter': devs_filter,
+#                                                                            'devs': devs, 'lists': lists})
+#     else:
+#         devs = Profile.objects.search(query)
+#         return render(request, 'account_manager/dashboard.html', {'devs': devs, 'lists': lists})
 
 
 # # developers
