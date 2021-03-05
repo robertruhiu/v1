@@ -33,10 +33,14 @@ def index(request):
         page_obj = paginator.get_page(page_number)
         # devs_filter = DevFilter(request.GET, queryset=devs)
         # devs = DevFilter(request.GET, queryset=devs).qs
-        return render(request, 'account_manager/dashboard.html', {'page_obj': page_obj})
+        return render(request, 'account_manager/dashboard.html', {'page_obj': page_obj, 'lists':lists})
     else:
         devs = Profile.objects.search(query)
-        return render(request, 'account_manager/dashboard.html', {'devs': devs, 'lists': lists})
+        # print(devs.count())
+        # paginator = Paginator(devs, 25)
+        # page_number = request.GET.get('page')
+        page_obj = devs
+        return render(request, 'account_manager/dashboard.html', {'page_obj': page_obj, 'lists': lists})
 
 # @login_required
 # def index(request):

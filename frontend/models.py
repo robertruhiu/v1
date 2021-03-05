@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
 from accounts.models import Profile
 from marketplace.models import Job
@@ -46,10 +48,18 @@ class Portfolio(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     likes = models.CharField(max_length=900, null=True, blank=True)
     dislikes = models.CharField(max_length=900, null=True, blank=True)
+    search_vector = SearchVectorField(null=True)
+
+    class Meta(object):
+        indexes = [GinIndex(fields=['search_vector'])]
+
+    def save(self, *args, **kwargs):
+        self.search_vector = (SearchVector('tech__tags'))
+        super().save(*args, **kwargs)
 
 
 class Experience(models.Model):
-    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE,related_name='candidateexperience')
+    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='candidateexperience')
     title = models.CharField(null=True, max_length=100)
     company = models.CharField(null=True, max_length=100)
     description = models.CharField(null=True, max_length=400)
