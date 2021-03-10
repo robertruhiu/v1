@@ -1,6 +1,8 @@
 {% extends 'base4.html' %}
+{% load bulma_tags %}
 {% block content %}
     <div class="w3-containe w3-margi">
+        {#    search div#}
         <section class="hero is-info is-small">
             <div class="hero-body">
                 <div class="container">
@@ -22,172 +24,103 @@
             </div>
         </section>
     </div>
+    {#    data section #}
     <div class="w3-container">
         <v-card id="all__jobs__card" elevation="0" class="mt-5">
+            <div class="columns">
+                <div class="column is-3">
+                    <nav class="panel w3-margin">
+                        <p class="panel-heading">
+                            Filter
+                        </p>
+                        <div class="w3-margin">
+                            <form method="get">
 
+                                {{ devs_filter.form | bulma }}
+                                <div class="panel-block">
+                                    <button class="button is-link is-outlined is-fullwidth" type="submit">
+                                        Filter
+                                    </button>
+                                </div>
 
-            <v-card id="job_card" class="mb-5  pa-5" :ripple="false" color="white" flat>
-                {#                <v-expansion-panels focusable>#}
-                {##}
-                {#                    {% for dev in page_obj %}#}
-                {#                        <v-expansion-panel class="w3-row-padding">#}
-                {##}
-                {#                            <v-expansion-panel-header>#}
-                {#                                <div>#}
-                {#                                    <h5><strong>Name</strong></h5>#}
-                {#                                    <br>#}
-                {#                                    <p>{{ dev.user.first_name }} {{ dev.user.last_name }}</p>#}
-                {#                                </div>#}
-                {#                                <div>#}
-                {#                                    <h5><strong>Email</strong></h5>#}
-                {#                                    <br>#}
-                {#                                    <p>{{ dev.user.email }}</p>#}
-                {#                                </div>#}
-                {#                                <div>#}
-                {#                                    <h5><strong>Experience</strong></h5>#}
-                {#                                    <br>#}
-                {#                                    <p> {{ dev.user.years }}</p>#}
-                {#                                </div>#}
-                {#                                <div>#}
-                {#                                    <h5><strong>Skills</strong></h5>#}
-                {#                                    <br>#}
-                {#                                    <p>{{ dev.skills }}</p>#}
-                {#                                </div>#}
-                {#                                <div>#}
-                {#                                    <h5><strong>Framework</strong></h5>#}
-                {#                                    <br>#}
-                {#                                    <p>{{ dev.framework }}</p>#}
-                {#                                </div>#}
-                {#                                <div>#}
-                {#                                    <h5><strong>Availability</strong></h5>#}
-                {#                                    <br>#}
-                {#                                    <p>{{ dev.availabilty }}</p>#}
-                {#                                </div>#}
-                {#                                <div>#}
-                {#                                    <v-btn color="blue lighten-2" dark href="{% url 'account_manager:cv' %}">View CV#}
-                {#                                    </v-btn>#}
-                {#                                </div>#}
-                {#                                <div>#}
-                {#                                    <v-btn color="blue lighten-2" dark#}
-                {#                                           href="{% url 'account_manager:add_to_list' dev.id %}">#}
-                {#                                        Add to list#}
-                {#                                    </v-btn>#}
-                {#                                </div>#}
-                {#                            </v-expansion-panel-header>#}
-                {#                            <v-expansion-panel-content class="w3-padding">#}
-                {#                                {% for exp in dev.candidateexperience.all %}#}
-                {#                                    <div class="text--primary">#}
-                {#                                        <h5><strong>Work History</strong></h5>#}
-                {#                                        {{ exp.title }} <br>#}
-                {#                                        {{ exp.company }}#}
-                {#                                        {{ exp.description }}#}
-                {#                                        {{ exp.duration }}#}
-                {#                                        {{ exp.techtags }}#}
-                {#                                    </div>#}
-                {#                                {% endfor %}#}
-                {#                            </v-expansion-panel-content>#}
-                {#                        </v-expansion-panel>#}
-                {##}
-                {#                    {% endfor %}#}
-                {#                </v-expansion-panels>#}
-                <table class="table is-fullwidth w3-border w3-large">
-                    {#                    <thead>#}
-                    {#                    <tr>#}
-                    {#                        <th>Full Name</th>#}
-                    {#                        <th>Email</th>#}
-                    {#                        <th>Experience</th>#}
-                    {#                        <th>Skills</th>#}
-                    {#                        <th>Framework</th>#}
-                    {#                        <th>Availability</th>#}
-                    {#                        <th>CV</th>#}
-                    {#                        <th>Action</th>#}
-                    {#                    </tr>#}
-                    {#                    </thead>#}
-                    <tbody>
-                    {#                    {% for dev in page_obj %}#}
-                    {#                            <tr>#}
-                    {#                                <td>{{ dev.user.first_name }} {{ dev.user.last_name }}</td>#}
-                    {#                                <td>{{ dev.user.email }}</td>#}
-                    {#                                <td>{{ dev.user.years }}</td>#}
-                    {#                                <td>{{ dev.skills }}</td>#}
-                    {#                                <td>{{ dev.framework }}</td>#}
-                    {#                                <td>{{ dev.availabilty }}</td>#}
-                    {#                                <td>#}
-                    {#                                    <v-btn color="blue lighten-2" dark href="{% url 'account_manager:cv' %}">View CV</v-btn>#}
-                    {#                                </td>#}
-                    {#                                <td>#}
-                    {#                                    <v-btn color="blue lighten-2" dark#}
-                    {#                                           href="{% url 'account_manager:add_to_list' dev.id %}">#}
-                    {#                                        Add to list#}
-                    {#                                    </v-btn>#}
-                    {#                                </td>#}
-                    {#                            </tr>#}
-                    <div class="columns">
-                        <div class="column is-6 is-offset-3">
-                            {% for dev in page_obj %}
-                                <v-card class="w3-margin">
-                                    <v-card-title> {{ dev.user.first_name }} {{ dev.user.last_name }} </v-card-title>
-                                    <v-card-subtitle>
-                                        <v-icon medium>mdi-email</v-icon>{{ dev.user.email }}
-                                        <br><v-icon medium>mdi-home</v-icon>{{ dev.country }}
-                                        <br><v-icon medium>mdi-timeline-text</v-icon>{{ dev.years }} years</v-card-subtitle>
-                                    <v-card-text>
-                                        {% if  dev.candidateexperience.all %}
-                                            <p class="subtitle">Experience</p>
-                                            {% for exp in dev.candidateexperience.all %}
-                                                <v-card-text>
-                                                    {{ exp.title }}
-                                                    <br>
-                                                    {{ exp.company }}
-                                                    {{ exp.description }}
-                                                    {{ exp.duration }}
-                                                    <br>
-                                                    {{ exp.tech_tags }}
-                                                </v-card-text>
-                                            {% endfor %}
-                                        {% else %}
-                                            Candidate has not filled out their experience
-                                        {% endif %}
-                                    </v-card-text>
-                                    <v-card-text>
-                                    {% if  dev.candidateportfolio.all %}
-                                        <p class="subtitle">Portfolio</p>
-                                        {% for portfolio in dev.candidateportfolio.all %}
-                                            <v-card-text>
-                                                {{ portfolio.title }}
-                                                {{ portfolio.description }}
-                                                {{ portfolio.verified }}
-                                                {{ portfolio.tech_tags }}
-                                            </v-card-text>
-                                        {% endfor %}
-                                    {% else %}
-                                        Candidate hasn't filled out their portfolio
-                                    {% endif %}
-                                    </v-card-text>
-                                <v-card-actions>
-                                    <v-btn color="blue lighten-2" text href="{% url 'account_manager:cv' %}">View CV</v-btn>
-                                    <v-btn color="blue lighten-2" text href="{% url 'account_manager:add_to_list' dev.id %}">Add to list</v-btn>
-                                </v-card-actions>
-                                </v-card>
-                            {% endfor %}
-
+                            </form>
                         </div>
-                        {#                    {% endfor %}#}
-                    </tbody>
-                </table>
-            </v-card>
-            <nav class="pagination" role="navigation" aria-label="pagination">
-                <ul class="pagination-list">
-                    {% if page_obj.has_previous %}
-                        <li>
-                            <a class="pagination-link" aria-label="Goto page 1" href="?page=1"> Page 1</a>
-                        </li>
-                        <li>
-                            <a class="pagination-previous" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                        </li>
-                    {% endif %}
+                    </nav>
+                </div>
+                <div class="column is-9">
+                    <v-card id="job_card" class="mb-5  pa-5" :ripple="false" color="white" flat>
+                                {% for dev in page_obj %}
+                                    <v-card class="w3-margin">
+                                        <v-card-title
+                                                class="w3-margin-top"> {{ dev.user.first_name }} {{ dev.user.last_name }} </v-card-title>
+                                        <v-card-subtitle>
+                                            <v-icon medium>mdi-email</v-icon>
+                                            {{ dev.user.email }}
+                                            <br>
+                                            <v-icon medium>mdi-home</v-icon>
+                                            {{ dev.country }}
+                                            <br>
+                                            <v-icon medium>mdi-timeline-text</v-icon>
+                                            {{ dev.years }} years
+                                        </v-card-subtitle>
+                                        <v-card-text>
+                                            {% if  dev.candidateexperience.all %}
+                                                <p class="subtitle">Experience</p>
+                                                {% for exp in dev.candidateexperience.all %}
+                                                    <v-card-text>
+                                                        {{ exp.title }}
+                                                        <br>
+                                                        {{ exp.company }}
+                                                        {{ exp.description }}
+                                                        {{ exp.duration }}
+                                                        <br>
+                                                        {{ exp.tech_tags }}
+                                                        <br>
+                                                        {{ exp.duration }} months
+                                                    </v-card-text>
+                                                {% endfor %}
+                                            {% else %}
+                                                <p>Candidate has not filled out their experience</p>
+                                            {% endif %}
+                                        </v-card-text>
+                                        <v-card-text>
+                                            {% if  dev.candidateportfolio.all %}
+                                                <p class="subtitle">Portfolio</p>
+                                                {% for portfolio in dev.candidateportfolio.all %}
+                                                    <v-card-text>
+                                                        {{ portfolio.title }}
+                                                        {{ portfolio.description }}
+                                                        {{ portfolio.verified }}
+                                                        {{ portfolio.tech_tags }}
+                                                    </v-card-text>
+                                                {% endfor %}
+                                            {% else %}
+                                                Candidate hasn't filled out their portfolio
+                                            {% endif %}
+                                        </v-card-text>
+                                        <v-card-actions>
+                                            <v-btn color="blue lighten-2" outlined
+                                                   href="{% url 'account_manager:cv' %}">View CV
+                                            </v-btn>
+                                            <v-btn color="blue lighten-2" outlined
+                                                   href="{% url 'account_manager:add_to_list' dev.id %}">Add to list
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                {% endfor %}
+                    </v-card>
+                    <nav class="pagination" role="navigation" aria-label="pagination">
+                        <ul class="pagination-list">
+                            {% if page_obj.has_previous %}
+                                <li>
+                                    <a class="pagination-link" aria-label="Goto page 1" href="?page=1"> Page 1</a>
+                                </li>
+                                <li>
+                                    <a class="pagination-previous" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
 
-                    <span class="current">
+                            <span class="current">
                         {% if page_obj.has_next %}
                             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
                         {% else %}
@@ -195,26 +128,25 @@
                         {% endif %}
                     </span>
 
-                    {% if page_obj.has_next %}
-                        <li>
-                            <a class="pagination-next" href="?page={{ page_obj.next_page_number }}">Next</a>
-                        </li>
-                        <li>
-                            <a class="pagination-link" aria-label="Last"
-                               href="?page={{ page_obj.paginator.num_pages }}">Last Page</a>
-                        </li>
-                    {% endif %}
-                    </span>
-                </ul>
-            </nav>
+                            {% if page_obj.has_next %}
+                                <li>
+                                    <a class="pagination-next" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                </li>
+                                <li>
+                                    <a class="pagination-link" aria-label="Last"
+                                       href="?page={{ page_obj.paginator.num_pages }}">Last Page</a>
+                                </li>
+                            {% endif %}
+                            </span>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
 
         </v-card>
-
     </div>
 
-    </div>
-    </div>
 
-    </div>
 
 {% endblock %}

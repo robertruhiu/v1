@@ -7,14 +7,14 @@ from django.http import HttpResponse, JsonResponse, HttpResponseServerError
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from requests import Response
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from rest_framework import status
 
 from marketplace.models import Job, Profile, JobApplication
 from account_manager.models import Shortlist
-from account_manager.filters import JobFilter, DevFilter
+from account_manager.filters import JobFilter, DevFilter, ShortlistDevFilter
 from account_manager.forms import ShortlistCreateUpdateForm, ListForm
 
 
@@ -27,13 +27,15 @@ def index(request):
     lists = Shortlist.objects.all()
     if not query:
         all_devs = Profile.objects.filter(user_type='developer')
-        print(all_devs.count())
-        paginator = Paginator(all_devs, 25)
+        devs_filter = DevFilter(request.GET, queryset=all_devs)
+        devs = DevFilter(request.GET, queryset=all_devs).qs
+        print(devs.count())
+        paginator = Paginator(devs, 25)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        # devs_filter = DevFilter(request.GET, queryset=devs)
         # devs = DevFilter(request.GET, queryset=devs).qs
-        return render(request, 'account_manager/dashboard.html', {'page_obj': page_obj, 'lists':lists})
+        return render(request, 'account_manager/dashboard.html',
+                      {'page_obj': page_obj, 'lists':lists,'devs_filter': devs_filter})
     else:
         devs = Profile.objects.search(query)
         # print(devs.count())
@@ -149,7 +151,7 @@ def download_cv(request):
 def shortlist(request, id):
     list = Shortlist.objects.get(id=id)
     devs = list.developers.all()
-    devs_filter = DevFilter(request.GET, queryset=devs)
+    devs_filter = ShortlistDevFilter(request.GET, queryset=devs)
     # list = Shortlist.objects.get(slug=slug)
     return render(request, 'account_manager/shortlist.html', {'list': list, 'devs_filter': devs_filter})
 
@@ -176,10 +178,12 @@ def add_to_list(request, id):
                 shortlist = Shortlist.objects.get(id=int(list))
                 shortlist.developers.add(developer)
                 shortlist.save()
-            return redirect('frontend:index')
+            return redirect('account_manager:base')
     else:
         list_form = ListForm()
         return render(request, 'account_manager/addtolist.html', {'developer': developer, 'list_form': list_form})
+
+
 @login_required
 def send_mail(request, id):
     developer = Profile.objects.get(id=id)
@@ -204,35 +208,34 @@ def update_application(request):
     if data == 'shortlist':
         application.stage = 'shortlisted'
         application.save()
-        return redirect('frontend:myjob', id=application.job.id)
+        return redirect('account_manager:myjob', id=application.job.id)
     elif data == 'reject':
         application.stage = 'rejected'
         application.save()
-        return redirect('frontend:myjob', id=application.job.id)
+        return redirect('account_manager:myjob', id=application.job.id)
     else:
         # todo return error messages
-        return redirect('frontend:myjob', id=application.job.id)
+        return redirect('account_manager:myjob', id=application.job.id)
 
 
-class ShortlistCreate(LoginRequiredMixin, CreateView):
+class ShortlistCreate(CreateView):
     template_name = 'account_manager/shortlist_form.html'
     model = Shortlist
     fields = ['title', 'category']
-    success_url = '/all_shortlist/'
-    # form_class = ShortlistCreateUpdateForm
+    success_url = '/cac/all_shortlist/'
 
 
 class ShortlistUpdate(LoginRequiredMixin, UpdateView):
     template_name = 'account_manager/shortlist_form.html'
     model = Shortlist
     fields = ['title', 'category']
-    success_url = '/all_shortlist/'
+    success_url = '/cac/all_shortlist/'
 
 
 class ShortlistDelete(LoginRequiredMixin, DeleteView):
     template_name = 'account_manager/shortlist_confirm_delete.html'
     model = Shortlist
-    success_url = '/all_shortlist/'
+    success_url = '/cac/all_shortlist/'
 
 
 # # test pdf view

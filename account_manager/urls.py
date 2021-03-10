@@ -4,7 +4,7 @@ from account_manager import views
 app_name = 'account_manager'
 #
 urlpatterns = [
-    path('', views.index),
+    path('', views.index, name='base'),
     # path('devs/', views.index),
     path('jobs/', views.jobs, name='jobs'),
     path('myjob/<int:id>/', views.myjob, name='myjob'),

@@ -1,64 +1,94 @@
 {% extends 'base4.html' %}
+{% load bulma_tags %}
 {% block content %}
     <div class="w3-container">
         <v-card id="all__jobs__card" elevation="0" class="mt-5">
             <v-card-title class="mb-5">
-                Shortlists > {{ list.title }}
+                <h1 class="title">{{ list.title }}</h1>
             </v-card-title>
-
-            <v-card class="ma-5 pa-5">
-                <form method="get">
-                    <div class="filter">
-                        <div class="filter-option">
-                            <p class="mb-1">GENDER</p>
-                            {{ devs_filter.form.gender }}
-                        </div>
-                        <div class="filter-option">
-                            <p class="mb-1">FRAMEWORK</p>
-                            {{ devs_filter.form.framework }}
-                        </div>
-                        <div class="filter-option">
-                            <p class="mb-1">SKILLS</p>
-                            {{ devs_filter.form.skills }}
-                        </div>
-                        <div class="filter-option">
-                            <p class="mb-1">VERIFIED SKILLS</p>
-                            {{ devs_filter.form.verified_skills }}
-                        </div>
-
-                        <div class="filter-option">
-                            <p class="mb-1">AVAILABILITY</p>
-                            {{ devs_filter.form.availabilty }}
-                        </div>
-                        <div class="filter-option">
-                            <v-btn class="filter-btn" color="#007bff" dark small type="submit">Filter</v-btn>
-                        </div>
-                    </div>
-                </form>
-            </v-card>
-
             <v-card id="job_card" class="mb-5 pa-5" :ripple="false" color="white" flat>
-                {% for dev in devs_filter.qs %}
-                    <v-card class="dev-card">
-                        <v-row class="justify-space-around align-center pa-2">
-                            <div>
-                                <h4>{{ dev.user.first_name }} {{ dev.user.last_name }}</h4>
-                                <p></p>
+                <div class="columns">
+                    <div class="column is-3">
+                        <nav class="panel w3-margin">
+                            <p class="panel-heading">
+                                Filter
+                            </p>
+                            <div class="w3-margin">
+                                <form method="get">
+
+                                    {{ devs_filter.form | bulma }}
+                                    <div class="panel-block">
+                                        <button class="button is-link is-outlined is-fullwidth" type="submit">
+                                           Filter
+                                        </button>
+                                    </div>
+
+                                </form>
                             </div>
-                            <div>
-                                <h4>{{ dev.gender }}</h4>
-                            </div>
-                            <div>
-                                <h4>{{ dev.experience }}</h4><br>
-                            </div>
-                            <v-btn small dark color="#007bff" href="#">View CV</v-btn>
-                            <v-btn small dark color="#007bff" href="{% url 'account_manager:mydev' dev.id %}">View Developer
-                            </v-btn>
-                            <v-btn small dark color="#007bff" href="{% url 'account_manager:mydev' dev.id %}">Remove from List
-                            </v-btn>
-                        </v-row>
-                    </v-card>
-                {% endfor %}
+                        </nav>
+                    </div>
+
+                    <div class="column is-9">
+                        {% for dev in devs_filter.qs %}
+                            <v-card class="w3-margin">
+                                <v-card-title
+                                        class="w3-margin-top"> {{ dev.user.first_name }} {{ dev.user.last_name }} </v-card-title>
+                                <v-card-subtitle>
+                                    <v-icon medium>mdi-email</v-icon>
+                                    {{ dev.user.email }}
+                                    <br>
+                                    <v-icon medium>mdi-home</v-icon>
+                                    {{ dev.country }}
+                                    <br>
+                                    <v-icon medium>mdi-timeline-text</v-icon>
+                                    {{ dev.years }} years
+                                </v-card-subtitle>
+                                <v-card-text>
+                                    {% if  dev.candidateexperience.all %}
+                                        <p class="subtitle">Experience</p>
+                                        {% for exp in dev.candidateexperience.all %}
+                                            <v-card-text>
+                                                {{ exp.title }}
+                                                <br>
+                                                {{ exp.company }}
+                                                {{ exp.description }}
+                                                {{ exp.duration }}
+                                                <br>
+                                                {{ exp.tech_tags }}
+                                                <br>
+                                                {{ exp.duration }} months
+                                            </v-card-text>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>Candidate has not filled out their experience</p>
+                                    {% endif %}
+                                </v-card-text>
+                                <v-card-text>
+                                    {% if  dev.candidateportfolio.all %}
+                                        <p class="subtitle">Portfolio</p>
+                                        {% for portfolio in dev.candidateportfolio.all %}
+                                            <v-card-text>
+                                                {{ portfolio.title }}
+                                                {{ portfolio.description }}
+                                                {{ portfolio.verified }}
+                                                {{ portfolio.tech_tags }}
+                                            </v-card-text>
+                                        {% endfor %}
+                                    {% else %}
+                                        Candidate hasn't filled out their portfolio
+                                    {% endif %}
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn color="blue lighten-2" outlined href="{% url 'account_manager:cv' %}">View CV
+                                    </v-btn>
+                                    <v-btn color="blue lighten-2" outlined
+                                           href="{% url 'account_manager:add_to_list' dev.id %}">Add to list
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        {% endfor %}
+                    </div>
+                </div>
             </v-card>
         </v-card>
     </div>
