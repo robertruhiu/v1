@@ -1,5 +1,6 @@
 {% extends 'base4.html' %}
 {% load bulma_tags %}
+{% load account_manager_tags %}
 {% block content %}
     <div class="w3-containe w3-margi">
         {#    search div#}
@@ -49,97 +50,110 @@
                 </div>
                 <div class="column is-9">
                     <v-card id="job_card" class="mb-5  pa-5" :ripple="false" color="white" flat>
-                                {% for dev in page_obj %}
-                                    <v-card class="w3-margin">
-                                        <v-card-title
-                                                class="w3-margin-top"> {{ dev.user.first_name }} {{ dev.user.last_name }} </v-card-title>
-                                        <v-card-subtitle>
-                                            <v-icon medium>mdi-email</v-icon>
-                                            {{ dev.user.email }}
-                                            <br>
-                                            <v-icon medium>mdi-home</v-icon>
-                                            {{ dev.country }}
-                                            <br>
-                                            <v-icon medium>mdi-timeline-text</v-icon>
-                                            {{ dev.years }} years
-                                        </v-card-subtitle>
-                                        <v-card-text>
-                                            {% if  dev.candidateexperience.all %}
-                                                <p class="subtitle">Experience</p>
-                                                {% for exp in dev.candidateexperience.all %}
-                                                    <v-card-text>
-                                                        {{ exp.title }}
-                                                        <br>
-                                                        {{ exp.company }}
-                                                        {{ exp.description }}
-                                                        {{ exp.duration }}
-                                                        <br>
-                                                        {{ exp.tech_tags }}
-                                                        <br>
-                                                        {{ exp.duration }} months
-                                                    </v-card-text>
-                                                {% endfor %}
-                                            {% else %}
-                                                <p>Candidate has not filled out their experience</p>
-                                            {% endif %}
-                                        </v-card-text>
-                                        <v-card-text>
-                                            {% if  dev.candidateportfolio.all %}
-                                                <p class="subtitle">Portfolio</p>
-                                                {% for portfolio in dev.candidateportfolio.all %}
-                                                    <v-card-text>
-                                                        {{ portfolio.title }}
-                                                        {{ portfolio.description }}
-                                                        {{ portfolio.verified }}
-                                                        {{ portfolio.tech_tags }}
-                                                    </v-card-text>
-                                                {% endfor %}
-                                            {% else %}
-                                                Candidate hasn't filled out their portfolio
-                                            {% endif %}
-                                        </v-card-text>
-                                        <v-card-actions>
-                                            <v-btn color="blue lighten-2" outlined
-                                                   href="{% url 'account_manager:cv' %}">View CV
-                                            </v-btn>
-                                            <v-btn color="blue lighten-2" outlined
-                                                   href="{% url 'account_manager:add_to_list' dev.id %}">Add to list
-                                            </v-btn>
-                                        </v-card-actions>
-                                    </v-card>
-                                {% endfor %}
+                        {% for dev in devs %}
+                            <v-card class="w3-margin">
+                                <v-card-title
+                                        class="w3-margin-top"> {{ dev.user.first_name }} {{ dev.user.last_name }} </v-card-title>
+                                <v-card-subtitle>
+                                    <v-icon medium>mdi-email</v-icon>
+                                    {{ dev.user.email }}
+                                    <br>
+                                    <v-icon medium>mdi-home</v-icon>
+                                    {{ dev.country }}
+                                    <br>
+                                    <v-icon medium>mdi-timeline-text</v-icon>
+                                    {{ dev.years }} years
+                                </v-card-subtitle>
+                                <v-card-text>
+                                    {% if  dev.candidateexperience.all %}
+                                        <p class="subtitle">Experience</p>
+                                        {% for exp in dev.candidateexperience.all %}
+                                            <v-card-text>
+                                                {{ exp.title }}
+                                                <br>
+                                                {{ exp.company }}
+                                                {{ exp.description }}
+                                                {{ exp.duration }}
+                                                <br>
+                                                {{ exp.tech_tags }}
+                                                <br>
+                                                {{ exp.duration }} months
+                                            </v-card-text>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>Candidate has not filled out their experience</p>
+                                    {% endif %}
+                                </v-card-text>
+                                <v-card-text>
+                                    {% if  dev.candidateportfolio.all %}
+                                        <p class="subtitle">Portfolio</p>
+                                        {% for portfolio in dev.candidateportfolio.all %}
+                                            <v-card-text>
+                                                {{ portfolio.title }}
+                                                {{ portfolio.description }}
+                                                {{ portfolio.verified }}
+                                                {{ portfolio.tech_tags }}
+                                            </v-card-text>
+                                        {% endfor %}
+                                    {% else %}
+                                        Candidate hasn't filled out their portfolio
+                                    {% endif %}
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn color="blue lighten-2" outlined
+                                           href="{% url 'account_manager:cv' %}">View CV
+                                    </v-btn>
+                                    <v-btn color="blue lighten-2" outlined
+                                           href="{% url 'account_manager:add_to_list' dev.id %}">Add to list
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        {% endfor %}
                     </v-card>
-                    <nav class="pagination" role="navigation" aria-label="pagination">
-                        <ul class="pagination-list">
-                            {% if page_obj.has_previous %}
-                                <li>
-                                    <a class="pagination-link" aria-label="Goto page 1" href="?page=1"> Page 1</a>
-                                </li>
-                                <li>
-                                    <a class="pagination-previous" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                                </li>
-                            {% endif %}
+                    {% if devs.has_other_pages %}
+                        <nav class="pagination" role="navigation" aria-label="pagination">
 
-                            <span class="current">
-                        {% if page_obj.has_next %}
-                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                        {% else %}
-                            Page 1 of 1
-                        {% endif %}
-                    </span>
 
-                            {% if page_obj.has_next %}
-                                <li>
-                                    <a class="pagination-next" href="?page={{ page_obj.next_page_number }}">Next</a>
-                                </li>
-                                <li>
-                                    <a class="pagination-link" aria-label="Last"
-                                       href="?page={{ page_obj.paginator.num_pages }}">Last Page</a>
-                                </li>
-                            {% endif %}
-                            </span>
-                        </ul>
-                    </nav>
+                            <ul class="pagination-list">
+                                {% if devs.has_previous %}
+                                    {% if devs.previous_page_number != 1 %}
+                                        <li>
+                                            <a href="?{% param_replace page=devs.previous_page_number %}"
+                                               class="pagination-previous">Previous</a>
+                                        </li>
+                                    {% endif %}
+
+                                {% else %}
+                                    <li class="disabled"><span>&laquo;</span></li>
+                                {% endif %}
+                                {% for i in devs.paginator.page_range %}
+                                    {% if devs.number == i %}
+                                        <li>
+                                            <a href="?{% param_replace page=i %}" class="pagination-link is-current"
+                                               aria-current="page">{{ i }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li><a href="?{% param_replace page=i %}" class="pagination-link"
+                                               aria-current="page">{{ i }}</a>
+                                        </li>
+                                    {% endif %}
+
+                                {% endfor %}
+                                {% if devs.has_next %}
+                                    {% if devs.next_page_number != devs.paginator.num_pages%}
+                                     <li>
+                                        <a href="?{% param_replace page=devs.next_page_number %}" class="pagination-next">Next page</a>
+
+                                    </li>
+                                    {% endif %}
+
+                                {% else %}
+                                    <li class="disabled"><span>&raquo;</span></li>
+                                {% endif %}
+                            </ul>
+
+                        </nav>
+                    {% endif %}
                 </div>
             </div>
 

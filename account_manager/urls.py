@@ -5,11 +5,9 @@ app_name = 'account_manager'
 #
 urlpatterns = [
     path('', views.index, name='base'),
-    # path('devs/', views.index),
     path('jobs/', views.jobs, name='jobs'),
     path('myjob/<int:id>/', views.myjob, name='myjob'),
     path('update_application/', views.update_application, name='update_application'),
-    # path('devs/', views.devs, name='devs'),
     path('mydev/<int:id>/', views.mydev, name='mydev'),
     path('all_shortlist/', views.all_shortlist, name='all_shortlist'),
     path('shortlist/<int:id>/', views.shortlist, name='shortlist'),

@@ -20,7 +20,9 @@ from account_manager.forms import ShortlistCreateUpdateForm, ListForm
 
 # Create your views here.
 # dashboard
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
+
 @login_required
 def index(request):
     query = request.GET.get('q', None)
@@ -29,20 +31,32 @@ def index(request):
         all_devs = Profile.objects.filter(user_type='developer')
         devs_filter = DevFilter(request.GET, queryset=all_devs)
         devs = DevFilter(request.GET, queryset=all_devs).qs
-        print(devs.count())
+        page = request.GET.get('page', 1)
         paginator = Paginator(devs, 25)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        # devs = DevFilter(request.GET, queryset=devs).qs
+        try:
+            devs = paginator.page(page)
+        except PageNotAnInteger:
+            devs = paginator.page(1)
+        except EmptyPage:
+            devs = paginator.page(paginator.num_pages)
         return render(request, 'account_manager/dashboard.html',
-                      {'page_obj': page_obj, 'lists':lists,'devs_filter': devs_filter})
+                      {'devs': devs, 'lists':lists,'devs_filter': devs_filter})
     else:
-        devs = Profile.objects.search(query)
-        # print(devs.count())
-        # paginator = Paginator(devs, 25)
-        # page_number = request.GET.get('page')
-        page_obj = devs
-        return render(request, 'account_manager/dashboard.html', {'page_obj': page_obj, 'lists': lists})
+        search_results = Profile.objects.search(query)
+        devs_filter = DevFilter(request.GET, queryset=search_results)
+        devs = DevFilter(request.GET, queryset=search_results).qs
+        page = request.GET.get('page', 1)
+
+        paginator = Paginator(devs, 25)
+        try:
+            devs = paginator.page(page)
+        except PageNotAnInteger:
+            devs = paginator.page(1)
+        except EmptyPage:
+            devs = paginator.page(1)
+
+        return render(request, 'account_manager/dashboard.html', {'devs': devs, 'lists': lists,
+                                                                  'devs_filter': devs_filter})
 
 # @login_required
 # def index(request):

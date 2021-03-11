@@ -39,7 +39,7 @@ from .serializers import UserSerializer, ProfileSerializer, ExperienceSerializer
 
 CharField.register_lookup(Length, 'length')
 
-
+# rest api endpoints
 
 
 def Talentorder(request):
@@ -475,36 +475,12 @@ def profile_type_selection(request, current_profile):
 
 def index(request):
     if request.user.is_authenticated:
-        current_profile = request.user.profile
-        transactions = Transaction.objects.filter(user=request.user).filter(stage='complete')
-        if request.user.profile.stage == 'profile_type_selection':
-            return profile_type_selection(request, current_profile)
-        elif request.user.profile.stage == 'developer_filling_details':
-            return developer_filling_details(request, current_profile)
-        elif request.user.profile.stage == 'recruiter_filling_details':
-            return recruiter_filling_details(request, current_profile)
-        elif request.user.profile.stage == 'complete':
-            if request.user.profile.user_type == 'developer':
-                student = Profile.objects.get(id=request.user.id)
-                passedquizz = TakenQuiz.objects.filter(score__gt=50).filter(student_id=student)
-
-                return render(request, 'frontend/developer/developer.html', {'passedquizz': passedquizz})
-
-            elif request.user.profile.user_type == 'recruiter':
-
-                return render(request, 'frontend/recruiter/recruiter.html', {'transactions': transactions})
+        return redirect('account_manager:base')
     else:
         return home(request)
 
 
 def home(request):
-
-
-
-
-
-
-
     return render(request, 'frontend/landing.html')
 
 
