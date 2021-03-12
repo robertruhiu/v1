@@ -1,4 +1,4 @@
-{% extends 'base2.html' %}
+{% extends 'base4.html' %}
 {#{% load bulma_tags %}#}
 {% block content %}
     <div class="w3-container w3-margin">
@@ -6,7 +6,7 @@
             <div id="cv" class="w3-topbar w3-bottombar w3-border-blue">
                 <div id="cv-template" class="w3-margin-left w3-margin-right">
                     <section class="cv-header">
-                         <v-btn color="blue"  button href="{% url 'frontend:download_cv' %}" class="is-pulled-right">Download as Pdf</v-btn>
+                         <v-btn color="blue"  button href="{% url 'account_manager:download_cv' %}" class="is-pulled-right">Download as Pdf</v-btn>
                         <div class="name__detail">
                             <div class="template-name__detail">
                                 <h2 class="w3-xxlarge">Dexter Ouatarra</h2>
