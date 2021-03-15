@@ -52,11 +52,18 @@
                     <v-card id="job_card" class="mb-5  pa-5" :ripple="false" color="white" flat>
                         {% for dev in devs %}
                             <v-card class="w3-margin">
-                                <v-card-title
-                                        class="w3-margin-top"> {{ dev.user.first_name }} {{ dev.user.last_name }} </v-card-title>
+
+                                <v-card-title class="w3-margin-top">
+                                    {% if request.user|has_group:"cac_admin" %}
+                                        {{ dev.user.first_name }} {{ dev.user.last_name }}
+                                    {% endif %}
+                                </v-card-title>
                                 <v-card-subtitle>
-                                    <v-icon medium>mdi-email</v-icon>
-                                    {{ dev.user.email }}
+                                    {% if request.user|has_group:"cac_admin" %}
+                                        <v-icon medium>mdi-email</v-icon>
+                                        {{ dev.user.email }}
+
+                                    {% endif %}
                                     <br>
                                     <v-icon medium>mdi-home</v-icon>
                                     {{ dev.country }}
@@ -140,11 +147,12 @@
 
                                 {% endfor %}
                                 {% if devs.has_next %}
-                                    {% if devs.next_page_number != devs.paginator.num_pages%}
-                                     <li>
-                                        <a href="?{% param_replace page=devs.next_page_number %}" class="pagination-next">Next page</a>
+                                    {% if devs.next_page_number != devs.paginator.num_pages %}
+                                        <li>
+                                            <a href="?{% param_replace page=devs.next_page_number %}"
+                                               class="pagination-next">Next page</a>
 
-                                    </li>
+                                        </li>
                                     {% endif %}
 
                                 {% else %}

@@ -1,5 +1,6 @@
 {% extends 'base4.html' %}
 {% load bulma_tags %}
+{% load account_manager_tags %}
 {% block content %}
     <div class="w3-container">
         <v-card id="all__jobs__card" elevation="0" class="mt-5">
@@ -19,7 +20,7 @@
                                     {{ devs_filter.form | bulma }}
                                     <div class="panel-block">
                                         <button class="button is-link is-outlined is-fullwidth" type="submit">
-                                           Filter
+                                            Filter
                                         </button>
                                     </div>
 
@@ -31,12 +32,19 @@
                     <div class="column is-9">
                         {% for dev in devs_filter.qs %}
                             <v-card class="w3-margin">
-                                <v-card-title
-                                        class="w3-margin-top"> {{ dev.user.first_name }} {{ dev.user.last_name }} </v-card-title>
+
+                                <v-card-title class="w3-margin-top">
+                                    {% if request.user|has_group:"cac_admin" %}
+                                        {{ dev.user.first_name }} {{ dev.user.last_name }}
+                                    {% endif %}
+                                </v-card-title>
                                 <v-card-subtitle>
-                                    <v-icon medium>mdi-email</v-icon>
-                                    {{ dev.user.email }}
+                                    {% if request.user|has_group:"cac_admin" %}
+                                        <v-icon medium>mdi-email</v-icon>
+                                        {{ dev.user.email }}
+                                    {% endif %}
                                     <br>
+
                                     <v-icon medium>mdi-home</v-icon>
                                     {{ dev.country }}
                                     <br>
