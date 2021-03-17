@@ -32,7 +32,10 @@
                     <div class="column is-9">
                         {% for dev in devs_filter.qs %}
                             <v-card class="w3-margin">
-
+                                {% if  dev.availabilty != None %}
+                                    <v-btn class="is-pulled-right w3-margin" button rounded
+                                           color="blue lighten-2">{{ dev.availabilty }}</v-btn>
+                                {% endif %}
                                 <v-card-title class="w3-margin-top">
                                     {% if request.user|has_group:"cac_admin" %}
                                         {{ dev.user.first_name }} {{ dev.user.last_name }}
@@ -40,16 +43,23 @@
                                 </v-card-title>
                                 <v-card-subtitle>
                                     {% if request.user|has_group:"cac_admin" %}
-                                        <v-icon medium>mdi-email</v-icon>
+                                        <v-icon medium color="blue lighten-2">mdi-email</v-icon>
                                         {{ dev.user.email }}
                                     {% endif %}
                                     <br>
 
-                                    <v-icon medium>mdi-home</v-icon>
+                                    <v-icon medium color="blue lighten-2">mdi-home</v-icon>
                                     {{ dev.country }}
                                     <br>
-                                    <v-icon medium>mdi-timeline-text</v-icon>
+                                    <v-icon medium color="blue lighten-2">mdi-timeline-text</v-icon>
                                     {{ dev.years }} years
+                                    <br>
+                                    {% if dev.file.url != None %}
+                                        <v-icon medium color="blue lighten-2">mdi-file-link</v-icon>
+                                        <v-btn text depressed color="blue lighten-2" href="{{ dev.file.url }}">
+                                            Uploaded CV
+                                        </v-btn>
+                                    {% endif %}
                                 </v-card-subtitle>
                                 <v-card-text>
                                     {% if  dev.candidateexperience.all %}
@@ -87,7 +97,8 @@
                                     {% endif %}
                                 </v-card-text>
                                 <v-card-actions>
-                                    <v-btn color="blue lighten-2" outlined href="{% url 'account_manager:cv' dev.id %}">View CV
+                                    <v-btn color="blue lighten-2" outlined href="{% url 'account_manager:cv' dev.id %}">
+                                        View CV
                                     </v-btn>
                                     <v-btn color="blue lighten-2" outlined
                                            href="{% url 'account_manager:add_to_list' dev.id %}">Add to list
