@@ -319,6 +319,7 @@ INVITATIONS_ALLOW_JSON_INVITES = True
 INVITATIONS_ADAPTER = ACCOUNT_ADAPTER
 INVITATIONS_EMAIL_SUBJECT_PREFIX = 'Codeln'
 
+# TODO: delete unused aws configs
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY', default='AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='AWS_STORAGE_BUCKET_NAME')
@@ -346,15 +347,16 @@ if ENVIRONMENT != 'local':
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.RawMediaCloudinaryStorage'
 
 CLOUDINARY = {
-    'cloud_name': 'dwtvwjhn3',
-    'api_key': '748889632162181',
-    'api_secret': 'ecbWIeK33ka7-1wyy9TiB6pVwAw',
+    'cloud_name': config('CLOUDINARY_CLOUD_NAME'),
+    'api_key': config('CLOUDINARY_API_KEY'),
+    'api_secret': config('CLOUDINARY_API_SECRET'),
 }
+
 CLOUDINARY_STORAGE = {
 
-    'CLOUD_NAME': 'dwtvwjhn3',
-    'API_KEY': '748889632162181',
-    'API_SECRET': 'ecbWIeK33ka7-1wyy9TiB6pVwAw',
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
 
 }
 CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'

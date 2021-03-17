@@ -1,6 +1,7 @@
 {% extends 'base4.html' %}
 {% load bulma_tags %}
 {% load account_manager_tags %}
+{% load cloudinary %}
 {% block content %}
     <div class="w3-containe w3-margi">
         {#    search div#}
@@ -72,9 +73,12 @@
                                     <v-icon medium color="blue lighten-2">mdi-timeline-text</v-icon>
                                     {{ dev.years }} years
                                     <br>
-{#                                    <v-icon medium color="blue lighten-2">mdi-file-link</v-icon>#}
-{#                                {{ dev.file }}#}
 
+                                    {% if dev.file.url != None %}
+                                        <v-icon medium color="blue lighten-2">mdi-file-link</v-icon>
+                                        <v-btn text depressed color="blue lighten-2" href="{{ dev.file.url }}">Uploaded CV
+                                        </v-btn>
+                                    {% endif %}
                                 </v-card-subtitle>
                                 <v-card-text>
                                     {% if  dev.candidateexperience.all %}

@@ -87,7 +87,7 @@ class Profile(models.Model):
     objects = ProfileManager()
 
     def __str__(self):
-        return self.user.username
+        return f'{self.user.username} - {self.user.first_name} {self.user.last_name}'
 
     def last_seen(self):
         return cache.get('last_seen_%s' % self.user.username)
