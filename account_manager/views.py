@@ -59,36 +59,6 @@ def index(request):
                                                                   'devs_filter': devs_filter})
 
 
-# @login_required
-# def index(request):
-#     query = request.GET.get('q', None)
-#     lists = Shortlist.objects.all()
-#     if not query:
-#         devs = Profile.objects.filter(user_type='developer')
-#         print(devs.count())
-#         devs_filter = DevFilter(request.GET, queryset=devs)
-#         devs = DevFilter(request.GET, queryset=devs).qs
-#         return render(request, 'account_manager/dashboard.html', {'devs_filter': devs_filter,
-#                                                                            'devs': devs, 'lists': lists})
-#     else:
-#         devs = Profile.objects.search(query)
-#         return render(request, 'account_manager/dashboard.html', {'devs': devs, 'lists': lists})
-
-
-# # developers
-# @login_required
-# def devs(request):
-#     if request.method == 'POST':
-#         email = request.GET.get('email')
-#         devs_filter = Profile.objects.annotate(search=SearchVector('user__email'), ).filter(search=email)
-#         return render(request, 'frontend/account_manager/developers.html', {'devs': devs_filter})
-#     else:
-#         devs = Profile.objects.filter(user_type='developer')
-#         devs_filter = DevFilter(request.GET, queryset=devs)
-#         devs = DevFilter(request.GET, queryset=devs).qs
-#         return render(request, 'frontend/account_manager/developers.html', {'devs_filter': devs_filter,
-#                                                                             'devs': devs})
-
 @login_required
 def mydev(request, id):
     dev = Profile.objects.get(id=id)
@@ -138,11 +108,6 @@ def cv(request, id):
     # return render(request, 'account_manager/stripped_cv.html', {'dev': dev})
 
 
-# from io import BytesIO
-# from reportlab.pdfgen import canvas
-# from django.http import HttpResponse
-# from reportlab.lib.pagesizes import letter, landscape
-# from reportlab.lib.pagesizes import A4
 
 
 import os
@@ -317,22 +282,4 @@ class ShortlistDelete(LoginRequiredMixin, DeleteView):
     model = Shortlist
     success_url = '/cac/all_shortlist/'
 
-# # test pdf view
-# from django.http import HttpResponse
-# from django.views.generic import View
-#
-# # importing get_template from loader
-# from django.template.loader import get_template
-#
-# # import render_to_pdf from util.py
-# from api.utils import render_to_pdf
-#
-#
-# # Creating our view, it is a class based view
-# class GeneratePdf(View):
-#     def get(self, request, *args, **kwargs):
-#         # getting the template
-#         pdf = render_to_pdf('account_manager/full_cv.html')
-#
-#         # rendering the template
-#         return HttpResponse(pdf, content_type='application/pdf')
+

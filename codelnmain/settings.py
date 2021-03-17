@@ -375,3 +375,17 @@ BROKER_URL = config('REDIS_URL', default='redis://')
 CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://')
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Accra'
+
+# sentry integration
+
+ENVIRONMENT = config('ENVIRONMENT', default='local')
+if ENVIRONMENT != 'local':
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        send_default_pii=True,
+        dsn=config('SENTRY_DSN'),
+        integrations=[DjangoIntegration()],
+        environment=ENVIRONMENT,
+    )
