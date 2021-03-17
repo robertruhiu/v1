@@ -6,19 +6,20 @@
             <div id="cv" class="w3-topbar w3-bottombar w3-border-blue">
                 <div id="cv-template" class="w3-margin-left w3-margin-right">
                     <section class="cv-header">
-                         <v-btn color="blue"  button href="{% url 'account_manager:download_cv' %}" class="is-pulled-right">Download as Pdf</v-btn>
+                         <v-btn color="blue"  button href="{% url 'account_manager:download_stripped_cv'  dev.id %}" class="is-pulled-left">Download Stripped CV</v-btn><v-btn></v-btn>
+                         <v-btn color="blue"  button href="{% url 'account_manager:download_cv'  dev.id %}" class="is-pulled-right">Download Full CV</v-btn>
                         <div class="name__detail">
                             <div class="template-name__detail">
-                                <h2 class="w3-xxlarge">Dexter Ouatarra</h2>
+                                <h2 class="w3-xxlarge">{{ dev.user.first_name }} {{ dev.user.last_name }}</h2>
                                 <span class="position">Current Position: CPO at Codeln</span>
-                                <span class="position">Location: </span>Ivory Coast</span>
-                                <span class="position">Email: dexter@codeln.com</span>
-                                <span class="position">Phone: 09894556677</span>
+                                <span class="position">Location: {{dev.country.name }}</span>
+                                <span class="position">Email: {{ dev.user.email }}</span>
+                                <span class="position">Phone: {{ dev.phone_number }}</span>
                             </div>
                         </div>
                         <div class="template-experience">
                             <span class="experience">EXPERIENCE</span>
-                            <span class="years__experience">8 years</span>
+                            <span class="years__experience">{{ dev.years }} years</span>
                         </div>
                     </section>
                     <section class="resume">
@@ -28,59 +29,50 @@
                             {#                <span v-for="(hashtag, index) in cvtemplate.hashtags">{{ hashtag }}</span>#}
                         </div>
                         <div class="resume__details">
-                            Je suis en charge de tous les aspects produits. Typiquement, comprend l'innovation, la
-                            conception et
-                            le
-                            développement de produits, la production générale et la gestion des produits. Je travaille
-                            sur la
-                            stratégie produit en
-                            fonction des objectifs fixés par le CEO ou les membres du conseil d'administration dont je
-                            fais
-                            partie.
+                            {{ dev.about}}
                         </div>
                     </section>
                     <section class="competences__roles__skills">
                         <h5>COMPETENCES</h5>
                         <div class="roles">
                             <span class="roles-title">Roles</span>
-                            <div class="role-description">Full Stack Development · 7 years +
+                            {% for role in dev.candidateexperience.all %}
+                            <div class="role-description">{{ role.title}} · {{ role.duration }} months+
                             </div>
+                            {% endfor %}
                         </div>
                         <div class="skills">
                             <h5>Skills</h5>
                             <div class="skills-list">
-                                {#                    <span v-for="(skill, index) in cvtemplate.skills">{{ skill }}</span>#}
+
                                 <span>project</span>
+                                <span>{{ dev.skills }}</span>
+                                <span>{{ dev.verified_skills }}</span>
                             </div>
                         </div>
                     </section>
                     <section class="experiences">
                         <h5>EXPERIENCE</h5>
-                        {#            <div class="experience-details" v-for="(experience, index) in cvtemplate.experienceDetails" :key="index">#}
+
+                         {% for exp in dev.candidateexperience.all %}
                         <div>
                             <div class="company-name">
-                                <h3>Codeln</h3>
+                                <h3>{{ exp.company }}</h3>
                                 <div class="products">
                                     {#                        <span class="product" v-for="(product, index) in experience.product" :key="index">{{ product }}</span>#}
-                                    <span class="product">Product</span>
+                                    <span class="product">{{ exp.tech_tags }}</span>
                                 </div>
                             </div>
                             <div class="work__date">
-                                <span class="work-date">September 2018</span>
-                                <span class="work-time">2 years 11 months</span>
+                                <span class="work-date">Duration</span>
+                                <span class="work-time">{{ exp.duration }} months</span>
                             </div>
                         </div>
-                        <p class="position">Chief Product Officer</p>
+                        <p class="position">{{ exp.title}}</p>
                         <p class="position-details">
-                            Je suis responsable de toutes les questions relatives aux produits.Comprend généralement
-                            l’innovation,
-                            la conception et ledéveloppement de produit, la production générale, la gestion de projets
-                            et la
-                            gestion
-                            de produits.Je travaille sur la stratégie produit en fonction des objectifs fixés par le PDG
-                            ou les
-                            membres du conseil.
+                            {{ exp.description}}
                         </p>
+                        {% endfor %}
                     </section>
                     <section class="formation">
                         <h5>EDUCATION</h5>
@@ -101,6 +93,7 @@
                             across
                             the world. Lancaster isranked amongst the top ten universities in the UK.',
                         </div>
+                        ****** Hey dexter we dont have education data in the db pls reccomend what we should use in this space*****
                     </section>
 
                 </div>

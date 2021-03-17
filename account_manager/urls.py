@@ -16,7 +16,7 @@ urlpatterns = [
     path('shortlist/create/', views.ShortlistCreate.as_view(), name='shortlist_create'),
     path('shortlist/<int:pk>/update/', views.ShortlistUpdate.as_view(), name='shortlist_update'),
     path('shortlist/<int:pk>/delete/', views.ShortlistDelete.as_view(), name='shortlist_delete'),
-    path('cv/', views.cv, name='cv'),
-    path('download_cv/', views.download_cv, name='download_cv'),
-    # path('test/', views.GeneratePdf.as_view(), name='download_cv'),
+    path('cv/<int:id>/', views.cv, name='cv'),
+    path('download_cv/<int:id>/', views.download_cv, name='download_cv'),
+    path('download_stripped_cv/<int:id>/', views.download_stripped_cv, name='download_stripped_cv'),
 ]

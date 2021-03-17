@@ -1,0 +1,766 @@
+{% load static %}
+{#{% load humanize %}#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+
+    <script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.2.17/dist/vuetify.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style type="text/css">
+        .w3-container:after, .w3-container:before, .w3-panel:after, .w3-panel:before, .w3-row:after, .w3-row:before, .w3-row-padding:after, .w3-row-padding:before,
+        .w3-text-light-grey, .w3-hover-text-light-grey:hover, .w3-text-light-gray, .w3-hover-text-light-gray:hover {
+            color: #f1f1f1 !important
+        }
+
+        .w3-white, .w3-hover-white:hover {
+            color: #000 !important;
+            background-color: #fff !important
+        }
+
+        .w3-card, .w3-card-2 {
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)
+        }
+
+        .w3-border-0 {
+            border: 0 !important
+        }
+
+        .w3-border {
+            border: 1px solid #ccc !important
+        }
+
+        .w3-border-top {
+            border-top: 1px solid #ccc !important
+        }
+
+        .w3-border-bottom {
+            border-bottom: 1px solid #ccc !important
+        }
+
+        .w3-border-left {
+            border-left: 1px solid #ccc !important
+        }
+
+        .w3-border-right {
+            border-right: 1px solid #ccc !important
+        }
+
+        .w3-topbar {
+            border-top: 6px solid #ccc !important
+        }
+
+        .w3-bottombar {
+            border-bottom: 6px solid #ccc !important
+        }
+
+        .w3-border-blue, .w3-hover-border-blue:hover {
+            border-color: #2196F3 !important
+        }
+
+        .w3-margin {
+            margin: 16px !important
+        }
+
+        .w3-margin-top {
+            margin-top: 16px !important
+        }
+
+        .w3-margin-bottom {
+            margin-bottom: 16px !important
+        }
+
+        .w3-margin-left {
+            margin-left: 16px !important
+        }
+
+        .w3-margin-right {
+            margin-right: 16px !important
+        }
+
+        .w3-margin {
+            margin: 16px !important
+        }
+
+        .w3-margin-top {
+            margin-top: 16px !important
+        }
+
+        .w3-margin-bottom {
+            margin-bottom: 16px !important
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+        }
+
+        #dashboard,
+        #all_jobs,
+        #job__detail,
+        #shortlists,
+        #all_shortlist {
+            width: 100%;
+            display: flex;
+        }
+
+        #sidebar-v-card {
+            padding: 0;
+            box-shadow: 0 0 0;
+            margin-right: 0;
+        }
+
+        #sidebar-subheader {
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        #inner-sidebar-subheader {
+            width: 144px;
+            margin: 0 auto;
+        }
+
+        .v-image__image {
+            width: 100%;
+        }
+
+        .sidebar-link {
+            height: 40px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding-left: 0 .5rem;
+            margin: 0.5rem 0;
+        }
+
+        .sidebar-link:hover {
+            border-right: 2px solid #007bff;
+            background-color: #f5f5f5;
+        }
+
+        .sidebar-link:hover a,
+        .sidebar-link:hover .v-icon {
+            color: #007bff !important;
+        }
+
+        .sidebar-link a {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #595959 !important;
+            padding-left: 1rem;
+        }
+
+        .sidebar-link a span {
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .v-icon {
+            margin-right: .5rem;
+        }
+
+        #main-bar-dashboard {
+            width: 100%;
+        }
+
+        #main-bar__all-jobs {
+            width: 100%;
+            z-index: 20;
+        }
+
+        /* All jobs styling */
+
+        #all__jobs__card {
+            margin: 0 auto;
+            width: 80%;
+        }
+
+        #table {
+            border-spacing: 0;
+            margin: 0 1rem;
+        }
+
+        #table tr:nth-child(even) {
+            background-color: #eee;
+        }
+
+        #table tr:nth-child(odd) {
+            background-color: #fff;
+        }
+
+        #table tr:hover {
+            background-color: #fff;
+        }
+
+
+        th, td {
+            text-align: left;
+            border-spacing: 1rem;
+            border: 1px solid #c4c4c4;
+            max-width: 300px;
+            padding: .2rem 1rem;
+        }
+
+        td a {
+            color: #383838 !important;
+            display: block;
+        }
+
+
+        /* Filter card */
+        .filter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-option {
+            width: 200px;
+        }
+
+        .filter-option p {
+            color: #007bff !important;
+        }
+
+        .filter-option input, .filter-option select {
+            border: 1px solid #cecece;
+            width: 100%;
+            padding: .3rem;
+            outline: none;
+            border-radius: 5px;
+        }
+
+        .filter-btn {
+            width: 100%;
+        }
+
+        #main-bar__dev-detail {
+            width: 100%;
+            display: flex;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .profile__image {
+            width: 300px;
+            background-color: #f8f8f8;
+            height: 400px;
+            margin-right: 1rem;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            justify-content: center;
+        }
+
+        .profile__detail {
+            width: 600px;
+            background-color: #f8f8f8;
+            height: 400px;
+            border-radius: .3rem;
+            padding: 1rem;
+        }
+
+        /* Job details */
+        #main-bar__job-detail {
+            display: flex;
+            margin: 1rem 0 0 1rem;
+        }
+
+        #list-of-applicants {
+            width: auto;
+            margin-right: 1rem;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #e1e1e1;
+        }
+
+        #list-of-applicants-title {
+            background-color: #f5f5f5;
+            padding: .5rem;
+            margin-bottom: 1rem;
+        }
+
+        .applicants {
+            display: flex;
+            align-items: center;
+            padding: .5rem 1rem;
+            background-color: #f5f5f5;
+            margin: .2rem 0;
+        }
+
+        .applicant-details {
+            display: flex;
+            align-items: center;
+        }
+
+        .applicant-detail {
+            margin-left: 1rem;
+        }
+
+        .applicant-detail p {
+            margin-bottom: 0;
+            font-style: italic;
+            font-size: 12px;
+        }
+
+        .applicant-code p, .applicant-phone p {
+            font-size: 14px;
+            margin-left: .5rem;
+        }
+
+        .job__details {
+            width: 700px;
+        }
+
+        /* Recruiters Details: comprises of logo, name other details relating to the job */
+        .recruiter-details {
+            display: flex;
+            background-color: #f5f5f5;
+            padding: 1rem;
+            align-items: center;
+            margin-bottom: .5rem;
+        }
+
+        .recruiter-details > .recruiter-logo {
+            width: 20%;
+            height: 20%;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: .5rem;
+            margin-right: 1rem;
+        }
+
+        .recruiter-details > .recruiter-logo img {
+            width: 100%;
+        }
+
+        .recruiters-name {
+            width: 80%;
+        }
+
+        .recruiters-name p {
+            margin-bottom: 0;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .job-summary {
+            background-color: #f5f5f5;
+            padding: 1rem;
+            margin-bottom: .5rem;
+        }
+
+        .job-summary ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .job-summary ul li {
+            font-size: 14px;
+        }
+
+        /* width */
+        ::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #007bff;
+            border-radius: 10px;
+        }
+
+        /* End of scrollbar styling */
+
+        /* Shortlist styling */
+        .shortlist_wrapper {
+            width: 100%;
+            margin: 0 1rem;
+        }
+
+        .shortlist {
+            margin: 2rem 0 2rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-rows: 150px;
+            width: 100%;
+            grid-row-gap: 1rem;
+        }
+
+        .shortlist-card {
+            width: 250px;
+            height: 150px;
+            border-radius: .3rem;
+            box-shadow: 0 0 4px #e1e1e1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .shortlist-card:hover {
+            box-shadow: 0 0 6px #d6d6d6;
+        }
+
+        .card-tag {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #007bff;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .shortlist-card h2 {
+            color: #007bff;
+        }
+
+        .shortlist-card p {
+            margin-bottom: 0;
+            font-style: italic;
+        }
+
+        /* CV Template */
+        #cv-template {
+            margin: 0 1rem;
+            background-color: #eceff1;
+        }
+
+        section {
+            width: 100%;
+            padding: 1rem 1rem;
+            border-bottom: 1px solid #cecece;
+        }
+
+        .name__detail {
+            display: flex;
+            margin-bottom: 1rem;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 1px solid grey;
+            margin-right: 1rem;
+        }
+
+        .template-experience {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .template-name__detail .position {
+            display: block;
+        }
+
+        .template-name__detail .location {
+            font-size: 12px;
+            color: #979797;
+        }
+
+        .template-experience .experience {
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: #979797;
+        }
+
+        .template-experience .years__experience {
+            color: #007bff;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .hashtags {
+            margin-bottom: 1rem;
+            color: #979797;
+            letter-spacing: 1px;
+        }
+
+        .hashtags h5 {
+            margin-bottom: .5rem;
+        }
+
+        .hashtags span {
+            font-size: 14px;
+        }
+
+        .resume__details {
+            color: #979797;
+            font-size: 16px;
+        }
+
+        .competences__roles__skills h5 {
+            margin-bottom: 1rem;
+            color: #979797;
+            letter-spacing: 1px;
+        }
+
+        .competences__roles__skills .roles {
+            margin: 1rem 0;
+        }
+
+        .roles .roles-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .roles .role-description {
+            font-size: 12px;
+            font-weight: 500;
+            width: min-content;
+            padding: .3rem;
+            border: 1px solid #979797;
+            border-radius: 40px;
+            white-space: nowrap;
+            margin-top: .5rem;
+        }
+
+        .skills h5 {
+            margin-bottom: .5rem;
+            color: #383838;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .skills-list {
+            display: flex;
+            column-gap: 1rem;
+        }
+
+        .skills-list span {
+            border: 1px solid #979797;
+            width: min-content;
+            white-space: nowrap;
+            padding: .2rem .4rem;
+            border-radius: 40px;
+            color: #000;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .experiences h5 {
+            margin-bottom: 1rem;
+            color: #979797;
+            letter-spacing: 1px;
+        }
+
+        .experience-details {
+            margin: 1rem 0;
+            border-bottom: 1px solid #ededed;
+            padding-bottom: 1rem;
+        }
+
+        .experience-details div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: .5rem;
+        }
+
+        .experience-details .company-name {
+            display: flex;
+            flex-direction: column;
+            row-gap: 1rem;
+        }
+
+        .company-name .products {
+            display: flex;
+            column-gap: 1rem;
+        }
+
+        .company-name .product {
+            width: min-content;
+            padding: .2rem 1rem;
+            background-color: #e4e4e4;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .experiences .position,
+        .experiences .position-details {
+            font-size: 14px;
+            color: #979797;
+        }
+
+        .work__date {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .work__date .work-date {
+            font-size: 14px;
+            color: #383838;
+            text-align: right;
+        }
+
+        .work__date .work-time {
+            font-style: italic;
+            font-size: 12px;
+            color: #979797;
+            text-align: right;
+        }
+
+        .formation h5 {
+            margin-bottom: 1rem;
+            color: #979797;
+            letter-spacing: 1px;
+        }
+
+        .formation h3 {
+            margin-bottom: .5rem;
+        }
+
+        .certification-certificate {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .certification-details h6 {
+            color: #979797;
+            margin: .5rem 0;
+            letter-spacing: 1px;
+        }
+
+        .certification-details h3 {
+            letter-spacing: 1px;
+            margin-bottom: .5rem;
+        }
+
+        .certification h5 {
+            color: #979797;
+            font-weight: 400;
+        }
+
+        .certification-details {
+            color: #979797;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body class="w3-light-gray">
+<div class="w3-white w3-card w3-border-bottom">
+    <div style="min-height: 90vh">
+        <div class="w3-container w3-margin">
+            <div class="columns column is-8 is-offset-2">
+                <div id="cv" class="w3-topbar w3-bottombar w3-border-blue">
+                    <div id="cv-template" class="w3-margin-left w3-margin-right">
+                        <section class="cv-header">
+                            <div class="name__detail">
+                                <div class="template-name__detail">
+                                    <h2 class="w3-xxlarge">{{ dev.user.first_name }} {{ dev.user.last_name }}</h2>
+                                    <span class="position">Current Position: CPO at Codeln</span>
+                                    <span class="position">Location: {{ dev.country.name }}</span>
+                                    <span class="position">Email: {{ dev.user.email }}</span>
+                                    <span class="position">Phone: {{ dev.phone_number }}</span>
+                                </div>
+                            </div>
+                            <div class="template-experience">
+                                <span class="experience">EXPERIENCE</span>
+                                <span class="years__experience">{{ dev.years }} years</span>
+                            </div>
+                        </section>
+                        <section class="resume">
+                            {#            <div class="hashtags">#}
+                            <div>
+                                <h5>RESUME</h5>
+                                {#                <span v-for="(hashtag, index) in cvtemplate.hashtags">{{ hashtag }}</span>#}
+                            </div>
+                            <div class="resume__details">
+                                {{ dev.about }}
+                            </div>
+                        </section>
+                        <section class="competences__roles__skills">
+                            <h5>COMPETENCES</h5>
+                            <div class="roles">
+                                <span class="roles-title">Roles</span>
+                                {% for role in dev.candidateexperience.all %}
+                                    <div class="role-description">{{ role.title }} · {{ role.duration }} months+
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="skills">
+                                <h5>Skills</h5>
+                                <div class="skills-list">
+
+                                    <span>project</span>
+                                    <span>{{ dev.skills }}</span>
+                                    <span>{{ dev.verified_skills }}</span>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="experiences">
+                            <h5>EXPERIENCE</h5>
+
+                            {% for exp in dev.candidateexperience.all %}
+                                <div>
+                                    <div class="company-name">
+                                        <h3>{{ exp.company }}</h3>
+                                        <div class="products">
+                                            {#                        <span class="product" v-for="(product, index) in experience.product" :key="index">{{ product }}</span>#}
+                                            <span class="product">{{ exp.tech_tags }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="work__date">
+                                        <span class="work-date">Duration</span>
+                                        <span class="work-time">{{ exp.duration }} months</span>
+                                    </div>
+                                </div>
+                                <p class="position">{{ exp.title }}</p>
+                                <p class="position-details">
+                                    {{ exp.description }}
+                                </p>
+                            {% endfor %}
+                        </section>
+                        <section class="formation">
+                            <h5>EDUCATION</h5>
+                            <h3>Lancaster University</h3>
+                        </section>
+                        {#            <section class="certification" v-for="(certification, index) in cvtemplate.certification" :key="index">#}
+                        <section class="certification">
+                            <div class="certification-certificate">
+                                <div class="certification-details">
+                                    <h6>BUSINESS ENGLISH CERTIFICATE</h6>
+                                    <h3>Lancaster University</h3>
+                                </div>
+                                <div class="certification-date">2017 - 2017</div>
+                            </div>
+                            <h5>Business</h5>
+                            <div class="certification-details">
+                                For over 50 years Lancaster University has been providing World Class education to
+                                students
+                                across
+                                the world. Lancaster isranked amongst the top ten universities in the UK.',
+                            </div>
+                            ****** Hey dexter we dont have education data in the db pls reccomend what we should use in
+                            this space*****
+                        </section>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

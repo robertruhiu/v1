@@ -11,12 +11,12 @@ from django.urls import reverse, reverse_lazy
 from requests import Response
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from rest_framework import status
+from xhtml2pdf import pisa
 
 from marketplace.models import Job, Profile, JobApplication
 from account_manager.models import Shortlist
 from account_manager.filters import JobFilter, DevFilter, ShortlistDevFilter
 from account_manager.forms import ShortlistCreateUpdateForm, ListForm
-
 
 # Create your views here.
 # dashboard
@@ -40,7 +40,7 @@ def index(request):
         except EmptyPage:
             devs = paginator.page(paginator.num_pages)
         return render(request, 'account_manager/dashboard.html',
-                      {'devs': devs, 'lists':lists,'devs_filter': devs_filter})
+                      {'devs': devs, 'lists': lists, 'devs_filter': devs_filter})
     else:
         search_results = Profile.objects.search(query)
         devs_filter = DevFilter(request.GET, queryset=search_results)
@@ -57,6 +57,7 @@ def index(request):
 
         return render(request, 'account_manager/dashboard.html', {'devs': devs, 'lists': lists,
                                                                   'devs_filter': devs_filter})
+
 
 # @login_required
 # def index(request):
@@ -103,10 +104,11 @@ def jobs(request):
         jobs_filter = JobFilter(request.GET, queryset=jobs)
         jobs = jobs_filter.qs
         return render(request, 'account_manager/jobs.html', {'jobs_filter': jobs_filter,
-                                                                      'jobs': jobs})
+                                                             'jobs': jobs})
     else:
         jobs = Job.objects.search(query)
         return render(request, 'account_manager/jobs.html', {'jobs': jobs})
+
 
 @login_required
 def myjob(request, id):
@@ -117,8 +119,8 @@ def myjob(request, id):
     rejected = applications.filter(stage='rejected')
 
     return render(request, 'account_manager/job.html', {'job': job, 'applications': applications,
-                                                                 'new_applications': new_applications,
-                                                                 'shortlist': shortlist, 'rejected': rejected})
+                                                        'new_applications': new_applications,
+                                                        'shortlist': shortlist, 'rejected': rejected})
 
 
 # lists
@@ -127,9 +129,14 @@ def all_shortlist(request):
     lists = Shortlist.objects.all()
     return render(request, 'account_manager/all_shortlist.html', {'lists': lists})
 
+
 @login_required
-def cv(request):
-    return render(request, 'account_manager/cv.html')
+def cv(request, id):
+    dev = Profile.objects.get(id=id)
+    return render(request, 'account_manager/cv.html', {'dev': dev})
+    # return render(request, 'account_manager/full_cv.html', {'dev': dev})
+    # return render(request, 'account_manager/stripped_cv.html', {'dev': dev})
+
 
 # from io import BytesIO
 # from reportlab.pdfgen import canvas
@@ -138,27 +145,84 @@ def cv(request):
 # from reportlab.lib.pagesizes import A4
 
 
-@login_required
-def download_cv(request):
-    # # Create a file-like buffer to receive PDF data.
-    # buffer = io.BytesIO()
-    #
-    # # Create the PDF object, using the buffer as its "file."
-    # p = canvas.Canvas(buffer)
-    #
-    # # Draw things on the PDF. Here's where the PDF generation happens.
-    # # See the ReportLab documentation for the full list of functionality.
-    # p.drawString(100, 100, "Hello world.")
-    #
-    # # Close the PDF object cleanly, and we're done.
-    # p.showPage()
-    # p.save()
-    #
-    # # FileResponse sets the Content-Disposition header so that browsers
-    # # present the option to save the file.
-    # buffer.seek(0)
-    # return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
-    return redirect('account_manager:cv')
+import os
+from django.conf import settings
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib.staticfiles import finders
+
+
+def link_callback(uri, rel):
+    """
+    Convert HTML URIs to absolute system paths so xhtml2pdf can access those
+    resources
+    """
+    result = finders.find(uri)
+    if result:
+        if not isinstance(result, (list, tuple)):
+            result = [result]
+        result = list(os.path.realpath(path) for path in result)
+        path = result[0]
+    else:
+        sUrl = settings.STATIC_URL  # Typically /static/
+        sRoot = settings.STATIC_ROOT  # Typically /home/userX/project_static/
+        mUrl = settings.MEDIA_URL  # Typically /media/
+        mRoot = settings.MEDIA_ROOT  # Typically /home/userX/project_static/media/
+
+        if uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+        elif uri.startswith(sUrl):
+            path = os.path.join(sRoot, uri.replace(sUrl, ""))
+        else:
+            return uri
+
+    # make sure that file exists
+    if not os.path.isfile(path):
+        raise Exception(
+            'media URI must start with %s or %s' % (sUrl, mUrl)
+        )
+    return path
+
+
+def download_cv(request, id):
+    template_path = 'account_manager/full_cv.html'
+    dev = Profile.objects.get(id=id)
+    context = {'dev': dev}
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    # filename = f'{dev.user.first_name} {dev.user.last_name}.pdf'
+    response['Content-Disposition'] = f'attachment; filename="{dev.user.first_name} {dev.user.last_name}.pdf"'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+        html, dest=response, link_callback=link_callback)
+    # if error then show some funy view
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
+def download_stripped_cv(request, id):
+    template_path = 'account_manager/stripped_cv.html'
+    dev = Profile.objects.get(id=id)
+    context = {'dev': dev}
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{dev.user.first_name} {dev.user.last_name}.pdf"'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+        html, dest=response, link_callback=link_callback)
+    # if error then show some funy view
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
 
 
 @login_required
@@ -179,6 +243,7 @@ def add_shortlist(request):
     else:
         shortlist_form = ShortlistCreateUpdateForm()
         return render(request, 'account_manager/shortlist_form.html', {'shortlist_form': shortlist_form})
+
 
 @login_required
 def add_to_list(request, id):
@@ -214,6 +279,7 @@ def send_mail(request, id):
     else:
         list_form = ListForm()
         return render(request, 'account_manager/addtolist.html', {'developer': developer, 'list_form': list_form})
+
 
 @login_required
 def update_application(request):
@@ -251,7 +317,6 @@ class ShortlistDelete(LoginRequiredMixin, DeleteView):
     model = Shortlist
     success_url = '/cac/all_shortlist/'
 
-
 # # test pdf view
 # from django.http import HttpResponse
 # from django.views.generic import View
@@ -267,7 +332,7 @@ class ShortlistDelete(LoginRequiredMixin, DeleteView):
 # class GeneratePdf(View):
 #     def get(self, request, *args, **kwargs):
 #         # getting the template
-#         pdf = render_to_pdf('account_manager/test.html')
+#         pdf = render_to_pdf('account_manager/full_cv.html')
 #
 #         # rendering the template
 #         return HttpResponse(pdf, content_type='application/pdf')
