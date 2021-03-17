@@ -58,18 +58,23 @@
                                         {{ dev.user.first_name }} {{ dev.user.last_name }}
                                     {% endif %}
                                 </v-card-title>
-                                <v-card-subtitle>
+
+                                <v-card-subtitle class="w3-margin-top">
                                     {% if request.user|has_group:"cac_admin" %}
-                                        <v-icon medium>mdi-email</v-icon>
+                                        <v-icon medium color="blue lighten-2">mdi-email</v-icon>
                                         {{ dev.user.email }}
 
                                     {% endif %}
                                     <br>
-                                    <v-icon medium>mdi-home</v-icon>
+                                    <v-icon medium color="blue lighten-2">mdi-home</v-icon>
                                     {{ dev.country }}
                                     <br>
-                                    <v-icon medium>mdi-timeline-text</v-icon>
+                                    <v-icon medium color="blue lighten-2">mdi-timeline-text</v-icon>
                                     {{ dev.years }} years
+                                    <br>
+{#                                    <v-icon medium color="blue lighten-2">mdi-file-link</v-icon>#}
+{#                                {{ dev.file }}#}
+
                                 </v-card-subtitle>
                                 <v-card-text>
                                     {% if  dev.candidateexperience.all %}
@@ -108,7 +113,7 @@
                                 </v-card-text>
                                 <v-card-actions>
                                     <v-btn color="blue lighten-2" outlined
-                                           href="{% url 'account_manager:cv' dev.id%}">View CV
+                                           href="{% url 'account_manager:cv' dev.id %}">View CV
                                     </v-btn>
                                     <v-btn color="blue lighten-2" outlined
                                            href="{% url 'account_manager:add_to_list' dev.id %}">Add to list
