@@ -18,10 +18,10 @@
                             <v-list-item three-line>
                                 <v-list-item-content>
 
-                                    <v-list-item-title class="headline mb-1">
+                                    <v-list-item-title class="title mb-1">
                                         {{ list.title }}
                                     </v-list-item-title>
-                                    <v-list-item-subtitle>Number of Devs</v-list-item-subtitle>
+                                    <v-list-item-subtitle>Number of Devs {{ devs.count }}</v-list-item-subtitle>
                                 </v-list-item-content>
 
 
@@ -31,11 +31,11 @@
     {#                                <v-btn outlined rounded text class="is-info" href="{% url 'frontend:shortlist' list.id %}">#}
     {#                                    Go to List#}
     {#                                </v-btn>#}
-                                <v-btn tile color="success" href="{% url 'account_manager:shortlist_update' list.id %}">
-                                    <v-icon left>mdi-pencil</v-icon>Edit
+                                <v-btn href="{% url 'account_manager:shortlist_update' list.id %}">
+                                    <v-icon color="green lighten-2">mdi-pencil</v-icon>
                                 </v-btn>
-                                <v-btn tile color="error" href="{% url 'account_manager:shortlist_delete' list.id %}">
-                                    <v-icon left>mdi-delete</v-icon>Delete
+                                <v-btn  class="is-pulled-right" href="{% url 'account_manager:shortlist_delete' list.id %}">
+                                    <v-icon color="red lighten-2">mdi-delete</v-icon>
                                 </v-btn>
 
                             </v-card-actions>
@@ -48,7 +48,7 @@
                         <v-list-item three-line>
                             <v-list-item-content>
 
-                                <v-list-item-title class="headline mb-1">
+                                <v-list-item-title class="title mb-1">
                                     Create New List
                                 </v-list-item-title>
                             </v-list-item-content>

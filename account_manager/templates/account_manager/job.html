@@ -79,7 +79,7 @@
                                                 <td>{{ application.candidate.years }}</td>
                                                 <td>
                                                     <v-btn color="blue lighten-2" dark
-                                                           href="{% url 'account_manager:cv' %}">View CV
+                                                           href="{% url 'account_manager:cv' application.candidate.id %}">View CV
                                                     </v-btn>
 
 
@@ -151,7 +151,7 @@
                                                     <div class="control">
 
                                                         <v-btn color="blue lighten-2" dark
-                                                               href="{% url 'account_manager:cv' %}">
+                                                               href="{% url 'account_manager:cv' application.candidate.id %}">
                                                             View CV
                                                         </v-btn>
                                                     </div>
@@ -223,7 +223,7 @@
                                                 <td>
                                                     <div class="control">
                                                         <v-btn color="blue lighten-2" dark
-                                                               href="{% url 'account_manager:cv' %}">View CV
+                                                               href="{% url 'account_manager:cv' application.candidate.id %}">View CV
                                                         </v-btn>
 
                                                     </div>
@@ -294,7 +294,7 @@
                                                 <td>
                                                     <div class="control">
                                                         <v-btn color="blue lighten-2" dark
-                                                               href="{% url 'account_manager:cv' %}">View CV
+                                                               href="{% url 'account_manager:cv' application.candidate.id %}">View CV
                                                         </v-btn>
 
                                                     </div>

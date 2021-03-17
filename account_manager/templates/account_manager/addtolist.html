@@ -5,22 +5,46 @@
     <div class="modal is-active">
         <div class="modal-background"></div>
         <div class="modal-card">
-            <section class="modal-card-body">
-                <p class="panel-tabs">
-                    <a class="is-active title">Select List</a>
-                </p>
-                <form action="" method="post">
-                {% csrf_token %}
-                    {% for list in list_form.lists %}
-                        <label class="panel-block">
-                            {{ list }}
+            {% if list_form.lists %}
+                <section class="modal-card-body">
+                    <p class="panel-tabs">
+                        <a class="is-active title">Select List</a>
+                    </p>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        {% for list in list_form.lists %}
+                            <label class="panel-block">
+                                {{ list }}
+                            </label>
+                        {% endfor %}
+                        <br>
+                        <label>
+                            <button type="submit" class=" button is-info"> Save</button>
                         </label>
-                    {% endfor %}
-                    <label>
-                        <button type="submit" class=" button is-info"> Save</button>
-                    </label>
-                </form>
-            </section>
+                    </form>
+                </section>
+            {% else %}
+
+                <v-card outlined>
+                    <v-list-item three-line>
+                        <v-list-item-content>
+
+                            <v-list-item-title class="headline mb-1">
+                                Create New List
+                            </v-list-item-title>
+                        </v-list-item-content>
+
+
+                    </v-list-item>
+
+                    <v-card-actions>
+                        <v-btn rounde button color="blue lighten-2"
+                               href="{% url 'account_manager:shortlist_create' %}">
+                            +
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
