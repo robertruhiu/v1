@@ -144,7 +144,7 @@
                 updateApplication(id, data) {
                     {#window.location.href = `{% url 'frontend:update_application' %}?id=${id}&data=${data}`#}
                 },
-                toggleModal(modai) {
+                toggleModal(modal) {
                     const form = document.getElementById('modal');
                     form.classList.toggle('is-active')
                 },
@@ -153,7 +153,8 @@
                 async copy(s) {
                     await navigator.clipboard.writeText(s);
                     alert('Copied!');
-                }
+                },
+
             },
 
         },

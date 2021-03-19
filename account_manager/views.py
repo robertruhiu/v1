@@ -27,6 +27,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 def index(request):
     query = request.GET.get('q', None)
     lists = Shortlist.objects.all()
+    list_form = ListForm()
     if not query:
         all_devs = Profile.objects.filter(user_type='developer')
         devs_filter = DevFilter(request.GET, queryset=all_devs)
@@ -40,7 +41,7 @@ def index(request):
         except EmptyPage:
             devs = paginator.page(paginator.num_pages)
         return render(request, 'account_manager/dashboard.html',
-                      {'devs': devs, 'lists': lists, 'devs_filter': devs_filter})
+                      {'devs': devs, 'lists': lists, 'devs_filter': devs_filter, 'list_form':list_form})
     else:
         search_results = Profile.objects.search(query)
         devs_filter = DevFilter(request.GET, queryset=search_results)
@@ -56,7 +57,7 @@ def index(request):
             devs = paginator.page(1)
 
         return render(request, 'account_manager/dashboard.html', {'devs': devs, 'lists': lists,
-                                                                  'devs_filter': devs_filter})
+                                                                  'devs_filter': devs_filter, 'list_form': list_form})
 
 
 @login_required

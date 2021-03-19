@@ -2,7 +2,7 @@
 {% load bulma_tags %}
 {% block content %}
 
-    <div class="modal is-active">
+    <div class="modal is-active" >
         <div class="modal-background"></div>
         <div class="modal-card">
             {% if list_form.lists %}
@@ -21,6 +21,7 @@
                         <label>
                             <button type="submit" class=" button is-info"> Save</button>
                         </label>
+
                     </form>
                 </section>
             {% else %}
@@ -45,6 +46,7 @@
                     </v-card-actions>
                 </v-card>
             {% endif %}
+            <button href="{% url 'account_manager:base' %}" class="modal-close is-large" aria-label="close"></button>
         </div>
     </div>
 {% endblock %}

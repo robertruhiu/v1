@@ -53,81 +53,131 @@
                     <v-card id="job_card" class="mb-5  pa-5" :ripple="false" color="white" flat>
                         {% for dev in devs %}
                             <v-card class="w3-margin">
-                            {% if  dev.availabilty != None %}
-                                <v-btn class="is-pulled-right w3-margin" button rounded color="blue lighten-2">{{ dev.availabilty }}</v-btn>
-                            {% endif %}
+                                {% if  dev.availabilty != None %}
+                                    <v-btn class="is-pulled-right w3-margin" button rounded
+                                           color="blue lighten-2">{{ dev.availabilty }}</v-btn>
+                                {% endif %}
 
-                                    <v-card-title class="w3-margin-top">
-                                        {% if request.user|has_group:"cac_admin" %}
-                                            {{ dev.user.first_name }} {{ dev.user.last_name }}
-                                        {% endif %}
-                                    </v-card-title>
+                                <v-card-title class="w3-margin-top">
+                                    {% if request.user|has_group:"cac_admin" %}
+                                        {{ dev.user.first_name }} {{ dev.user.last_name }}
+                                    {% endif %}
+                                </v-card-title>
 
-                                    <v-card-subtitle class="w3-margin-top">
-                                        {% if request.user|has_group:"cac_admin" %}
-                                            <v-icon medium color="blue lighten-2">mdi-email</v-icon>
-                                            {{ dev.user.email }}
+                                <v-card-subtitle class="w3-margin-top">
+                                    {% if request.user|has_group:"cac_admin" %}
+                                        <v-icon medium color="blue lighten-2">mdi-email</v-icon>
+                                        {{ dev.user.email }}
 
-                                        {% endif %}
-                                        <br>
-                                        <v-icon medium color="blue lighten-2">mdi-home</v-icon>
-                                        {{ dev.country }}
-                                        <br>
-                                        <v-icon medium color="blue lighten-2">mdi-timeline-text</v-icon>
-                                        {{ dev.years }} years
-                                        <br>
+                                    {% endif %}
+                                    <br>
+                                    <v-icon medium color="blue lighten-2">mdi-home</v-icon>
+                                    {{ dev.country }}
+                                    <br>
+                                    <v-icon medium color="blue lighten-2">mdi-timeline-text</v-icon>
+                                    {{ dev.years }} years
+                                    <br>
 
-                                        {% if dev.file.url != None %}
-                                            <v-icon medium color="blue lighten-2">mdi-file-link</v-icon>
-                                            <v-btn text depressed color="blue lighten-2" href="{{ dev.file.url }}">
-                                                Uploaded CV
-                                            </v-btn>
-                                        {% endif %}
-                                    </v-card-subtitle>
-                                    <v-card-text>
-                                        {% if  dev.candidateexperience.all %}
-                                            <p class="subtitle">Experience</p>
-                                            {% for exp in dev.candidateexperience.all %}
-                                                <v-card-text>
-                                                    {{ exp.title }}
-                                                    <br>
-                                                    {{ exp.company }}
-                                                    {{ exp.description }}
-                                                    {{ exp.duration }}
-                                                    <br>
-                                                    {{ exp.tech_tags }}
-                                                    <br>
-                                                    {{ exp.duration }} months
-                                                </v-card-text>
-                                            {% endfor %}
-                                        {% else %}
-                                            <p>Candidate has not filled out their experience</p>
-                                        {% endif %}
-                                    </v-card-text>
-                                    <v-card-text>
-                                        {% if  dev.candidateportfolio.all %}
-                                            <p class="subtitle">Portfolio</p>
-                                            {% for portfolio in dev.candidateportfolio.all %}
-                                                <v-card-text>
-                                                    {{ portfolio.title }}
-                                                    {{ portfolio.description }}
-                                                    {{ portfolio.verified }}
-                                                    {{ portfolio.tech_tags }}
-                                                </v-card-text>
-                                            {% endfor %}
-                                        {% else %}
-                                            Candidate hasn't filled out their portfolio
-                                        {% endif %}
-                                    </v-card-text>
-                                    <v-card-actions>
-                                        <v-btn color="blue lighten-2" outlined
-                                               href="{% url 'account_manager:cv' dev.id %}">View CV
+                                    {% if dev.file.url != None %}
+                                        <v-icon medium color="blue lighten-2">mdi-file-link</v-icon>
+                                        <v-btn text depressed color="blue lighten-2" href="{{ dev.file.url }}">
+                                            Uploaded CV
                                         </v-btn>
-                                        <v-btn color="blue lighten-2" outlined
-                                               href="{% url 'account_manager:add_to_list' dev.id %}">Add to list
-                                        </v-btn>
-                                    </v-card-actions>
+                                    {% endif %}
+                                </v-card-subtitle>
+                                <v-card-text>
+                                    {% if  dev.candidateexperience.all %}
+                                        <p class="subtitle">Experience</p>
+                                        {% for exp in dev.candidateexperience.all %}
+                                            <v-card-text>
+                                                {{ exp.title }}
+                                                <br>
+                                                {{ exp.company }}
+                                                {{ exp.description }}
+                                                {{ exp.duration }}
+                                                <br>
+                                                {{ exp.tech_tags }}
+                                                <br>
+                                                {{ exp.duration }} months
+                                            </v-card-text>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>Candidate has not filled out their experience</p>
+                                    {% endif %}
+                                </v-card-text>
+                                <v-card-text>
+                                    {% if  dev.candidateportfolio.all %}
+                                        <p class="subtitle">Portfolio</p>
+                                        {% for portfolio in dev.candidateportfolio.all %}
+                                            <v-card-text>
+                                                {{ portfolio.title }}
+                                                {{ portfolio.description }}
+                                                {{ portfolio.verified }}
+                                                {{ portfolio.tech_tags }}
+                                            </v-card-text>
+                                        {% endfor %}
+                                    {% else %}
+                                        Candidate hasn't filled out their portfolio
+                                    {% endif %}
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn color="blue lighten-2" outlined
+                                           href="{% url 'account_manager:cv' dev.id %}">View CV
+                                    </v-btn>
+                                    <v-btn color="blue lighten-2" outlined onclick="vueApp.toggleModal('modal')">Add to
+                                        list
+                                    </v-btn>
+                                </v-card-actions>
                             </v-card>
+                            <div class="modal" id="modal">
+                                <div class="modal-background"></div>
+                                <div class="modal-card">
+                                    {% if list_form.lists %}
+                                        <section class="modal-card-body">
+                                            <p class="panel-tabs">
+                                                <a class="is-active title">Select List</a>
+                                            </p>
+                                            <form action="{% url 'account_manager:add_to_list'  dev.id %}"
+                                                  method="post">
+                                                {% csrf_token %}
+                                                {% for list in list_form.lists %}
+                                                    <label class="panel-block">
+                                                        {{ list }}
+                                                    </label>
+                                                {% endfor %}
+                                                <br>
+                                                <label>
+                                                    <button type="submit" class=" button is-info"> Save</button>
+                                                </label>
+
+                                            </form>
+                                        </section>
+                                    {% else %}
+
+                                        <v-card outlined>
+                                            <v-list-item three-line>
+                                                <v-list-item-content>
+
+                                                    <v-list-item-title class="title mb-1">
+                                                        Create New List
+                                                    </v-list-item-title>
+                                                </v-list-item-content>
+
+
+                                            </v-list-item>
+
+                                            <v-card-actions>
+                                                <v-btn rounde button color="blue lighten-2"
+                                                       href="{% url 'account_manager:shortlist_create' %}">
+                                                    +
+                                                </v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                    {% endif %}
+                                    <button class="modal-close is-large"
+                                            aria-label="close" onclick="vueApp.toggleModal('modal')"></button>
+                                </div>
+                            </div>
                         {% endfor %}
                     </v-card>
                     {% if devs.has_other_pages %}
