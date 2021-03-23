@@ -1,22 +1,35 @@
 {% extends 'base4.html' %}
 {#{% load bulma_tags %}#}
+{% load account_manager_tags %}
+
 {% block content %}
     <div class="w3-container w3-margin">
+        <v-btn  class="is-pulled-right" color="blue lighten-2" rounded href="{% url 'account_manager:add_to_list' dev.id %}">Add to list
+        </v-btn>
         <div class="columns column is-8 is-offset-2">
+
             <div id="cv" class="w3-topbar w3-bottombar w3-border-blue">
                 <div id="cv-template" class="w3-margin-left w3-margin-right">
                     <section class="cv-header">
-                         <v-btn color="blue"  button href="{% url 'account_manager:download_stripped_cv'  dev.id %}" class="is-pulled-left">Download Stripped CV</v-btn><v-btn></v-btn>
-                         <v-btn color="blue"  button href="{% url 'account_manager:download_cv'  dev.id %}" class="is-pulled-right">Download Full CV</v-btn>
-                        <div class="name__detail">
-                            <div class="template-name__detail">
-                                <h2 class="w3-xxlarge">{{ dev.user.first_name }} {{ dev.user.last_name }}</h2>
-                                <span class="position">Current Position: CPO at Codeln</span>
-                                <span class="position">Location: {{dev.country.name }}</span>
-                                <span class="position">Email: {{ dev.user.email }}</span>
-                                <span class="position">Phone: {{ dev.phone_number }}</span>
+                        <v-btn color="blue" button href="{% url 'account_manager:download_stripped_cv'  dev.id %}"
+                               class="is-pulled-left">Download Stripped CV
+                        </v-btn>
+                        <v-btn></v-btn>
+                        <v-btn color="blue" button href="{% url 'account_manager:download_cv'  dev.id %}"
+                               class="is-pulled-right">Download Full CV
+                        </v-btn>
+                        {% if request.user|has_group:"cac_admin" %}
+
+                            <div class="name__detail">
+                                <div class="template-name__detail">
+                                    <h2 class="w3-xxlarge">{{ dev.user.first_name }} {{ dev.user.last_name }}</h2>
+                                    <span class="position">Current Position: CPO at Codeln</span>
+                                    <span class="position">Location: {{ dev.country.name }}</span>
+                                    <span class="position">Email: {{ dev.user.email }}</span>
+                                    <span class="position">Phone: {{ dev.phone_number }}</span>
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
                         <div class="template-experience">
                             <span class="experience">EXPERIENCE</span>
                             <span class="years__experience">{{ dev.years }} years</span>
@@ -29,7 +42,7 @@
                             {#                <span v-for="(hashtag, index) in cvtemplate.hashtags">{{ hashtag }}</span>#}
                         </div>
                         <div class="resume__details">
-                            {{ dev.about}}
+                            {{ dev.about }}
                         </div>
                     </section>
                     <section class="competences__roles__skills">
@@ -37,8 +50,8 @@
                         <div class="roles">
                             <span class="roles-title">Roles</span>
                             {% for role in dev.candidateexperience.all %}
-                            <div class="role-description">{{ role.title}} · {{ role.duration }} months+
-                            </div>
+                                <div class="role-description">{{ role.title }} · {{ role.duration }} months+
+                                </div>
                             {% endfor %}
                         </div>
                         <div class="skills">
@@ -53,37 +66,39 @@
                     </section>
                     <section class="experiences">
                         <h5>EXPERIENCE</h5>
-
-                         {% for exp in dev.candidateexperience.all %}
-                        <div>
-                            <div class="company-name">
-                                <h3>{{ exp.company }}</h3>
-                                <div class="products">
-                                    {#                        <span class="product" v-for="(product, index) in experience.product" :key="index">{{ product }}</span>#}
-                                    <span class="product">{{ exp.tech_tags }}</span>
+                        {% if dev.candidateexperience.all %}
+                            {% for exp in dev.candidateexperience.all %}
+                                <div>
+                                    <div class="company-name">
+                                        <h3>{{ exp.company }}</h3>
+                                        <div class="products">
+                                            {#                        <span class="product" v-for="(product, index) in experience.product" :key="index">{{ product }}</span>#}
+                                            <span class="product">{{ exp.tech_tags }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="work__date">
+                                        <span class="work-date">Duration</span>
+                                        <span class="work-time">{{ exp.duration }} months</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="work__date">
-                                <span class="work-date">Duration</span>
-                                <span class="work-time">{{ exp.duration }} months</span>
-                            </div>
-                        </div>
-                        <p class="position">{{ exp.title}}</p>
-                        <p class="position-details">
-                            {{ exp.description}}
-                        </p>
-                        {% endfor %}
+                                <p class="position">{{ exp.title }}</p>
+                                <p class="position-details">
+                                    {{ exp.description }}
+                                </p>
+                            {% endfor %}
+                        {% else %}
+                            Developer profile doesn't contain past experience
+                        {% endif %}
                     </section>
                     <section class="formation">
                         <h5>EDUCATION</h5>
-                        <h3>Lancaster University</h3>
+                        Developer profile doesn't contain education history
                     </section>
                     {#            <section class="certification" v-for="(certification, index) in cvtemplate.certification" :key="index">#}
                     <section class="certification">
                         <div class="certification-certificate">
                             <div class="certification-details">
-                                <h6>BUSINESS ENGLISH CERTIFICATE</h6>
-                                <h3>Lancaster University</h3>
+                                Developer profile doesn't contain past certifications
                             </div>
                             <div class="certification-date">2017 - 2017</div>
                         </div>
@@ -93,7 +108,7 @@
                             across
                             the world. Lancaster isranked amongst the top ten universities in the UK.',
                         </div>
-                        ****** Hey dexter we dont have education data in the db pls reccomend what we should use in this space*****
+
                     </section>
 
                 </div>

@@ -1,4 +1,6 @@
 {% load static %}
+{% load account_manager_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,10 +57,12 @@
             <div id="navbarBasicExample" class="navbar-menu">
                 <div class="navbar-start w3-center my-auto px-10">
                     {% if request.user.is_authenticated %}
-                        <v-btn text rounded class="navbar-item w3-padding-large"
-                               href="{% url 'account_manager:jobs' %}">Jobs
-                        </v-btn>
-                        {#                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'account_manager:devs' %}">Developers</v-btn>#}
+                        {% if request.user|has_group:"cac_admin" %}
+                            <v-btn text rounded class="navbar-item w3-padding-large"
+                                   href="{% url 'account_manager:jobs' %}">Jobs
+                            </v-btn>
+                        {% endif %}
+                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'account_manager:base' %}">Developers</v-btn>
                         <v-btn text rounded class="navbar-item w3-padding-large"
                                href="{% url 'account_manager:all_shortlist' %}">
                             Shortlists
