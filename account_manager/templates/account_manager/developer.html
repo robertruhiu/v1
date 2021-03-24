@@ -1,0 +1,65 @@
+{% extends 'base4.html' %}
+{% block content %}
+    <div class="w3-container" style="background-color: lightgray">
+        <v-card id="all__jobs__card" elevation="0" class="mt-5">
+            <v-card id="job_card" class="mb-5  pa-5" :ripple="false" color="white" flat>
+                <div class="columns">
+                    <div class="column is-4">
+                        <div class="w3-border-right">
+                            <div class="card-image">
+                                <figure class="image is-4by3">
+                                    <img src="https://versions.bulma.io/0.7.0/images/placeholders/1280x960.png"
+                                         alt="Placeholder image">
+                                </figure>
+                            </div>
+                            <div class="card-content">
+                                <div class="media">
+
+                                    <div class="media-content">
+
+                                        <p class="title is-4"> {{ dev.user.first_name }} {{ dev.user.last_name }} </p>
+
+                                        <p class="subtitle is-6">
+                                            <v-icon class="fas fa-envelope"></v-icon>
+                                            {{ dev.user.email }}
+
+
+                                        <p class="subtitle is-6">
+                                            <v-icon class="fas fa-phone"></v-icon>
+                                            {{ dev.phone_number }}
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-8">
+                        <v-card id="job_card" class="mb-5  pa-5" :ripple="false" color="white" flat>
+                            <v-card-title primary-title>
+                                <div>
+                                    <p class="subtitle">About</p>
+                                    <p>{{ dev.about }}</p>
+                                    <p class="subtitle">Previous Positions</p>
+                                    {% for exp in dev.candidateexperience.all %}
+                                        <p>{{ exp }}</p>
+                                    {% endfor %}
+
+                                    <p class="subtitle">Education</p>
+                                    {% for exp in dev.candidateexperience.all %}
+                                        <p>{{ exp }}</p>
+                                    {% endfor %}
+                                </div>
+                            </v-card-title>
+                            <v-card-actions>
+                                <v-btn href="{% url 'frontend:add_to_list' dev.id %}">Add to List</v-btn>
+                                <v-btn href="{% url 'frontend:send_mail' dev.id%}">Send Email</v-btn>
+                            </v-card-actions>
+
+                        </v-card>
+                    </div>
+                </div>
+            </v-card>
+        </v-card>
+    </div>
+{% endblock %}

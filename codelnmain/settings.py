@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
     'remote_codeln',
+    'api',
+    'account_manager',
     # third party libs
     'allauth',
     'allauth.account',
@@ -82,10 +84,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_api_key',
-    'api',
     'corsheaders',
-    'django_celery_beat'
-
+    'django_celery_beat',
+    'bulma',
 ]
 
 SITE_ID = 1
@@ -169,32 +170,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # thirdparty app configurations
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://127.0.0.1:8080',
-    'http://localhost:8080',
-    'http://127.0.0.1:4200',
-    'http://localhost:4200',
-    'http://localhost:8081',
-    'http://localhost:8082',
-    'https://mulan.herokuapp.com',
-    'https://leanapp.herokuapp.com',
     'http://mulan.herokuapp.com',
-    'http://leanapp.herokuapp.com',
-    'https://codelnalpha.herokuapp.com',
-    'http://codelnalpha.herokuapp.com',
     'http://codeln.com',
     'https://codeln.com',
     'http://www.codeln.com',
     'https://www.codeln.com',
-    'http://165.22.27.68:3000',
-    'http://165.22.27.68',
-
-    'http://clide.codeln.com:3000',
-    'http://clide.codeln.com',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -250,7 +233,6 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
-
 
 }
 
@@ -337,6 +319,7 @@ INVITATIONS_ALLOW_JSON_INVITES = True
 INVITATIONS_ADAPTER = ACCOUNT_ADAPTER
 INVITATIONS_EMAIL_SUBJECT_PREFIX = 'Codeln'
 
+# TODO: delete unused aws configs
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY', default='AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='AWS_STORAGE_BUCKET_NAME')
@@ -364,15 +347,16 @@ if ENVIRONMENT != 'local':
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.RawMediaCloudinaryStorage'
 
 CLOUDINARY = {
-    'cloud_name': 'dwtvwjhn3',
-    'api_key': '748889632162181',
-    'api_secret': 'ecbWIeK33ka7-1wyy9TiB6pVwAw',
+    'cloud_name': config('CLOUDINARY_CLOUD_NAME'),
+    'api_key': config('CLOUDINARY_API_KEY'),
+    'api_secret': config('CLOUDINARY_API_SECRET'),
 }
+
 CLOUDINARY_STORAGE = {
 
-    'CLOUD_NAME': 'dwtvwjhn3',
-    'API_KEY': '748889632162181',
-    'API_SECRET': 'ecbWIeK33ka7-1wyy9TiB6pVwAw',
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
 
 }
 CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
@@ -393,3 +377,17 @@ BROKER_URL = config('REDIS_URL', default='redis://')
 CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://')
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Accra'
+
+# sentry integration
+
+ENVIRONMENT = config('ENVIRONMENT', default='local')
+if ENVIRONMENT != 'local':
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        send_default_pii=True,
+        dsn=config('SENTRY_DSN'),
+        integrations=[DjangoIntegration()],
+        environment=ENVIRONMENT,
+    )

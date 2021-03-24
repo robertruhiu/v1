@@ -1,0 +1,115 @@
+{% extends 'base4.html' %}
+{% load bulma_tags %}
+{% load account_manager_tags %}
+{% block content %}
+    <div class="w3-container">
+        <v-card id="all__jobs__card" elevation="0" class="mt-5">
+            <v-card-title class="mb-5">
+                <h1 class="title">{{ list.title }}</h1>
+            </v-card-title>
+            <v-card id="job_card" class="mb-5 pa-5" :ripple="false" color="white" flat>
+                <div class="columns">
+                    <div class="column is-3">
+                        <nav class="panel w3-margin">
+                            <p class="panel-heading">
+                                Filter
+                            </p>
+                            <div class="w3-margin">
+                                <form method="get">
+
+                                    {{ devs_filter.form | bulma }}
+                                    <div class="panel-block">
+                                        <button class="button is-link is-outlined is-fullwidth" type="submit">
+                                            Filter
+                                        </button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </nav>
+                    </div>
+
+                    <div class="column is-9">
+                        {% for dev in devs_filter.qs %}
+                            <v-card class="w3-margin">
+                                {% if  dev.availabilty != None %}
+                                    <v-btn class="is-pulled-right w3-margin" button rounded
+                                           color="blue lighten-2">{{ dev.availabilty }}</v-btn>
+                                {% endif %}
+                                <v-card-title class="w3-margin-top">
+                                    {% if request.user|has_group:"cac_admin" %}
+                                        {{ dev.user.first_name }} {{ dev.user.last_name }}
+                                    {% endif %}
+                                </v-card-title>
+                                <v-card-subtitle>
+                                    {% if request.user|has_group:"cac_admin" %}
+                                        <v-icon medium color="blue lighten-2">mdi-email</v-icon>
+                                        {{ dev.user.email }}
+                                    {% endif %}
+                                    <br>
+
+                                    <v-icon medium color="blue lighten-2">mdi-home</v-icon>
+                                    {{ dev.country }}
+                                    <br>
+                                    <v-icon medium color="blue lighten-2">mdi-timeline-text</v-icon>
+                                    {{ dev.years }} years
+                                    <br>
+                                    {% if dev.file.url != None %}
+                                        <v-icon medium color="blue lighten-2">mdi-file-link</v-icon>
+                                        <v-btn text depressed color="blue lighten-2" href="{{ dev.file.url }}">
+                                            Uploaded CV
+                                        </v-btn>
+                                    {% endif %}
+                                </v-card-subtitle>
+                                <v-card-text>
+                                    {% if  dev.candidateexperience.all %}
+                                        <p class="subtitle">Experience</p>
+                                        {% for exp in dev.candidateexperience.all %}
+                                            <v-card-text>
+                                                {{ exp.title }}
+                                                <br>
+                                                {{ exp.company }}
+                                                {{ exp.description }}
+                                                {{ exp.duration }}
+                                                <br>
+                                                {{ exp.tech_tags }}
+                                                <br>
+                                                {{ exp.duration }} months
+                                            </v-card-text>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>Candidate has not filled out their experience</p>
+                                    {% endif %}
+                                </v-card-text>
+                                <v-card-text>
+                                    {% if  dev.candidateportfolio.all %}
+                                        <p class="subtitle">Portfolio</p>
+                                        {% for portfolio in dev.candidateportfolio.all %}
+                                            <v-card-text>
+                                                {{ portfolio.title }}
+                                                {{ portfolio.description }}
+                                                {{ portfolio.verified }}
+                                                {{ portfolio.tech_tags }}
+                                            </v-card-text>
+                                        {% endfor %}
+                                    {% else %}
+                                        Candidate hasn't filled out their portfolio
+                                    {% endif %}
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn color="blue lighten-2" outlined href="{% url 'account_manager:cv' dev.id %}">
+                                        View CV
+                                    </v-btn>
+                                    <v-btn color="blue lighten-2" outlined
+                                           href="{% url 'account_manager:add_to_list' dev.id %}">Add to list
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        {% endfor %}
+                    </div>
+                </div>
+            </v-card>
+        </v-card>
+    </div>
+
+{% endblock %}

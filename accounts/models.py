@@ -16,6 +16,9 @@ from django_countries.fields import CountryField
 from separatedvaluesfield.models import SeparatedValuesField
 from taggit.managers import TaggableManager
 
+from account_manager.managers import ProfileManager
+from django.contrib.postgres.search import SearchVectorField, SearchVector
+
 
 def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -79,9 +82,12 @@ class Profile(models.Model):
     tags = TaggableManager()
     file = CloudinaryField(resource_type="raw", blank=True)
     salary = models.IntegerField(null=True)
+    search_vector = SearchVectorField(null=True, blank=True)
+
+    objects = ProfileManager()
 
     def __str__(self):
-        return self.user.username
+        return f'{self.user.username} - {self.user.first_name} {self.user.last_name}'
 
     def last_seen(self):
         return cache.get('last_seen_%s' % self.user.username)

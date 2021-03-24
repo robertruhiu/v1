@@ -1,0 +1,340 @@
+{% extends 'base4.html' %}
+{% load bulma_tags %}
+
+{% block content %}
+    <div class="w3-container" style="background-color: whitesmoke">
+        <v-card id="all__jobs__card" elevation="0" class="mt-5" >
+            <v-card-title class="mb-5"><h2>Job Title: {{ job.title }}</h2></v-card-title>
+            <div class="tile is-ancestor w3-margin">
+                <div class="tile is-parent">
+                    <div id="job_details" class="tile is-ancestor">
+                        <div class="tile is-4 is-vertical is-parent">
+                            <div class="tile is-child bo">
+                                <article class="media">
+                                    <div class="media-content">
+                                        <div class="content">
+                                            <p>
+                                                <strong>Company: </strong> {{ job.company }}
+                                                <br>
+                                                <strong> Posted by: {{ job.posted_by.get_full_name }} </strong>
+                                                <br>
+                                                <strong> Location: {{ job.location }} </strong>
+                                                <br>
+
+                                                <strong>Stack: </strong> {{ job.tag }}
+                                                <br>
+                                                <strong>Deadline: </strong> {{ job.deadline }}
+                                                <br>
+                                                <strong>Published: </strong> {{ job.deadline }}
+
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                </article>
+                            </div>
+
+                        </div>
+                        <div class="tile is-parent">
+                            <div class="tile is-child bo">
+                                <p class="title">Job Details</p>
+                                <p>{{ job.description }}</p>
+                                <p class="title">Responsibilities</p>
+                                <p>{{ job.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <v-tabs>
+                <v-tab>All Applications</v-tab>
+                <v-tab-item>
+                    <div id="all_applicants">
+                        <v-card id="job_card" class="mb-5 pa-5" :ripple="false" color="white" flat>
+                            <div class="table-containe">
+                                <table class="table is-fullwidth">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Gender</th>
+                                        <th>Skills</th>
+                                        <th>Verified Skills</th>
+                                        <th>Availability</th>
+                                        <th>Framework</th>
+                                        <th>Experience</th>
+                                        <th>CV</th>
+                                        {#                                        <th>Action</th>#}
+                                    </tr>
+                                    </thead>
+                                    <t-body>
+                                        {% for application in applications %}
+                                            <tr>
+                                                <td>{{ application.candidate.user.first_name }} {{ application.candidate.user.last_name }}</td>
+                                                <td>{{ application.candidate.gender }}</td>
+                                                <td>{{ application.candidate.skills }}</td>
+                                                <td>{{ application.candidate.verified_skills }}</td>
+                                                <td>{{ application.candidate.availabilty }}</td>
+                                                <td>{{ application.candidate.framework }}</td>
+                                                <td>{{ application.candidate.years }}</td>
+                                                <td>
+                                                    <v-btn color="blue lighten-2" dark
+                                                           href="{% url 'account_manager:cv' application.candidate.id %}">View CV
+                                                    </v-btn>
+
+
+                                                </td>
+                                                {#                                                <td>#}
+                                                {#                                                    {% if application.stage == 'shortlisted' %}#}
+                                                {#                                                        <v-btn text rounded class="button is-danger"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'reject')">#}
+                                                {#                                                            Reject#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% elif  application.stage == 'rejected' %}#}
+                                                {#                                                        <v-btn text rounded class="button is-info"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'shortlist')">#}
+                                                {#                                                            Shortlist#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% else %}#}
+                                                {#                                                        <v-btn text rounded class="button is-info"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'shortlist')">#}
+                                                {#                                                            Shortlist#}
+                                                {#                                                        </v-btn>#}
+                                                {##}
+                                                {#                                                        <v-btn text rounded class="button is-danger"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'reject')">#}
+                                                {#                                                            Reject#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% endif %}#}
+                                                {#                                                </td>#}
+                                            </tr>
+                                        {% endfor %}
+                                    </t-body>
+                                </table>
+                            </div>
+
+                        </v-card>
+                    </div>
+                </v-tab-item>
+                <v-tab>New Applications</v-tab>
+                <v-tab-item>
+                    <div id="new_applicants">
+                        <v-card id="job_card" class="mb-5 pa-5" :ripple="false" color="white" flat>
+                            <div class="table-containe">
+                                <table class="table is-fullwidth">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Gender</th>
+                                        <th>Skills</th>
+                                        <th>Verified Skills</th>
+                                        <th>Availability</th>
+                                        <th>Framework</th>
+                                        <th>Experience</th>
+                                        <th>Report</th>
+                                        <th>CV</th>
+                                        {#                                        <th>Action</th>#}
+                                    </tr>
+                                    </thead>
+                                    <t-body>
+                                        {% for application in new_applications %}
+                                            <tr>
+                                                <td>{{ application.candidate.user.first_name }} {{ application.candidate.user.last_name }}</td>
+                                                <td>{{ application.candidate.gender }}</td>
+                                                <td>{{ application.candidate.skills }}</td>
+                                                <td>{{ application.candidate.verified_skills }}</td>
+                                                <td>{{ application.candidate.availabilty }}</td>
+                                                <td>{{ application.candidate.framework }}</td>
+                                                <td>{{ application.candidate.years }}</td>
+                                                <td>{{ application.report }}</td>
+                                                <td>
+                                                    <div class="control">
+
+                                                        <v-btn color="blue lighten-2" dark
+                                                               href="{% url 'account_manager:cv' application.candidate.id %}">
+                                                            View CV
+                                                        </v-btn>
+                                                    </div>
+                                                </td>
+                                                {#                                                <td>#}
+                                                {#                                                    {% if application.stage == 'shortlisted' %}#}
+                                                {#                                                        <v-btn text rounded class="button is-danger"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'reject')">#}
+                                                {#                                                            Reject#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% elif  application.stage == 'rejected' %}#}
+                                                {#                                                        <v-btn text rounded class="button is-info"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'shortlist')">#}
+                                                {#                                                            Shortlist#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% else %}#}
+                                                {#                                                        <v-btn text rounded class="button is-info"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'shortlist')">#}
+                                                {#                                                            Shortlist#}
+                                                {#                                                        </v-btn>#}
+                                                {##}
+                                                {#                                                        <v-btn text rounded class="button is-danger"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'reject')">#}
+                                                {#                                                            Reject#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% endif %}#}
+                                                {#                                                </td>#}
+                                            </tr>
+                                        {% endfor %}
+                                    </t-body>
+                                </table>
+                            </div>
+
+                        </v-card>
+
+                    </div>
+                </v-tab-item>
+                <v-tab> Shortlisted Devs</v-tab>
+                <v-tab-item>
+                    <div id="shortlist">
+                        <v-card id="job_card" class="mb-5 pa-5" :ripple="false" color="white" flat>
+                            <div class="table-containe">
+                                <table class="table is-fullwidth">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Gender</th>
+                                        <th>Skills</th>
+                                        <th>Verified Skills</th>
+                                        <th>Availability</th>
+                                        <th>Framework</th>
+                                        <th>Experience</th>
+                                        <th>CV</th>
+                                        {#                                        <th>Action</th>#}
+                                    </tr>
+                                    </thead>
+                                    <t-body>
+                                        {% for application in shortlist %}
+                                            <tr>
+                                                <td>{{ application.candidate.user.first_name }} {{ application.candidate.user.last_name }}</td>
+                                                <td>{{ application.candidate.gender }}</td>
+                                                <td>{{ application.candidate.skills }}</td>
+                                                <td>{{ application.candidate.verified_skills }}</td>
+                                                <td>{{ application.candidate.availabilty }}</td>
+                                                <td>{{ application.candidate.tags }}</td>
+                                                <td>{{ application.candidate.framework }}</td>
+                                                <td>{{ application.candidate.years }}</td>
+                                                <td>{{ application.report }}</td>
+                                                <td>
+                                                    <div class="control">
+                                                        <v-btn color="blue lighten-2" dark
+                                                               href="{% url 'account_manager:cv' application.candidate.id %}">View CV
+                                                        </v-btn>
+
+                                                    </div>
+                                                </td>
+                                                {#                                                <td>#}
+                                                {#                                                    {% if application.stage == 'shortlisted' %}#}
+                                                {#                                                        <v-btn text rounded class="button is-danger"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'reject')">#}
+                                                {#                                                            Reject#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% elif  application.stage == 'rejected' %}#}
+                                                {#                                                        <v-btn text rounded class="button is-info"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'shortlist')">#}
+                                                {#                                                            Shortlist#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% else %}#}
+                                                {#                                                        <v-btn text rounded class="button is-info"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'shortlist')">#}
+                                                {#                                                            Shortlist#}
+                                                {#                                                        </v-btn>#}
+                                                {##}
+                                                {#                                                        <v-btn text rounded class="button is-danger"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'reject')">#}
+                                                {#                                                            Reject#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% endif %}#}
+                                                {#                                                </td>#}
+                                            </tr>
+                                        {% endfor %}
+                                    </t-body>
+                                </table>
+                            </div>
+
+                        </v-card>
+
+                    </div>
+                </v-tab-item>
+                <v-tab> Rejected Devs
+                </v-tab>
+                <v-tab-item>
+                    <div id="rejected">
+                        <v-card id="job_card" class="mb-5 pa-5" :ripple="false" color="white" flat>
+                            <div class="table-containe">
+                                <table class="table is-fullwidth">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Gender</th>
+                                        <th>Skills</th>
+                                        <th>Verified Skills</th>
+                                        <th>Availability</th>
+                                        <th>Framework</th>
+                                        <th>Experience</th>
+                                        <th>CV</th>
+                                        {#                                        <th>Action</th>#}
+                                    </tr>
+                                    </thead>
+                                    <t-body>
+                                        {% for application in rejected %}
+                                            <tr>
+                                                <td>{{ application.candidate.user.first_name }} {{ application.candidate.user.last_name }}</td>
+                                                <td>{{ application.candidate.gender }}</td>
+                                                <td>{{ application.candidate.skills }}</td>
+                                                <td>{{ application.candidate.verified_skills }}</td>
+                                                <td>{{ application.candidate.availabilty }}</td>
+                                                <td>{{ application.candidate.framework }}</td>
+                                                <td>{{ application.candidate.years }}</td>
+                                                <td>
+                                                    <div class="control">
+                                                        <v-btn color="blue lighten-2" dark
+                                                               href="{% url 'account_manager:cv' application.candidate.id %}">View CV
+                                                        </v-btn>
+
+                                                    </div>
+                                                </td>
+                                                {#                                                <td>#}
+                                                {#                                                    {% if application.stage == 'shortlisted' %}#}
+                                                {#                                                        <v-btn text rounded class="button is-danger"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'reject')">#}
+                                                {#                                                            Reject#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% elif  application.stage == 'rejected' %}#}
+                                                {#                                                        <v-btn text rounded class="button is-info"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'shortlist')">#}
+                                                {#                                                            Shortlist#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% else %}#}
+                                                {#                                                        <v-btn text rounded class="button is-info"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'shortlist')">#}
+                                                {#                                                            Shortlist#}
+                                                {#                                                        </v-btn>#}
+                                                {##}
+                                                {#                                                        <v-btn text rounded class="button is-danger"#}
+                                                {#                                                               onclick="vueApp.updateApplication({{ application.id }}, 'reject')">#}
+                                                {#                                                            Reject#}
+                                                {#                                                        </v-btn>#}
+                                                {#                                                    {% endif %}#}
+                                                {#                                                </td>#}
+                                            </tr>
+                                        {% endfor %}
+                                    </t-body>
+                                </table>
+                            </div>
+
+                        </v-card>
+
+                    </div>
+                </v-tab-item>
+            </v-tabs>
+
+
+        </v-card>
+    </div>
+{% endblock %}

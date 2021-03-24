@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField, SearchVector
 from django.db import models
 from accounts.models import Profile
 from marketplace.models import Job
@@ -9,6 +11,7 @@ from transactions.models import Transaction
 from separatedvaluesfield.models import SeparatedValuesField
 from classroom.models import Subject
 # Create your models here.
+
 class candidatesprojects(models.Model):
     TYPE_CHOICES = (
         ('awaiting_candidate', 'Awaiting Candidate'),
@@ -25,6 +28,9 @@ class candidatesprojects(models.Model):
     candidate = models.ForeignKey(User, on_delete=models.CASCADE,null=True,)
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE,null=True,)
 
+    def __str__(self):
+        return f'{self.candidate} - {self.stage}'
+
 
 
 
@@ -33,6 +39,9 @@ class submissions(models.Model):
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
     demo = models.CharField(null=True, max_length=400)
     repo = models.CharField(null=True, max_length=400)
+
+    def __str__(self):
+        return f'{self.candidate}'
 
 class Portfolio(models.Model):
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE,related_name='candidateportfolio')
@@ -46,16 +55,30 @@ class Portfolio(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     likes = models.CharField(max_length=900, null=True, blank=True)
     dislikes = models.CharField(max_length=900, null=True, blank=True)
+    search_vector = SearchVectorField(null=True)
+
+    class Meta(object):
+        indexes = [GinIndex(fields=['search_vector'])]
+
+    def save(self, *args, **kwargs):
+        self.search_vector = (SearchVector('tech__tags'))
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.candidate}'
 
 
 class Experience(models.Model):
-    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE,related_name='candidateexperience')
+    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='candidateexperience')
     title = models.CharField(null=True, max_length=100)
     company = models.CharField(null=True, max_length=100)
     description = models.CharField(null=True, max_length=400)
     location = CountryField(null=True, max_length=30)
     duration = models.IntegerField(null=True)
     tech_tags = models.CharField(max_length=500, blank=True, null=True, )
+
+    def __str__(self):
+        return f'{self.candidate} - {self.title}'
 
 class Report(models.Model):
     candidate = models.ForeignKey(User, on_delete=models.CASCADE)

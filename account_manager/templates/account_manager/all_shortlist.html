@@ -1,0 +1,73 @@
+{% extends 'base4.html' %}
+{% block content %}
+    {#    <div id="all_shortlist">#}
+    {#        <sidebar :items="items"></sidebar>#}
+    {#        <main-bar-all-shortlist :devs="devs"></main-bar-all-shortlist>#}
+    {#        <!-- <main-bar-all-jobs :search="search" :headers="headers" :desserts="desserts" ></main-bar-all-jobs> -->#}
+    {#    </div>#}
+    <div class="w3-container">
+        <v-card id="all__jobs__card" elevation="0" class="mt-5">
+            <v-card-title class="mb-5">
+                All Developer Lists
+            </v-card-title>
+
+            <div class="columns is-multiline">
+                {% for list in lists %}
+                    <div class="column is-3" >
+                        <v-card outlined href="{% url 'account_manager:shortlist' list.id %}" class="is-hoverable">
+                            <v-list-item three-line>
+                                <v-list-item-content>
+
+                                    <v-list-item-title class="title mb-1">
+                                        {{ list.title }}
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>Number of Devs {{ devs.count }}</v-list-item-subtitle>
+                                </v-list-item-content>
+
+
+                            </v-list-item>
+
+                            <v-card-actions>
+    {#                                <v-btn outlined rounded text class="is-info" href="{% url 'frontend:shortlist' list.id %}">#}
+    {#                                    Go to List#}
+    {#                                </v-btn>#}
+                                <v-btn href="{% url 'account_manager:shortlist_update' list.id %}">
+                                    <v-icon color="green lighten-2">mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn  class="is-pulled-right" href="{% url 'account_manager:shortlist_delete' list.id %}">
+                                    <v-icon color="red lighten-2">mdi-delete</v-icon>
+                                </v-btn>
+
+                            </v-card-actions>
+                        </v-card>
+                    </div>
+                {% endfor %}
+
+                <div class="column is-3">
+                    <v-card outlined>
+                        <v-list-item three-line>
+                            <v-list-item-content>
+
+                                <v-list-item-title class="title mb-1">
+                                    Create New List
+                                </v-list-item-title>
+                            </v-list-item-content>
+
+
+                        </v-list-item>
+
+                        <v-card-actions>
+                            <v-btn rounde button color="blue lighten-2"
+                               href="{% url 'account_manager:shortlist_create' %}">
+                            +
+                        </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </div>
+
+            </div>
+
+        </v-card>
+    </div>
+{% endblock %}
+

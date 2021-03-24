@@ -1,4 +1,8 @@
 import json
+
+from django.contrib.postgres.search import SearchVectorField, SearchVector
+
+from account_manager.managers import JobManager
 from accounts.models import Profile
 from django.conf import settings
 from django.db import models
@@ -64,6 +68,13 @@ class Job(models.Model):
     commission = models.IntegerField(default=500)
     years_experience= models.CharField(max_length=30, choices=YEARS_ACTIVE_CHOICES, default='1-3')
     transaction_id = models.CharField(max_length=900, null=True, blank=True)
+    search_vector = SearchVectorField(null=True, blank=True)
+
+    objects = JobManager()
+
+    def save(self, *args, **kwargs):
+        self.search_vector = (SearchVector('company', 'title', 'job_role', 'tech_stack', 'city'))
+        super().save(*args, **kwargs)
 
 
     class Meta:

@@ -1,0 +1,171 @@
+{% load static %}
+{% load account_manager_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{% static 'frontend/images/how/coding.png' %}">
+
+    <title>{% block page_title %}{% endblock %}{% block title %}{% endblock %} Codeln</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+
+    <script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.2.17/dist/vuetify.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'js/custom.js' %}">
+    {% block extra_head %}
+
+    {% endblock %}
+</head>
+<body class="w3-light-gray">
+<div id="app" style="margin: auto" class="w3-white w3-card-2 w3-border-bottom">
+    <v-app>
+        {#        {% if messages %}#}
+        {#            {{ message.type }}#}
+        {#            {% for message in messages %}#}
+        {#                <div class="{% if message.level_tag == 'success' %}w3-green{% elif message.level_tag == 'error' %}w3-red{% endif %} w3-padding-large w3-center w3-animate-top trans-400">#}
+        {#                    {{ message }}#}
+        {#                </div>#}
+        {#            {% endfor %}#}
+        {#        {% endif %}#}
+        <nav class="navbar w3-padding is-info" role="navigation"
+             aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="{% url 'account_manager:base' %}">
+                    {#                    <img src="{% static 'frontend/images/how/coding.png' %}" width="112" height="28">#}
+                    <img src="{% static 'frontend/images/logo/logo.svg' %}" class="img-fluid ml-4  mt-2" width="120"
+                         alt="">
+
+                </a>
+
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+                   data-target="navbarBasicExample">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-start w3-center my-auto px-10">
+                    {% if request.user.is_authenticated %}
+                        {% if request.user|has_group:"cac_admin" %}
+                            <v-btn text rounded class="navbar-item w3-padding-large"
+                                   href="{% url 'account_manager:jobs' %}">Jobs
+                            </v-btn>
+                        {% endif %}
+                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'account_manager:base' %}">Developers</v-btn>
+                        <v-btn text rounded class="navbar-item w3-padding-large"
+                               href="{% url 'account_manager:all_shortlist' %}">
+                            Shortlists
+                        </v-btn>
+                    {% endif %}
+                    {#                    {% if not request.user.is_authenticated %}#}
+                    {#                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'frontend:about' %}">#}
+                    {#                            About#}
+                    {#                        </v-btn>#}
+                    {#                        &nbsp;#}
+                    {#                        <v-btn text rounded class="navbar-item w3-padding-large"#}
+                    {#                               href="{% url 'frontend:how-it-works' %}">#}
+                    {#                            How It Works#}
+                    {#                        </v-btn>#}
+                    {#                        &nbsp;#}
+                    {#                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'frontend:news' %}">#}
+                    {#                            In the News#}
+                    {#                        </v-btn>#}
+                    {#                        &nbsp;#}
+                    {#                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'frontend:contact' %}">#}
+                    {#                            Contact#}
+                    {#                        </v-btn>#}
+                    {#                        &nbsp;#}
+                    {#                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'frontend:pricing' %}">#}
+                    {#                            Pricing#}
+                    {#                        </v-btn>#}
+                    {#                    {% endif %}#}
+                </div>
+                <div class="navbar-end my-auto px-10">
+                    {% if request.user.is_authenticated %}
+                        <v-btn color="white" outlined class="w3-margin-right navbar-item" text
+                               href="{% url 'account_logout' %}">
+                            Logout
+                        </v-btn>
+                    {% else %}
+                        <v-btn color="white" outlined class="w3-margin-right navbar-item" text
+                               href="{% url 'account_login' %}">
+                            Login
+                        </v-btn>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+        <div style="min-height: 90vh">
+
+
+            {% block content %}
+
+            {% endblock %}
+        </div>
+    </v-app>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+{% block  extra_body %}
+
+{% endblock %}
+<script>
+
+    let vueApp = new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            delimiters: ['[[', ']]'],
+            data() {
+                return {
+                    dialog: false,
+                    search: '',
+                    selected: [],
+                    developeremail: 'dennis@codeln.com',
+                    canCopyEmail: false,
+
+                };
+            },
+            watch: {},
+            created() {
+                this.canCopyEmail = !!navigator.clipboard;
+            },
+            mounted: function () {
+            },
+            methods: {
+                updateApplication(id, data) {
+                    {#window.location.href = `{% url 'frontend:update_application' %}?id=${id}&data=${data}`#}
+                },
+                toggleModal(modal) {
+                    const form = document.getElementById('modal');
+                    form.classList.toggle('is-active')
+                },
+                classActivate() {
+                },
+                async copy(s) {
+                    await navigator.clipboard.writeText(s);
+                    alert('Copied!');
+                },
+
+            },
+
+        },
+    );
+</script>
+{% block extra_extra_body %}
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,100 @@
+{% extends 'base4.html' %}
+{% load bulma_tags %}
+
+{% block content %}
+    <div class="w3-containe w3-margi">
+        <section class="hero is-small is-info">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        Search for Jobs by Title, Role, Stack ...
+                    </h1>
+                    <form action="." method="get">
+                        <div class="field">
+                            <div class="control">
+                                <input class="input is-large" name="q" type="text" placeholder="Search...">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="w3-container">
+        <v-card id="all__jobs__card" elevation="0" class="mt-5">
+            <v-card id="job_card" class="mb-5  pa-5" :ripple="false" color="white" flat>
+                <v-expansion-panels focusable>
+                    {#                        <v-expansion-panel class="w3-row-padding">#}
+                    {##}
+                    {#                            <v-expansion-panel-header>#}
+                    {#                                <div>#}
+                    {#                                    <h5><strong>Job Tag</strong></h5>#}
+                    {#                                    <br>#}
+                    {#                                    <p>{{ job.tag }}</p>#}
+                    {#                                </div>#}
+                    {#                                <div>#}
+                    {#                                    <h5><strong>Job Title</strong></h5>#}
+                    {#                                    <br>#}
+                    {#                                    <p>{{ job.title }}</p>#}
+                    {#                                </div>#}
+                    {#                                <div>#}
+                    {#                                    <h5><strong>Country</strong></h5>#}
+                    {#                                    <br>#}
+                    {#                                    <p>{{ job.city }}</p>#}
+                    {#                                </div>#}
+                    {#                                <div>#}
+                    {#                                    <h5><strong>Contract</strong></h5>#}
+                    {#                                    <br>#}
+                    {#                                    <p>{{ job.engagement_type }}</p>#}
+                    {#                                </div>#}
+                    {#                                <div>#}
+                    {#                                    <h5><strong>Renumeration</strong></h5>#}
+                    {#                                    <br>#}
+                    {#                                    <p>{{ job.remuneration }}</p>#}
+                    {#                                </div>#}
+                    {#                                <div>#}
+                    {#                                    <v-btn href="{% url 'account_manager:myjob' job.id %}" color="#007bff" dark small>View Job#}
+                    {#                                    </v-btn>#}
+                    {#                                </div>#}
+                    {##}
+                    {#                            </v-expansion-panel-header>#}
+                    {#                            <v-expansion-panel-content class="w3-padding">#}
+                    {#                                {{ job.description }}#}
+                    {#                            </v-expansion-panel-content>#}
+                    {##}
+                    {#                        </v-expansion-panel>#}
+                    <table class="table is-fullwidth w3-border">
+                        <thead>
+                        <tr class="w3-margin">
+                            <th>Job Tag</th>
+                            <th>Title</th>
+                            <th>Country</th>
+                            <th>Contract Type</th>
+                            <th>Renumeration</th>
+                            <th>Link</th>
+                        </tr>
+                        </thead>
+                        <t-body>
+                            {% for job in jobs %}
+                                <tr class="panel w3-margin">
+                                    <td>{{ job.tag }}</td>
+                                    <td>{{ job.title }}</td>
+                                    <td>{{ job.city }}</td>
+                                    <td>{{ job.engagement_type }}</td>
+                                    <td>{{ job.remuneration }}</td>
+                                    <td>
+                                        <v-btn href="{% url 'account_manager:myjob' job.id %}" color="#007bff" dark
+                                               small>View Job
+                                        </v-btn>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </t-body>
+                    </table>
+
+                </v-expansion-panels>
+            </v-card>
+        </v-card>
+    </div>
+
+{% endblock %}
