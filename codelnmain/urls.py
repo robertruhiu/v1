@@ -48,7 +48,7 @@ urlpatterns = [
     path('api/', include('api.urls', namespace='api')),
     path('feedback/', include('feedback.urls', namespace='feedback')),
     path('remote/', include('remote_codeln.urls', namespace='remote')),
-    path('cac/', include('account_manager.urls', namespace='account_manager')),
+    # path('cac/', include('account_manager.urls', namespace='account_manager')),
 
 #     cart
     path('cart/', include('cart.urls')),
