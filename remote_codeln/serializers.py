@@ -44,6 +44,7 @@ class TaskSerializerUpdater(serializers.ModelSerializer):
 class EscrowPaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = EscrowPayment
+        fields = ['client','project','amount','data']
 
 class FeatureSerializerDetail(serializers.ModelSerializer):
     project = RemoteProjectSerializer()
