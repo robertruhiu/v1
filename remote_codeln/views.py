@@ -402,10 +402,20 @@ class CreateContractView(generics.CreateAPIView):
 class ContractsListView(generics.ListAPIView):
     pass
 
-
+#escrow
 class CreatePaymentView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated, ]
+    serializer_class = EscrowPaymentSerializer
+
+    def get_queryset(self):
+        return EscrowPayment.objects.all()
     pass
+
+class PaymentGet(generics.RetrieveAPIView):
+    queryset = EscrowPayment.objects.all()
+    lookup_field = 'project'
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = EscrowPaymentSerializer
 
 
 class PaymentListView(generics.ListAPIView):

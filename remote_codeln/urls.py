@@ -100,7 +100,7 @@ urlpatterns = [
             path('payments/', include([
                 path('create/', views.CreatePaymentView.as_view()),
                 # TODO: view for single issue view
-                path('all/', views.PaymentListView.as_view()),
+                path('get/<int:project>', views.PaymentGet.as_view()),
             ])),
             path('chat/', include([
                 path('all/', views.chats, name='chats'),
