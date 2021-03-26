@@ -178,6 +178,8 @@ CORS_ORIGIN_WHITELIST = (
     'https://codeln.com',
     'http://www.codeln.com',
     'https://www.codeln.com',
+    'http://remote.codeln.com/',
+    'https://remote.codeln.com/',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -351,7 +353,6 @@ CLOUDINARY = {
     'api_key': config('CLOUDINARY_API_KEY'),
     'api_secret': config('CLOUDINARY_API_SECRET'),
 }
-
 CLOUDINARY_STORAGE = {
 
     'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
