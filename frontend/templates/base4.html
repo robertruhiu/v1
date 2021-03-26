@@ -39,12 +39,21 @@
         <nav class="navbar w3-padding is-info" role="navigation"
              aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item" href="{% url 'account_manager:base' %}">
-                    {#                    <img src="{% static 'frontend/images/how/coding.png' %}" width="112" height="28">#}
-                    <img src="{% static 'frontend/images/logo/logo.svg' %}" class="img-fluid ml-4  mt-2" width="120"
-                         alt="">
+                {% if request.user|has_group:"cac_admin"  or request.user|has_group:"cac_staff" %}
+                    <a class="navbar-item" href="{% url 'account_manager:base' %}">
+                        {#                    <img src="{% static 'frontend/images/how/coding.png' %}" width="112" height="28">#}
+                        <img src="{% static 'frontend/images/logo/logo.svg' %}" class="img-fluid ml-4  mt-2" width="120"
+                             alt="">
 
-                </a>
+                    </a>
+                {% else %}
+                    <a class="navbar-item" href="https://www.codeln.com/">
+                        {#                    <img src="{% static 'frontend/images/how/coding.png' %}" width="112" height="28">#}
+                        <img src="{% static 'frontend/images/logo/logo.svg' %}" class="img-fluid ml-4  mt-2" width="120"
+                             alt="">
+
+                    </a>
+                {% endif %}
 
                 <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
                    data-target="navbarBasicExample">
@@ -56,17 +65,21 @@
 
             <div id="navbarBasicExample" class="navbar-menu">
                 <div class="navbar-start w3-center my-auto px-10">
-                    {% if request.user.is_authenticated %}
-                        {% if request.user|has_group:"cac_admin" %}
+                    {% if request.user|has_group:"cac_admin"  or request.user|has_group:"cac_staff" %}
+                        {% if request.user.is_authenticated %}
+                            {% if request.user|has_group:"cac_admin" %}
+                                <v-btn text rounded class="navbar-item w3-padding-large"
+                                       href="{% url 'account_manager:jobs' %}">Jobs
+                                </v-btn>
+                            {% endif %}
                             <v-btn text rounded class="navbar-item w3-padding-large"
-                                   href="{% url 'account_manager:jobs' %}">Jobs
+                                   href="{% url 'account_manager:base' %}">Developers
+                            </v-btn>
+                            <v-btn text rounded class="navbar-item w3-padding-large"
+                                   href="{% url 'account_manager:all_shortlist' %}">
+                                Shortlists
                             </v-btn>
                         {% endif %}
-                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'account_manager:base' %}">Developers</v-btn>
-                        <v-btn text rounded class="navbar-item w3-padding-large"
-                               href="{% url 'account_manager:all_shortlist' %}">
-                            Shortlists
-                        </v-btn>
                     {% endif %}
                     {#                    {% if not request.user.is_authenticated %}#}
                     {#                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'frontend:about' %}">#}
@@ -133,8 +146,7 @@
                     dialog: false,
                     search: '',
                     selected: [],
-                    developeremail: 'dennis@codeln.com',
-                    canCopyEmail: false,
+
 
                 };
             },
