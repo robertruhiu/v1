@@ -61,7 +61,7 @@ class Portfolio(models.Model):
         indexes = [GinIndex(fields=['search_vector'])]
 
     def save(self, *args, **kwargs):
-        self.search_vector = (SearchVector('tech__tags'))
+        # self.search_vector = (SearchVector('tech__tags'))
         super().save(*args, **kwargs)
 
     def __str__(self):

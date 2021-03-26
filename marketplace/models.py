@@ -73,7 +73,7 @@ class Job(models.Model):
     objects = JobManager()
 
     def save(self, *args, **kwargs):
-        self.search_vector = (SearchVector('company', 'title', 'job_role', 'tech_stack', 'city'))
+        # self.search_vector = (SearchVector('company', 'title', 'job_role', 'tech_stack', 'city'))
         super().save(*args, **kwargs)
 
 
