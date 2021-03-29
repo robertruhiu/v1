@@ -178,8 +178,8 @@ CORS_ORIGIN_WHITELIST = (
     'https://codeln.com',
     'http://www.codeln.com',
     'https://www.codeln.com',
-    'http://remote.codeln.com/',
-    'https://remote.codeln.com/',
+    'http://remote.codeln.com',
+    'https://remote.codeln.com',
 )
 
 AUTHENTICATION_BACKENDS = (
