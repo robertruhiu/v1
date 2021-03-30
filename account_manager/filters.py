@@ -32,11 +32,12 @@ class DevFilter(django_filters.FilterSet):
     class Meta:
         model = Profile
         # fields = ['user','language', 'framework', 'skills', 'verified_skills', 'availabilty', 'gender', ]
-        fields = ['language', 'framework', 'skills', 'verified_skills', 'availabilty', 'gender', ]
+        # fields = ['language', 'framework', 'skills', 'verified_skills', 'availabilty', 'gender', ]
+        fields = ['availabilty', 'gender', ]
 
 class ShortlistDevFilter(django_filters.FilterSet):
 
     class Meta:
         model = Profile
         # fields = ['user','language', 'framework', 'skills', 'verified_skills', 'availabilty', 'gender', ]
-        fields = [ 'framework', 'skills', 'verified_skills', 'availabilty', 'gender', ]
+        fields = ['availabilty', 'gender', ]

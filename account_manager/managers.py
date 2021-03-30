@@ -5,7 +5,9 @@ from django.contrib.postgres.search import (
 from django.db import models
 
 profile_vectors = (
-    SearchVector('skills', weight='A', config='english')
+    SearchVector('language', weight='A', config='english')
+    + SearchVector('framework', weight='A', config='english')
+    + SearchVector('skills', weight='A', config='english')
     + SearchVector('verified_skills', weight='B', config='english')
     + SearchVector(StringAgg('user__first_name', delimiter=' '), weight='A', config='english')
     + SearchVector(StringAgg('user__last_name', delimiter=' '), weight='A', config='english')
