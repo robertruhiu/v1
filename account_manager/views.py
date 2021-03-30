@@ -103,8 +103,10 @@ def all_shortlist(request):
 
 @login_required
 def cv(request, id):
+    lists = Shortlist.objects.all()
+    list_form = ListForm()
     dev = Profile.objects.get(id=id)
-    return render(request, 'account_manager/cv.html', {'dev': dev})
+    return render(request, 'account_manager/cv.html', {'lists': lists,'list_form':list_form,'dev': dev})
     # return render(request, 'account_manager/full_cv.html', {'dev': dev})
     # return render(request, 'account_manager/stripped_cv.html', {'dev': dev})
 

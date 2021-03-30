@@ -4,8 +4,60 @@
 
 {% block content %}
     <div class="w3-container w3-margin">
-        <v-btn  class="is-pulled-right" color="blue lighten-2" rounded href="{% url 'account_manager:add_to_list' dev.id %}">Add to list
+
+        <v-btn class="is-pulled-right" color="blue lighten-2" outlined onclick="vueApp.toggleModal('modal')">Add
+            to
+            list
         </v-btn>
+        <div class="modal" id="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                {% if list_form.lists %}
+                    <section class="modal-card-body">
+                        <p class="panel-tabs">
+                            <a class="is-active title">Select List</a>
+                        </p>
+                        <form action="{% url 'account_manager:add_to_list'  dev.id %}"
+                              method="post">
+                            {% csrf_token %}
+                            {% for list in list_form.lists %}
+                                <label class="panel-block">
+                                    {{ list }}
+                                </label>
+                            {% endfor %}
+                            <br>
+                            <label>
+                                <button type="submit" class=" button is-info"> Save</button>
+                            </label>
+
+                        </form>
+                    </section>
+                {% else %}
+
+                    <v-card outlined>
+                        <v-list-item three-line>
+                            <v-list-item-content>
+
+                                <v-list-item-title class="title mb-1">
+                                    Create New List
+                                </v-list-item-title>
+                            </v-list-item-content>
+
+
+                        </v-list-item>
+
+                        <v-card-actions>
+                            <v-btn rounde button color="blue lighten-2"
+                                   href="{% url 'account_manager:shortlist_create' %}">
+                                +
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                {% endif %}
+                <button class="modal-close is-large"
+                        aria-label="close" onclick="vueApp.toggleModal('modal')"></button>
+            </div>
+        </div>
         <div class="columns column is-8 is-offset-2">
 
             <div id="cv" class="w3-topbar w3-bottombar w3-border-blue">
