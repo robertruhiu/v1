@@ -38,7 +38,7 @@
                                 {% endif %}
                                 <v-card-title class="w3-margin-top">
                                     {% if request.user|has_group:"cac_admin" %}
-                                        {{ dev.user.first_name }} {{ dev.user.last_name }}
+                                        <strong>{{ dev.user.first_name }} {{ dev.user.last_name }}</strong>
                                     {% endif %}
                                 </v-card-title>
                                 <v-card-subtitle>
