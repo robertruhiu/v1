@@ -52,6 +52,7 @@
                     </div>
                     <div class="column is-9">
                         <v-card id="job_card" class="mb-5  pa-5" :ripple="false" color="white" flat>
+
                             {% for dev in devs %}
                                 <v-card class="w3-margin">
                                     {% if  dev.availabilty != None %}
@@ -61,7 +62,7 @@
 
                                     <v-card-title class="w3-margin-top">
                                         {% if request.user|has_group:"cac_admin" %}
-                                            {{ dev.user.first_name }} {{ dev.user.last_name }}
+                                            <strong>{{ dev.user.first_name }} {{ dev.user.last_name }}</strong>
                                         {% endif %}
                                     </v-card-title>
 
@@ -103,18 +104,21 @@
                                                 </v-card-text>
                                             {% endfor %}
                                         {% else %}
-                                            <p>Candidate has not filled out their experience</p>
+                                            <p> Candidate has not filled out their experience</p>
                                         {% endif %}
                                     </v-card-text>
                                     <v-card-text>
                                         {% if  dev.candidateportfolio.all %}
-                                            <p class="subtitle">Portfolio</p>
+                                            <p class="subtitle"><strong>Portfolio</strong></p>
                                             {% for portfolio in dev.candidateportfolio.all %}
                                                 <v-card-text>
-                                                    {{ portfolio.title }}
+                                                    <strong>{{ portfolio.title }}</strong>
+                                                    <br>
                                                     {{ portfolio.description }}
-                                                    {{ portfolio.verified }}
-                                                    {{ portfolio.tech_tags }}
+                                                    {#                                                {{ portfolio.verified }}#}
+                                                    {% if portfolio.tech_tags %}
+                                                        {{ portfolio.tech_tags }}
+                                                    {% endif %}
                                                 </v-card-text>
                                             {% endfor %}
                                         {% else %}
@@ -125,61 +129,14 @@
                                         <v-btn color="blue lighten-2" outlined
                                                href="{% url 'account_manager:cv' dev.id %}">View CV
                                         </v-btn>
-                                        <v-btn color="blue lighten-2" outlined onclick="vueApp.toggleModal('modal')">Add
-                                            to
-                                            list
+                                        <v-btn color="blue lighten-2" outlined
+                                               href="{% url 'account_manager:add_to_list' dev.id %}">Add to list
                                         </v-btn>
                                     </v-card-actions>
+
                                 </v-card>
-                                <div class="modal" id="modal">
-                                    <div class="modal-background"></div>
-                                    <div class="modal-card">
-                                        {% if list_form.lists %}
-                                            <section class="modal-card-body">
-                                                <p class="panel-tabs">
-                                                    <a class="is-active title">Select List</a>
-                                                </p>
-                                                <form action="{% url 'account_manager:add_to_list'  dev.id %}"
-                                                      method="post">
-                                                    {% csrf_token %}
-                                                    {% for list in list_form.lists %}
-                                                        <label class="panel-block">
-                                                            {{ list }}
-                                                        </label>
-                                                    {% endfor %}
-                                                    <br>
-                                                    <label>
-                                                        <button type="submit" class=" button is-info"> Save</button>
-                                                    </label>
+                                <br>
 
-                                                </form>
-                                            </section>
-                                        {% else %}
-
-                                            <v-card outlined>
-                                                <v-list-item three-line>
-                                                    <v-list-item-content>
-
-                                                        <v-list-item-title class="title mb-1">
-                                                            Create New List
-                                                        </v-list-item-title>
-                                                    </v-list-item-content>
-
-
-                                                </v-list-item>
-
-                                                <v-card-actions>
-                                                    <v-btn rounde button color="blue lighten-2"
-                                                           href="{% url 'account_manager:shortlist_create' %}">
-                                                        +
-                                                    </v-btn>
-                                                </v-card-actions>
-                                            </v-card>
-                                        {% endif %}
-                                        <button class="modal-close is-large"
-                                                aria-label="close" onclick="vueApp.toggleModal('modal')"></button>
-                                    </div>
-                                </div>
                             {% endfor %}
                         </v-card>
                         {% if devs.has_other_pages %}
@@ -229,7 +186,6 @@
                         {% endif %}
                     </div>
                 </div>
-
 
             </v-card>
         </div>

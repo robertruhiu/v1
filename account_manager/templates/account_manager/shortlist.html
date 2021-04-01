@@ -87,9 +87,12 @@
                                         {% for portfolio in dev.candidateportfolio.all %}
                                             <v-card-text>
                                                 {{ portfolio.title }}
+                                                <br>
                                                 {{ portfolio.description }}
-                                                {{ portfolio.verified }}
-                                                {{ portfolio.tech_tags }}
+                                                {#                                                {{ portfolio.verified }}#}
+                                                {% if portfolio.tech_tags %}
+                                                    {{ portfolio.tech_tags }}
+                                                {% endif %}
                                             </v-card-text>
                                         {% endfor %}
                                     {% else %}
@@ -100,7 +103,7 @@
                                     <v-btn color="blue lighten-2" outlined href="{% url 'account_manager:cv' dev.id %}">
                                         View CV
                                     </v-btn>
-                                    <v-btn color="blue lighten-2" outlined
+                                    <v-btn  color="red lighten-2" outlined
                                            href="{% url 'account_manager:remove_dev' list.id dev.id %}">Remove From List
                                     </v-btn>
                                 </v-card-actions>

@@ -208,6 +208,7 @@ def remove_dev(request, shortlist_id, dev_id):
     list.developers.remove(dev)
     return redirect('account_manager:shortlist', id=shortlist_id)
 
+
 @login_required
 def add_shortlist(request):
     if request.method == 'POST':
@@ -224,7 +225,6 @@ def add_to_list(request, id):
     developer = Profile.objects.get(id=id)
     if request.method == 'POST':
         list_form = ListForm(data=request.POST)
-        list_form
         if list_form.is_valid():
             lists = list_form.cleaned_data['lists']
             for list in lists:
@@ -242,7 +242,6 @@ def send_mail(request, id):
     developer = Profile.objects.get(id=id)
     if request.method == 'POST':
         list_form = ListForm(data=request.POST)
-        list_form
         if list_form.is_valid():
             lists = list_form.cleaned_data['lists']
             for list in lists:

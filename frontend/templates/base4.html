@@ -157,8 +157,8 @@
             mounted: function () {
             },
             methods: {
-                updateApplication(id, data) {
-                    {#window.location.href = `{% url 'frontend:update_application' %}?id=${id}&data=${data}`#}
+                addtoList() {
+                    {#window.location.href = `{% url 'account_manager:add_to_list' list_id dev_id %}`#}
                 },
                 toggleModal(modal) {
                     const form = document.getElementById('modal');
