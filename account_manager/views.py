@@ -43,7 +43,7 @@ def index(request):
         return render(request, 'account_manager/dashboard.html',
                       {'devs': devs, 'lists': lists, 'devs_filter': devs_filter, 'list_form':list_form})
     else:
-        search_results = Profile.objects.search(query).order_by('id')
+        search_results = Profile.objects.search(query).order_by('id').filter(user_type='developer').order_by('id')
         devs_filter = DevFilter(request.GET, queryset=search_results)
         devs = DevFilter(request.GET, queryset=search_results).qs
         page = request.GET.get('page', 1)
