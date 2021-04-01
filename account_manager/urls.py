@@ -12,6 +12,7 @@ urlpatterns = [
     path('all_shortlist/', views.all_shortlist, name='all_shortlist'),
     path('shortlist/<int:id>/', views.shortlist, name='shortlist'),
     path('add_to_list/<int:id>/', views.add_to_list, name='add_to_list'),
+    path('remove_dev/<int:shortlist_id>/<int:dev_id>/', views.remove_dev, name='remove_dev'),
     path('send_mail/<int:id>/', views.add_to_list, name='send_mail'),
     path('shortlist/create/', views.ShortlistCreate.as_view(), name='shortlist_create'),
     path('shortlist/<int:pk>/update/', views.ShortlistUpdate.as_view(), name='shortlist_update'),

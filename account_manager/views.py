@@ -201,6 +201,12 @@ def shortlist(request, id):
     # list = Shortlist.objects.get(slug=slug)
     return render(request, 'account_manager/shortlist.html', {'list': list, 'devs_filter': devs_filter})
 
+@login_required
+def remove_dev(request, shortlist_id, dev_id):
+    list = Shortlist.objects.get(id=shortlist_id)
+    dev = Profile.objects.get(id=dev_id)
+    list.developers.remove(dev)
+    return redirect('account_manager:shortlist', id=shortlist_id)
 
 @login_required
 def add_shortlist(request):
