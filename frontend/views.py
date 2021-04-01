@@ -114,8 +114,10 @@ class Allrecruiters(generics.ListAPIView):
         return Profile.objects.select_related('user').filter(user_type='recruiter').order_by('-user__date_joined')
 
 
+
 @login_required
 def DevList(request):
+    # todo: remove internal calls
 
     response = requests.get('http://codelnapi.herokuapp.com/alldevs')
     data = response.json()
@@ -132,7 +134,7 @@ class Wote(generics.ListAPIView):
 
 @login_required
 def Wotelist(request):
-
+    # todo: remove internal calls
     response = requests.get('http://codelnapi.herokuapp.com/wote')
     data = response.json()
 
@@ -140,7 +142,7 @@ def Wotelist(request):
 
 @login_required
 def RecruiterList(request):
-
+    # todo: remove internal calls
 
     response = requests.get('https://codelnapi.herokuapp.com/allrecruiters')
     data = response.json()
