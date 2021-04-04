@@ -77,8 +77,7 @@ urlpatterns = [
     path('management', management, name='management'),
     path('grading/<int:candidate_id>/<int:transaction_id>', grading, name='grading'),
     path('storegrades/<int:candidate_id>/<int:transaction_id>', storegrades, name='storegrades'),
-    path('wote',Wote.as_view()),
-    path('wotelist', Wotelist, name='wotelist'),
+
     path('qualified', UserList.as_view()),
     path('remotedevs', RemoteDevList.as_view()),
     path('devlist', DevList, name='devlist'),
@@ -109,11 +108,17 @@ urlpatterns = [
     path('myprojectdetailsupdater/<int:pk>', MySelfAssesmentsprojectupdater.as_view()),
     path('newselfverify/<int:pk>', Timesetemail.as_view()),
     path('newuser/<int:pk>', Newuser.as_view()),
-    path('alldevs', Alldevs.as_view()),
-    path('allrecruiters', Allrecruiters.as_view()),
+
     path('talentorder', Talentorder, name='Talentorder'),
     path('unsubscribe/<str:token>', unsubscribe, name='unsubscribe'),
     # path('selfprojectmanger')
+]
+
+urlpatterns += [
+    # path('wote', Wote.as_view()),
+    path('wotelist', Wotelist, name='wotelist'),
+    # path('alldevs', Alldevs.as_view()),
+    # path('allrecruiters', Allrecruiters.as_view()),
 ]
 
 from servermanagement.views import AssessmentJobCreate
