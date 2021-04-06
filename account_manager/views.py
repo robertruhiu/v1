@@ -208,18 +208,11 @@ def remove_dev(request, shortlist_id, dev_id):
     list = Shortlist.objects.get(id=shortlist_id)
     dev = Profile.objects.get(id=dev_id)
     list.developers.remove(dev)
+    list.save()
     return redirect('account_manager:shortlist', id=shortlist_id)
 
 
-@login_required
-def add_shortlist(request):
-    if request.method == 'POST':
-        shortlist_form = ShortlistCreateUpdateForm(data=request.POST)
-        if shortlist_form.is_valid():
-            new_list = shortlist_form.save(commit=False)
-    else:
-        shortlist_form = ShortlistCreateUpdateForm()
-        return render(request, 'account_manager/shortlist_form.html', {'shortlist_form': shortlist_form})
+
 
 
 @login_required
