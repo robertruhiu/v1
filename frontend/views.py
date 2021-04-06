@@ -108,6 +108,7 @@ class Alldevs(generics.ListAPIView):
 
 
 class Allrecruiters(generics.ListAPIView):
+    # todo: unneccessary
     serializer_class = ProfileSerializer
 
     def get_queryset(self):
@@ -117,14 +118,16 @@ class Allrecruiters(generics.ListAPIView):
 
 @login_required
 def DevList(request):
-    # todo: remove internal calls
 
-    response = requests.get('http://codelnapi.herokuapp.com/alldevs')
-    data = response.json()
+    devs = Profile.objects.select_related('user').filter(user_type='developer').order_by('-user__date_joined')
+
+    serializer = ProfileSerializer(devs, many=True)
+    data = serializer.data
 
     return render(request, 'frontend/recruiter/devlist.html', {'developers': data})
 
 class Wote(generics.ListAPIView):
+    # todo: rendered defunct
     serializer_class = UserSerializer
 
     def get_queryset(self):
@@ -134,18 +137,18 @@ class Wote(generics.ListAPIView):
 
 @login_required
 def Wotelist(request):
-    # todo: remove internal calls
-    response = requests.get('http://codelnapi.herokuapp.com/wote')
-    data = response.json()
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
+    data = serializer.data
 
     return render(request, 'frontend/recruiter/allusers.html', {'developers': data})
 
 @login_required
 def RecruiterList(request):
-    # todo: remove internal calls
+    recruiters = Profile.objects.select_related('user').filter(user_type='recruiter').order_by('-user__date_joined')
 
-    response = requests.get('https://codelnapi.herokuapp.com/allrecruiters')
-    data = response.json()
+    serializer = ProfileSerializer(recruiters, many=True)
+    data = serializer.data
 
     return render(request, 'frontend/recruiter/recruiterslist.html', {'payers': data})
 
@@ -162,6 +165,7 @@ class UserListsliced(generics.ListAPIView):
 
 class AllUsers(generics.ListAPIView):
     serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return User.objects.all()

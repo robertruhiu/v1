@@ -14,12 +14,14 @@ from frontend.views import home, activity, tracker, update_candidateprojects, \
     MySelfAssesmentsproject, MySelfAssesmentsprojectupdater, Portfoliocreate, Portfolioupdate, Experiencecreate, \
     Experienceupdate, \
     UserListsliced, DevList, RecruiterList, Alldevs, Allrecruiters, Mytestcenters, Talentorder, Timesetemail, Newuser, \
-    unsubscribe, Resourcecreate, Subjectresources, Resourceslikeupdate, Portfoliolikeupdate,RemoteDevList,Wote,Wotelist\
-    ,AllProfiles
+    unsubscribe, Resourcecreate, Subjectresources, Resourceslikeupdate, Portfoliolikeupdate, RemoteDevList, Wote, \
+    Wotelist \
+    , AllProfiles
 
 from accounts.views import update_profile
 
 app_name = 'frontend'
+# todo: audit all urls for security
 
 urlpatterns = [
     path('', index, name='index'),
@@ -77,14 +79,14 @@ urlpatterns = [
     path('management', management, name='management'),
     path('grading/<int:candidate_id>/<int:transaction_id>', grading, name='grading'),
     path('storegrades/<int:candidate_id>/<int:transaction_id>', storegrades, name='storegrades'),
-
+    # admin lists
     path('qualified', UserList.as_view()),
     path('remotedevs', RemoteDevList.as_view()),
     path('devlist', DevList, name='devlist'),
     path('recruiterlist', RecruiterList),
+    path('wotelist', Wotelist, name='wotelist'),
     path('userssliced/', UserListsliced.as_view()),
-    path('allusers/', AllUsers.as_view()),
-    path('allprofiles', AllProfiles.as_view()),
+
     path('updater/<int:pk>', ProfileUpdate.as_view()),
     path('getuser/<int:pk>', Userget.as_view()),
     path('getprofile/<int:pk>', Profileget.as_view()),
@@ -115,8 +117,9 @@ urlpatterns = [
 ]
 
 urlpatterns += [
+    path('allusers/', AllUsers.as_view()),
+    path('allprofiles/', AllProfiles.as_view()),
     # path('wote', Wote.as_view()),
-    path('wotelist', Wotelist, name='wotelist'),
     # path('alldevs', Alldevs.as_view()),
     # path('allrecruiters', Allrecruiters.as_view()),
 ]
