@@ -198,7 +198,7 @@ def download_stripped_cv(request, id):
 @login_required
 def shortlist(request, id):
     list = Shortlist.objects.get(id=id)
-    devs = list.developers.all().select_related()
+    devs = list.developers.all().prefetch_related('devs__project__portfolio_set')
     devs_filter = ShortlistDevFilter(request.GET, queryset=devs)
     # list = Shortlist.objects.get(slug=slug)
     return render(request, 'account_manager/shortlist.html', {'list': list, 'devs_filter': devs_filter})
