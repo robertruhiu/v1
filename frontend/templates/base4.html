@@ -80,6 +80,14 @@
                                    href="{% url 'account_manager:all_shortlist' %}">
                                 Shortlists
                             </v-btn>
+                            <v-btn text rounded class="navbar-item w3-padding-large"
+                                   href="{% url 'frontend:seedevs' %}">
+                                See Devs
+                            </v-btn>
+                            <v-btn text rounded class="navbar-item w3-padding-large"
+                                   href="{% url 'frontend:seerecruiters' %}">
+                                See Recruiters
+                            </v-btn>
                         {% endif %}
                     {% endif %}
                     {#                    {% if not request.user.is_authenticated %}#}

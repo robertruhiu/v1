@@ -662,6 +662,7 @@ def report(request, candidate_id, transaction_id):
     return render(request, 'frontend/recruiter/report.html',
                   {'user': user, 'transaction': transaction, 'report': report})
 
+# todo: may be defunct
 
 @login_required
 def onboarddevs(request):

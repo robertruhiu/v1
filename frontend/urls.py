@@ -48,12 +48,14 @@ urlpatterns = [
          name='update_finishedopencall'),
     path('update_candidateprojects/<int:candidateproject_id>/<int:transaction_id>', update_candidateprojects,
          name='update_candidateprojects'),
+    # todo: audit these too
     path('onboarddevs', onboarddevs, name='onboarddevs'),
     path('onboardrecruiters', onboardrecruiters, name='onboardrecruiters'),
     path('seedevs', DevList, name='seedevs'),
     path('seerecruiters', RecruiterList, name='seerecruiters'),
     path('manageprojects', manageprojects, name='manageprojects'),
     path('managetransactions', managetransactions, name='managetransactions'),
+    # todo: end of audit
     path('editproject/<int:project_id>', editproject, name='editproject'),
     path('deleteproject/<int:project_id>', deleteproject, name='deleteproject'),
     path('edittransactions/<int:transaction_id>', edittransactions, name='edittransactions'),
@@ -79,7 +81,7 @@ urlpatterns = [
     path('management', management, name='management'),
     path('grading/<int:candidate_id>/<int:transaction_id>', grading, name='grading'),
     path('storegrades/<int:candidate_id>/<int:transaction_id>', storegrades, name='storegrades'),
-    # admin lists
+    # todo: to find admin lists
     path('qualified', UserList.as_view()),
     path('remotedevs', RemoteDevList.as_view()),
     path('devlist', DevList, name='devlist'),
