@@ -30,7 +30,7 @@
                     </div>
 
                     <div class="column is-9">
-                        {% for dev in devs_filter.qs %}
+                        {% for dev in devs %}
                             <v-card class="w3-margin">
                                 {% if  dev.availabilty != None %}
                                     <v-btn class="is-pulled-right w3-margin" button rounded
@@ -61,55 +61,102 @@
                                         </v-btn>
                                     {% endif %}
                                 </v-card-subtitle>
-{#                                <v-card-text>#}
-{#                                    {% if  dev.candidateexperience.all %}#}
-{#                                        <p class="subtitle">Experience</p>#}
-{#                                        {% for exp in dev.candidateexperience.all %}#}
-{#                                            <v-card-text>#}
-{#                                                {{ exp.title }}#}
-{#                                                <br>#}
-{#                                                {{ exp.company }}#}
-{#                                                {{ exp.description }}#}
-{#                                                {{ exp.duration }}#}
-{#                                                <br>#}
-{#                                                {{ exp.tech_tags }}#}
-{#                                                <br>#}
-{#                                                {{ exp.duration }} months#}
-{#                                            </v-card-text>#}
-{#                                        {% endfor %}#}
-{#                                    {% else %}#}
-{#                                        <p>Candidate has not filled out their experience</p>#}
-{#                                    {% endif %}#}
-{#                                </v-card-text>#}
-{#                                <v-card-text>#}
-{#                                    {% if  dev.candidateportfolio.all %}#}
-{#                                        <p class="subtitle">Portfolio</p>#}
-{#                                        {% for portfolio in dev.candidateportfolio.all %}#}
-{#                                            <v-card-text>#}
-{#                                                {{ portfolio.title }}#}
-{#                                                <br>#}
-{#                                                {{ portfolio.description }}#}
-                                                {#                                                {{ portfolio.verified }}#}
-{#                                                {% if portfolio.tech_tags %}#}
-{#                                                    {{ portfolio.tech_tags }}#}
-{#                                                {% endif %}#}
-{#                                            </v-card-text>#}
-{#                                        {% endfor %}#}
-{#                                    {% else %}#}
-{#                                        Candidate hasn't filled out their portfolio#}
-{#                                    {% endif %}#}
-{#                                </v-card-text>#}
+                                {#                                <v-card-text>#}
+                                {#                                    {% if  dev.candidateexperience.all %}#}
+                                {#                                        <p class="subtitle">Experience</p>#}
+                                {#                                        {% for exp in dev.candidateexperience.all %}#}
+                                {#                                            <v-card-text>#}
+                                {#                                                {{ exp.title }}#}
+                                {#                                                <br>#}
+                                {#                                                {{ exp.company }}#}
+                                {#                                                {{ exp.description }}#}
+                                {#                                                {{ exp.duration }}#}
+                                {#                                                <br>#}
+                                {#                                                {{ exp.tech_tags }}#}
+                                {#                                                <br>#}
+                                {#                                                {{ exp.duration }} months#}
+                                {#                                            </v-card-text>#}
+                                {#                                        {% endfor %}#}
+                                {#                                    {% else %}#}
+                                {#                                        <p>Candidate has not filled out their experience</p>#}
+                                {#                                    {% endif %}#}
+                                {#                                </v-card-text>#}
+                                {#                                <v-card-text>#}
+                                {#                                    {% if  dev.candidateportfolio.all %}#}
+                                {#                                        <p class="subtitle">Portfolio</p>#}
+                                {#                                        {% for portfolio in dev.candidateportfolio.all %}#}
+                                {#                                            <v-card-text>#}
+                                {#                                                {{ portfolio.title }}#}
+                                {#                                                <br>#}
+                                {#                                                {{ portfolio.description }}#}
+                                {#                                                {{ portfolio.verified }}#}
+                                {#                                                {% if portfolio.tech_tags %}#}
+                                {#                                                    {{ portfolio.tech_tags }}#}
+                                {#                                                {% endif %}#}
+                                {#                                            </v-card-text>#}
+                                {#                                        {% endfor %}#}
+                                {#                                    {% else %}#}
+                                {#                                        Candidate hasn't filled out their portfolio#}
+                                {#                                    {% endif %}#}
+                                {#                                </v-card-text>#}
                                 <v-card-actions>
                                     <v-btn color="blue lighten-2" outlined href="{% url 'account_manager:cv' dev.id %}">
                                         View CV
                                     </v-btn>
-                                    <v-btn  color="red lighten-2" outlined
+                                    <v-btn color="red lighten-2" outlined
                                            href="{% url 'account_manager:remove_dev' list.id dev.id %}">Remove From List
                                     </v-btn>
                                 </v-card-actions>
                             </v-card>
                         {% endfor %}
+                        {% if devs.has_other_pages %}
+                            <nav class="pagination" role="navigation" aria-label="pagination">
+
+
+                                <ul class="pagination-list">
+                                    {% if devs.has_previous %}
+                                        {% if devs.previous_page_number != 1 %}
+                                            <li>
+                                                <a href="?{% param_replace page=devs.previous_page_number %}"
+                                                   class="pagination-previous">Previous</a>
+                                            </li>
+                                        {% endif %}
+
+                                    {% else %}
+                                        <li class="disabled"><span>&laquo;</span></li>
+                                    {% endif %}
+                                    {% for i in devs.paginator.page_range %}
+                                        {% if devs.number == i %}
+                                            <li>
+                                                <a href="?{% param_replace page=i %}" class="pagination-link is-current"
+                                                   aria-current="page">{{ i }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li><a href="?{% param_replace page=i %}" class="pagination-link"
+                                                   aria-current="page">{{ i }}</a>
+                                            </li>
+                                        {% endif %}
+
+                                    {% endfor %}
+                                    {% if devs.has_next %}
+                                        {% if devs.next_page_number != devs.paginator.num_pages %}
+                                            <li>
+                                                <a href="?{% param_replace page=devs.next_page_number %}"
+                                                   class="pagination-next">Next page</a>
+
+                                            </li>
+                                        {% endif %}
+
+                                    {% else %}
+                                        <li class="disabled"><span>&raquo;</span></li>
+                                    {% endif %}
+                                </ul>
+
+                            </nav>
+                        {% endif %}
                     </div>
+
+
                 </div>
             </v-card>
         </v-card>

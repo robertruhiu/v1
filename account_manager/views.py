@@ -29,7 +29,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 def index(request):
     query = request.GET.get('q', None)
     lists = Shortlist.objects.all()
-    list_form = ListForm()
+    # list_form = ListForm()
     if not query:
         all_devs = Profile.objects.filter(user_type='developer').order_by('id')
         devs_filter = DevFilter(request.GET, queryset=all_devs)
@@ -43,7 +43,7 @@ def index(request):
         except EmptyPage:
             devs = paginator.page(paginator.num_pages)
         return render(request, 'account_manager/dashboard.html',
-                      {'devs': devs, 'lists': lists, 'devs_filter': devs_filter, 'list_form':list_form})
+                      {'devs': devs, 'lists': lists, 'devs_filter': devs_filter})
     else:
         search_results = Profile.objects.search(query).order_by('id').filter(user_type='developer').order_by('id')
         devs_filter = DevFilter(request.GET, queryset=search_results)
@@ -59,7 +59,7 @@ def index(request):
             devs = paginator.page(1)
 
         return render(request, 'account_manager/dashboard.html', {'devs': devs, 'lists': lists,
-                                                                  'devs_filter': devs_filter, 'list_form': list_form})
+                                                                  'devs_filter': devs_filter})
 
 
 @login_required
@@ -198,10 +198,19 @@ def download_stripped_cv(request, id):
 @login_required
 def shortlist(request, id):
     list = Shortlist.objects.get(id=id)
-    devs = Profile.objects.filter(dev_list=list)
-    devs_filter = ShortlistDevFilter(request.GET, queryset=devs)
+    devs_list = Profile.objects.filter(dev_list=list)
+    devs_filter = ShortlistDevFilter(request.GET, queryset=devs_list)
+    devs = ShortlistDevFilter(request.GET, queryset=devs_list).qs
+    page = request.GET.get('page', 1)
+    paginator = Paginator(devs, 15)
+    try:
+        devs = paginator.page(page)
+    except PageNotAnInteger:
+        devs = paginator.page(1)
+    except EmptyPage:
+        devs = paginator.page(1)
     # list = Shortlist.objects.get(slug=slug)
-    return render(request, 'account_manager/shortlist.html', {'list': list, 'devs_filter': devs_filter})
+    return render(request, 'account_manager/shortlist.html', {'list': list, 'devs_filter': devs_filter, 'devs': devs})
 
 @login_required
 def remove_dev(request, shortlist_id, dev_id):
