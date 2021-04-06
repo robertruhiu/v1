@@ -121,9 +121,9 @@ urlpatterns = [
 urlpatterns += [
     path('allusers/', AllUsers.as_view()),
     path('allprofiles/', AllProfiles.as_view()),
-    # path('wote', Wote.as_view()),
-    # path('alldevs', Alldevs.as_view()),
-    # path('allrecruiters', Allrecruiters.as_view()),
+    path('wote/', Wote.as_view()),
+    path('alldevs/', Alldevs.as_view()),
+    path('allrecruiters/', Allrecruiters.as_view()),
 ]
 
 from servermanagement.views import AssessmentJobCreate

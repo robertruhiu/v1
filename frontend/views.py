@@ -100,6 +100,7 @@ class RemoteDevList(generics.ListAPIView):
 
 
 class Alldevs(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
 
     serializer_class = ProfileSerializer
 
@@ -108,6 +109,7 @@ class Alldevs(generics.ListAPIView):
 
 
 class Allrecruiters(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
     # todo: unneccessary
     serializer_class = ProfileSerializer
 
@@ -127,6 +129,7 @@ def DevList(request):
     return render(request, 'frontend/recruiter/devlist.html', {'developers': data})
 
 class Wote(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
     # todo: rendered defunct
     serializer_class = UserSerializer
 
