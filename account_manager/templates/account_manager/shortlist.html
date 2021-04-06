@@ -61,44 +61,44 @@
                                         </v-btn>
                                     {% endif %}
                                 </v-card-subtitle>
-                                {#                                <v-card-text>#}
-                                {#                                    {% if  dev.candidateexperience.all %}#}
-                                {#                                        <p class="subtitle">Experience</p>#}
-                                {#                                        {% for exp in dev.candidateexperience.all %}#}
-                                {#                                            <v-card-text>#}
-                                {#                                                {{ exp.title }}#}
-                                {#                                                <br>#}
-                                {#                                                {{ exp.company }}#}
-                                {#                                                {{ exp.description }}#}
-                                {#                                                {{ exp.duration }}#}
-                                {#                                                <br>#}
-                                {#                                                {{ exp.tech_tags }}#}
-                                {#                                                <br>#}
-                                {#                                                {{ exp.duration }} months#}
-                                {#                                            </v-card-text>#}
-                                {#                                        {% endfor %}#}
-                                {#                                    {% else %}#}
-                                {#                                        <p>Candidate has not filled out their experience</p>#}
-                                {#                                    {% endif %}#}
-                                {#                                </v-card-text>#}
-                                {#                                <v-card-text>#}
-                                {#                                    {% if  dev.candidateportfolio.all %}#}
-                                {#                                        <p class="subtitle">Portfolio</p>#}
-                                {#                                        {% for portfolio in dev.candidateportfolio.all %}#}
-                                {#                                            <v-card-text>#}
-                                {#                                                {{ portfolio.title }}#}
-                                {#                                                <br>#}
-                                {#                                                {{ portfolio.description }}#}
-                                {#                                                {{ portfolio.verified }}#}
-                                {#                                                {% if portfolio.tech_tags %}#}
-                                {#                                                    {{ portfolio.tech_tags }}#}
-                                {#                                                {% endif %}#}
-                                {#                                            </v-card-text>#}
-                                {#                                        {% endfor %}#}
-                                {#                                    {% else %}#}
-                                {#                                        Candidate hasn't filled out their portfolio#}
-                                {#                                    {% endif %}#}
-                                {#                                </v-card-text>#}
+                                <v-card-text>
+                                    {% if  dev.candidateexperience.all %}
+                                        <p class="subtitle">Experience</p>
+                                        {% for exp in dev.candidateexperience.all %}
+                                            <v-card-text>
+                                                {{ exp.title }}
+                                                <br>
+                                                {{ exp.company }}
+                                                {{ exp.description }}
+                                                {{ exp.duration }}
+                                                <br>
+                                                {{ exp.tech_tags }}
+                                                <br>
+                                                {{ exp.duration }} months
+                                            </v-card-text>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>Candidate has not filled out their experience</p>
+                                    {% endif %}
+                                </v-card-text>
+                                <v-card-text>
+                                    {% if  dev.candidateportfolio.all %}
+                                        <p class="subtitle">Portfolio</p>
+                                        {% for portfolio in dev.candidateportfolio.all %}
+                                            <v-card-text>
+                                                {{ portfolio.title }}
+                                                <br>
+                                                {{ portfolio.description }}
+                                                {{ portfolio.verified }}
+                                                {% if portfolio.tech_tags %}
+                                                    {{ portfolio.tech_tags }}
+                                                {% endif %}
+                                            </v-card-text>
+                                        {% endfor %}
+                                    {% else %}
+                                        Candidate hasn't filled out their portfolio
+                                    {% endif %}
+                                </v-card-text>
                                 <v-card-actions>
                                     <v-btn color="blue lighten-2" outlined href="{% url 'account_manager:cv' dev.id %}">
                                         View CV
