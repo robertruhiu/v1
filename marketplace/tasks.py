@@ -21,7 +21,7 @@ def send_email(job_id):
     emails = []
     for one_profile in dev_profiles:
         dev_skills = one_profile.skills.split(",")
-        if (set(skills) & set(dev_skills)) and one_profile.country ==job.location:
+        if (set(skills) & set(dev_skills)):
             emails.append(one_profile.user.email)
     for one in emails:
         to =[]
