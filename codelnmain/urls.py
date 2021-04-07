@@ -39,7 +39,7 @@ urlpatterns = [
     path('invitations/', include('invitations.urls', namespace='invitations')),
     path('servermanagement/', include('servermanagement.urls', namespace='servermanagement')),
     path('marketplace/', include('marketplace.urls', namespace='marketplace')),
-    path('blog/',include('blog.urls',namespace='blog')),
+    # path('blog/',include('blog.urls',namespace='blog')),
     path('martor/', include('martor.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('api-auth/', include('rest_framework.urls')),
