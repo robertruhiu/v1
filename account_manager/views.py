@@ -198,7 +198,7 @@ def download_stripped_cv(request, id):
 @login_required
 def shortlist(request, id):
     list = Shortlist.objects.get(id=id)
-    devs_list = Profile.objects.filter(dev_list=list)
+    devs_list = Profile.objects.filter(dev_list=list).order_by('id')
     devs_filter = ShortlistDevFilter(request.GET, queryset=devs_list)
     devs = ShortlistDevFilter(request.GET, queryset=devs_list).qs
     page = request.GET.get('page', 1)
