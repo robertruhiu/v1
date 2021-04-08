@@ -73,13 +73,12 @@ def mydev(request, id):
 def jobs(request):
     query = request.GET.get('q', None)
     if not query:
-        jobs = Job.objects.all()
-        jobs_filter = JobFilter(request.GET, queryset=jobs)
-        jobs = jobs_filter.qs
-        return render(request, 'account_manager/jobs.html', {'jobs_filter': jobs_filter,
-                                                             'jobs': jobs})
+        jobs = Job.objects.all().order_by('id')
+        # jobs_filter = JobFilter(request.GET, queryset=jobs)
+        # jobs = jobs_filter.qs
+        return render(request, 'account_manager/jobs.html', {'jobs': jobs})
     else:
-        jobs = Job.objects.search(query)
+        jobs = Job.objects.search(query).order_by('id')
         return render(request, 'account_manager/jobs.html', {'jobs': jobs})
 
 
