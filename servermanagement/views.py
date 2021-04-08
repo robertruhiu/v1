@@ -6,6 +6,7 @@ import pytz
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils import timezone
 from django.views import generic
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -592,7 +593,7 @@ class AssessmentDetail(APIView):
 
 class TestCenterList(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
-    queryset = TestCenter.objects.filter(start_time__gt=datetime.datetime.now())
+    queryset = TestCenter.objects.filter(start_time__gt=datetime.datetime.now(tz=timezone.utc))
     serializer_class = TestCenterSerializer
 
 class manual_test(generics.CreateAPIView):

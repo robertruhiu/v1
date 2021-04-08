@@ -1,6 +1,7 @@
 from collections import Counter
 from itertools import chain
 from django.core.mail import send_mail
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import requests
@@ -79,6 +80,7 @@ class MyApplicants(generics.ListAPIView):
 
 
 class Myjobapplication(generics.ListAPIView):
+    # todo: perm
     serializer_class = JobApplicationsRequestSerializer
 
     def get_queryset(self):
@@ -90,27 +92,32 @@ class Myjobapplication(generics.ListAPIView):
 
 
 class JobsList(generics.ListCreateAPIView):
+    # todo: perm
     queryset = Job.objects.all().order_by('-created')
     serializer_class = JobRequestSerializer
 
 
 class JobsListverified(generics.ListCreateAPIView):
+    # todo: perm
     queryset = Job.objects.exclude(published=False).all().order_by('-updated')
     serializer_class = JobRequestSerializer
 
 
 class Alljobsdeadlinefilter(generics.ListCreateAPIView):
-    queryset = Job.objects.filter(deadline__gte=datetime.datetime.now()).exclude(verified=False).exclude(
+    # todo: perm
+    queryset = Job.objects.filter(deadline__gte=datetime.datetime.now(tz=timezone.utc)).exclude(verified=False).exclude(
         published=False).all().order_by('-created')
     serializer_class = JobRequestSerializer
 
 
 class Jobdetails(generics.RetrieveAPIView):
+    # todo: perm
     queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
 
 
 class Myjobsrequests(generics.ListAPIView):
+    # todo: perm
     serializer_class = JobRequestSerializer
 
     def get_queryset(self):
@@ -145,17 +152,21 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 1000
 
 class JobsapplicantsAdmin(generics.ListAPIView):
+    # todo: perm
     serializer_class = MyapplicantsRequestSerializer
     pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
         return JobApplication.objects.select_related('job').all()
+
 class Specificjob(generics.RetrieveAPIView):
+    # todo: perm
     queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
 
 
 class SpecificJobsapplicants(generics.ListAPIView):
+    # todo: perm
     serializer_class = JobApplicationsRequestSerializerspecific
 
     def get_queryset(self):
@@ -200,10 +211,12 @@ class ReportCreate(generics.CreateAPIView):
 
 
 class ReportGet(generics.RetrieveAPIView):
+    # todo: perm
     queryset = DeveloperReport.objects.all()
     serializer_class = DeveloperReportSerilizer
 
 class newonsite(generics.RetrieveAPIView):
+    # todo: perm
     serializer_class = AssesmentSerializer
 
     def get_queryset(self):
