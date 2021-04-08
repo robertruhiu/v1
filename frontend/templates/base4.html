@@ -25,7 +25,6 @@
     {% block extra_head %}
 
     {% endblock %}
-{% if ENVIRONMENT == 'production' %}
     <script>
         window['_fs_debug'] = false;
         window['_fs_host'] = 'fullstory.com';
@@ -104,7 +103,6 @@
             });
         </script>
     {% endif %}
-{% endif %}
 </head>
 <body class="w3-light-gray">
 <div id="app" style="margin: auto" class="w3-white w3-card-2 w3-border-bottom">
