@@ -31,7 +31,8 @@ def index(request):
     lists = Shortlist.objects.all()
     # list_form = ListForm()
     if not query:
-        all_devs = Profile.objects.filter(user_type='developer').order_by('id')
+        all_devs = Profile.objects.filter(user_type='developer').\
+            prefetch_related('candidateexperience','candidateportfolio').order_by('id')
         devs_filter = DevFilter(request.GET, queryset=all_devs)
         devs = DevFilter(request.GET, queryset=all_devs).qs
         page = request.GET.get('page', 1)
