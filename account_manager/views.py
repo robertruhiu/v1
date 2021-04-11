@@ -22,10 +22,10 @@ from account_manager.forms import ShortlistCreateUpdateForm, ListForm
 # dashboard
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
-# from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page
 
 @login_required
-# @cache_page(60 * 15)
+@cache_page(60 * 15)
 def index(request):
     query = request.GET.get('q', None)
     lists = Shortlist.objects.all()
