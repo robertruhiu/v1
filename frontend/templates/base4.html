@@ -146,6 +146,14 @@
                 <div class="navbar-start w3-center my-auto px-10">
                     {% if request.user|has_group:"cac_admin"  or request.user|has_group:"cac_staff" %}
                         {% if request.user.is_authenticated %}
+
+                            <v-btn text rounded class="navbar-item w3-padding-large"
+                                   href="{% url 'account_manager:base' %}">Developers
+                            </v-btn>
+                            <v-btn text rounded class="navbar-item w3-padding-large"
+                                   href="{% url 'account_manager:all_shortlist' %}">
+                                Shortlists
+                            </v-btn>
                             {% if request.user|has_group:"cac_admin" %}
                                 <v-btn text rounded class="navbar-item w3-padding-large"
                                        href="{% url 'account_manager:jobs' %}">Jobs
@@ -159,38 +167,9 @@
                                     See Recruiters
                                 </v-btn>
                             {% endif %}
-                            <v-btn text rounded class="navbar-item w3-padding-large"
-                                   href="{% url 'account_manager:base' %}">Developers
-                            </v-btn>
-                            <v-btn text rounded class="navbar-item w3-padding-large"
-                                   href="{% url 'account_manager:all_shortlist' %}">
-                                Shortlists
-                            </v-btn>
 
                         {% endif %}
                     {% endif %}
-                    {#                    {% if not request.user.is_authenticated %}#}
-                    {#                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'frontend:about' %}">#}
-                    {#                            About#}
-                    {#                        </v-btn>#}
-                    {#                        &nbsp;#}
-                    {#                        <v-btn text rounded class="navbar-item w3-padding-large"#}
-                    {#                               href="{% url 'frontend:how-it-works' %}">#}
-                    {#                            How It Works#}
-                    {#                        </v-btn>#}
-                    {#                        &nbsp;#}
-                    {#                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'frontend:news' %}">#}
-                    {#                            In the News#}
-                    {#                        </v-btn>#}
-                    {#                        &nbsp;#}
-                    {#                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'frontend:contact' %}">#}
-                    {#                            Contact#}
-                    {#                        </v-btn>#}
-                    {#                        &nbsp;#}
-                    {#                        <v-btn text rounded class="navbar-item w3-padding-large" href="{% url 'frontend:pricing' %}">#}
-                    {#                            Pricing#}
-                    {#                        </v-btn>#}
-                    {#                    {% endif %}#}
                 </div>
                 <div class="navbar-end my-auto px-10">
                     {% if request.user.is_authenticated %}

@@ -55,10 +55,14 @@
 
                             {% for dev in devs %}
                                 <v-card class="w3-margin">
+                                {% if request.user|has_group:"cac_admin" %}
+                                <v-btn class="is-pulled-right w3-margin" button outlined color="green lighten-1" href="{% url 'account_manager:send_email' dev.id%}">Email</v-btn>
+                                {% endif %}
                                     {% if  dev.availabilty != None %}
-                                        <v-btn class="is-pulled-right w3-margin" button rounded
+                                        <v-btn class="is-pulled-right w3-margin" button  rounded outlined
                                                color="blue lighten-2">{{ dev.availabilty }}</v-btn>
                                     {% endif %}
+
 
                                     <v-card-title class="w3-margin-top">
                                         {% if request.user|has_group:"cac_admin" %}

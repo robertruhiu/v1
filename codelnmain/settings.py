@@ -262,13 +262,32 @@ if ENVIRONMENT == 'production':
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # email settings
+# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='DEFAULT_FROM_EMAIL')
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='EMAIL_HOST_PASSWORD')
+
+# sendgrid user settings
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='DEFAULT_FROM_EMAIL')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = config('SENDGRID_EMAIL_HOST', cast=str, default='smtp.sendgrid.net')
+EMAIL_HOST_USER = config('SENDGRID_USER', default='SENDGRID_USER')
+EMAIL_HOST_PASSWORD = config('SENDGRID_EMAIL_PASSWORD',
+                             default='SENDGRID_EMAIL_PASSWORD', cast=str)
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='EMAIL_HOST_PASSWORD')
+# mailgun user settings
+# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='DEFAULT_FROM_EMAIL')
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = config('MAILGUN_EMAIL_HOST', cast=str, default='smtp.mailgun.org')
+# EMAIL_HOST_USER = config('MAILGUN_EMAIL_HOST_USER', default='MAILGUN_EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = config('MAILGUN_EMAIL_HOST_PASSWORD',
+#                              default='MAILGUN_EMAIL_HOST_PASSWORD', cast=str)
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
 
 # allauth settings
 ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'

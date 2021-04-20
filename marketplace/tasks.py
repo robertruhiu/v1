@@ -83,6 +83,17 @@ def weekly_applicants():
         mail.send_mail(subject, plain_message, from_email, to, html_message=html_message)
     print('weekly reports sent')
 
+# @app.task
+# def update_cv():
+#     developers = Profile.objects.filter(user_type='developer', file=None)
+#     for developer in developers:
+#         to = [developer.user.email]
+#         subject = '[Action Required] Update your Codeln Profile'
+#         html_message = render_to_string('invitations/email/update_profile.html', {'dev': developer})
+#         from_email = config('DEFAULT_FROM_EMAIL')
+#         plain_message = strip_tags(html_message)
+#         mail.send_mail(subject, plain_message, from_email, to, html_message=html_message)
+
 
 
 

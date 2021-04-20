@@ -32,4 +32,13 @@ class ShortlistDeleteForm(forms.ModelForm):
 
 class ListForm(forms.Form):
     lists = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-    choices=Shortlist.objects.all().values_list('id', 'title'))
+                                      choices=Shortlist.objects.all().values_list('id', 'title'))
+
+
+class DevEmailForm(forms.Form):
+    subject = forms.CharField(max_length=200, widget=forms.TextInput,
+                              initial='[Action Required] Update your Codeln Profile')
+    message = forms.CharField(max_length=2000, widget=forms.Textarea,
+                              initial='You have an incomplete developer profile on Codeln.'
+                                      'There are new and exciting Job opportunities every week on Codeln.'
+                                      'Update your profile to participate in recruitment drives')

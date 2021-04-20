@@ -1,13 +1,18 @@
 import json
 
+import requests
+from decouple import config
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchVector
+from django.core import mail
+from django.core.mail import BadHeaderError, send_mail
 from django.http import HttpResponse, JsonResponse, HttpResponseServerError
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime
 
 from django.urls import reverse, reverse_lazy
+from django.utils.html import strip_tags
 from requests import Response
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from rest_framework import status
@@ -16,7 +21,7 @@ from xhtml2pdf import pisa
 from marketplace.models import Job, Profile, JobApplication
 from account_manager.models import Shortlist
 from account_manager.filters import JobFilter, DevFilter, ShortlistDevFilter
-from account_manager.forms import ShortlistCreateUpdateForm, ListForm
+from account_manager.forms import ShortlistCreateUpdateForm, ListForm, DevEmailForm
 
 # Create your views here.
 # dashboard
@@ -118,7 +123,7 @@ def cv(request, id):
 import os
 from django.conf import settings
 from django.http import HttpResponse
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from xhtml2pdf import pisa
 from django.contrib.staticfiles import finders
 
@@ -221,9 +226,6 @@ def remove_dev(request, shortlist_id, dev_id):
     return redirect('account_manager:shortlist', id=shortlist_id)
 
 
-
-
-
 @login_required
 def add_to_list(request, id):
     developer = Profile.objects.get(id=id)
@@ -242,20 +244,29 @@ def add_to_list(request, id):
 
 
 @login_required
-def send_mail(request, id):
+def send_email(request, id):
     developer = Profile.objects.get(id=id)
     if request.method == 'POST':
-        list_form = ListForm(data=request.POST)
-        if list_form.is_valid():
-            lists = list_form.cleaned_data['lists']
-            for list in lists:
-                shortlist = Shortlist.objects.get(id=int(list))
-                shortlist.developers.add(developer)
-                shortlist.save()
-            return redirect('frontend:index')
+        dev_email_form = DevEmailForm(data=request.POST)
+        if dev_email_form.is_valid():
+            cac_subject = dev_email_form.cleaned_data['subject']
+            message = dev_email_form.cleaned_data['message']
+            try:
+
+                to = [developer.user.email]
+                subject = cac_subject
+
+                html_message = render_to_string('invitations/email/update_profile.html',
+                                                {'dev': developer, 'subject': subject,'message': message })
+                from_email = config('DEFAULT_FROM_EMAIL')
+                plain_message = strip_tags(html_message)
+                mail.send_mail(subject, plain_message, from_email, to, html_message=html_message)
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return redirect('account_manager:base')
     else:
-        list_form = ListForm()
-        return render(request, 'account_manager/addtolist.html', {'developer': developer, 'list_form': list_form})
+        dev_email_form = DevEmailForm()
+        return render(request, 'account_manager/email.html', {'developer': developer, 'dev_email_form': dev_email_form})
 
 
 @login_required
