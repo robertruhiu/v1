@@ -400,14 +400,12 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Accra'
 
 # sentry integration
-
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 ENVIRONMENT = config('ENVIRONMENT', default='local')
 if ENVIRONMENT != 'local':
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
-    from sentry_sdk.integrations.celery import CeleryIntegration
-    from sentry_sdk.integrations.redis import RedisIntegration
-
     sentry_sdk.init(
         send_default_pii=True,
         dsn=config('SENTRY_DSN'),
