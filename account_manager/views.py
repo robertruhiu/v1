@@ -21,7 +21,7 @@ from xhtml2pdf import pisa
 from marketplace.models import Job, Profile, JobApplication
 from account_manager.models import Shortlist
 from account_manager.filters import JobFilter, DevFilter, ShortlistDevFilter
-from account_manager.forms import ShortlistCreateUpdateForm, ListForm, DevEmailForm
+from account_manager.forms import ShortlistCreateUpdateForm, ListForm, DevEmailForm, InviteToJobForm
 
 # Create your views here.
 # dashboard
@@ -268,6 +268,31 @@ def send_email(request, id):
         dev_email_form = DevEmailForm()
         return render(request, 'account_manager/email.html', {'developer': developer, 'dev_email_form': dev_email_form})
 
+@login_required
+def invitetojob(request,id):
+    developer = Profile.objects.get(id=id)
+    if request.method == 'POST':
+        invitetojobform = InviteToJobForm(data=request.POST)
+        if invitetojobform.is_valid():
+            url = invitetojobform.cleaned_data['url']
+            cac_subject = invitetojobform.cleaned_data['subject']
+            message = invitetojobform.cleaned_data['message']
+            try:
+
+                to = [developer.user.email]
+                subject = cac_subject
+
+                html_message = render_to_string('invitations/email/job_invite.html',
+                                                {'dev': developer, 'url': url,'subject': subject,'message': message })
+                from_email = config('DEFAULT_FROM_EMAIL')
+                plain_message = strip_tags(html_message)
+                mail.send_mail(subject, plain_message, from_email, to, html_message=html_message)
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return redirect('account_manager:base')
+    else:
+        invitetojobform = InviteToJobForm()
+        return render(request, 'account_manager/invite_job.html', {'developer': developer, 'invitetojobform': invitetojobform})
 
 @login_required
 def update_application(request):
