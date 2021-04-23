@@ -16,7 +16,7 @@ from marketplace.models import JobApplication
 def send_email(job_id):
     job = Job.objects.get(id=job_id)
     skills = job.tech_stack.split(",")
-    dev_profiles = Profile.objects.select_related('user').exclude(skills__isnull=True).filter(user_type='developer')
+    dev_profiles = Profile.objects.filter(user_type='developer').exclude(skills__isnull=True).select_related('user')
 
     emails = []
     for one_profile in dev_profiles:
