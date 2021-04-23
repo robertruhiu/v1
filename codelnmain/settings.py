@@ -290,8 +290,8 @@ EMAIL_PORT = 587
 # EMAIL_PORT = 587
 
 # allauth settings
-ACCOUNT_DEFAULT_HTTP_PROTOCOL='https'
-ACCOUNT_LOGIN_ON_PASSWORD_RESET='False'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_SIGNUP_PASSWORD_VERIFICATION = False
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
@@ -404,6 +404,7 @@ import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
+
 ENVIRONMENT = config('ENVIRONMENT', default='local')
 if ENVIRONMENT != 'local':
     sentry_sdk.init(
