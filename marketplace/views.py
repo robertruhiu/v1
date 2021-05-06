@@ -98,7 +98,7 @@ class JobsList(generics.ListCreateAPIView):
 
 
 class JobsListverified(generics.ListCreateAPIView):
-    # todo: perm
+    # todo: utilised by the job board
     queryset = Job.objects.exclude(published=False).all().order_by('-updated')
     serializer_class = JobRequestSerializer
 
