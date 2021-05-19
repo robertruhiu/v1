@@ -13,7 +13,7 @@ from frontend.views import home, activity, tracker, update_candidateprojects, \
     Portfolioget, AllUsers, Userget, ProjectAssignment, SelfAssesmentCreate, MySelfAssesments, \
     MySelfAssesmentsproject, MySelfAssesmentsprojectupdater, Portfoliocreate, Portfolioupdate, Experiencecreate, \
     Experienceupdate, \
-    UserListsliced, DevList, RecruiterList, Alldevs, Allrecruiters, Mytestcenters, Talentorder, Timesetemail, Newuser, \
+    UserListsliced, DevList, CsaList, StudentList, RecruiterList, Alldevs, Allrecruiters, Mytestcenters, Talentorder, Timesetemail, Newuser, \
     unsubscribe, Resourcecreate, Subjectresources, Resourceslikeupdate, Portfoliolikeupdate, RemoteDevList, Wote, \
     Wotelist \
     , AllProfiles
@@ -51,7 +51,9 @@ urlpatterns = [
     # todo: audit these too
     path('onboarddevs', onboarddevs, name='onboarddevs'),
     path('onboardrecruiters', onboardrecruiters, name='onboardrecruiters'),
-    path('seedevs', DevList, name='seedevs'),
+    path('seedevs/', DevList, name='seedevs'),
+    path('csa/', CsaList, name='csa'),
+    path('students/', StudentList, name='students'),
     path('seerecruiters', RecruiterList, name='seerecruiters'),
     path('manageprojects', manageprojects, name='manageprojects'),
     path('managetransactions', managetransactions, name='managetransactions'),
@@ -88,6 +90,7 @@ urlpatterns = [
     path('recruiterlist', RecruiterList),
     path('wotelist', Wotelist, name='wotelist'),
     path('userssliced/', UserListsliced.as_view()),
+
 
     path('updater/<int:pk>', ProfileUpdate.as_view()),
     path('getuser/<int:pk>', Userget.as_view()),

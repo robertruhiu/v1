@@ -126,7 +126,27 @@ def DevList(request):
     serializer = ProfileSerializer(devs, many=True)
     data = serializer.data
 
-    return render(request, 'frontend/recruiter/devlist.html', {'developers': data})
+    return render(request, 'frontend/recruiter/devlist.html', {'developers': data, 'title': 'All Developers'})
+
+@login_required
+def CsaList(request):
+
+    devs = Profile.objects.select_related('user').filter(user_type='developer', csa=True).order_by('-user__date_joined')
+
+    serializer = ProfileSerializer(devs, many=True)
+    data = serializer.data
+
+    return render(request, 'frontend/recruiter/devlist.html', {'developers': data, 'title':'All CSA'})
+
+@login_required
+def StudentList(request):
+
+    devs = Profile.objects.select_related('user').filter(user_type='developer', student=True).order_by('-user__date_joined')
+
+    serializer = ProfileSerializer(devs, many=True)
+    data = serializer.data
+
+    return render(request, 'frontend/recruiter/devlist.html', {'developers': data, 'title': 'All Students'})
 
 class Wote(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -700,13 +720,12 @@ def page_404(request, exception=None):
 def page_500(request):
     return render(request, 'frontend/error_pages/500.html')
 
-
+# todo: remove seedevs and recruiters
 @login_required
 def seedevs(request):
     developers = User.objects.filter(profile__user_type='developer').order_by('-date_joined')
 
     return render(request, 'frontend/recruiter/devlist.html', {'developers': developers})
-
 
 @login_required
 def seerecruiters(request):
