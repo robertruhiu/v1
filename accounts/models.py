@@ -59,7 +59,7 @@ class Profile(models.Model):
     linkedin_url = models.CharField(max_length=500, null=True, )
     portfolio = models.CharField(max_length=500, blank=True, null=True)
     design_portfolio = models.CharField(max_length=500, blank=True, null=True)
-    github_repo = models.CharField(max_length=500, null=True, )
+    github_repo = models.CharField(max_length=500, null=True, blank=True)
     language = models.CharField(max_length=140, null=True, blank=True)
     framework = models.CharField(max_length=140, null=True, blank=True)
     years = models.CharField(choices=YEARS_ACTIVE_CHOICES, null=True, max_length=30)
