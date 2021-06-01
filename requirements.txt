@@ -12,7 +12,7 @@ certifi==2018.4.16
 cffi==1.14.3
 chardet==3.0.4
 cloudinary==1.15.0
-cryptography==3.1.1
+cryptography==3.3.2
 cssselect2==0.4.1
 defusedxml==0.5.0
 dj-database-url==0.5.0
@@ -85,10 +85,9 @@ python-digitalocean==1.14.0
 python3-openid==3.1.0
 pytz==2018.4
 pywin32-ctypes==0.2.0
-pyxdg==0.25
+pyxdg==0.26
 redis==2.10.6
-reportlab==3.5.65
-requests==2.19.1
+requests==2.20.0
 requests-oauthlib==1.0.0
 s3transfer==0.1.13
 SecretStorage==3.2
@@ -96,7 +95,7 @@ sentry-sdk==1.0.0
 six==1.11.0
 sqlparse==0.3.0
 tinycss2==1.1.0
-urllib3==1.23
+urllib3==1.24.2
 vine==1.1.4
 webencodings==0.5.1
 whitenoise==3.3.1
