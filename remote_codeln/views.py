@@ -582,6 +582,12 @@ def chat_with(request, user, other_user):
     }
     return JsonResponse(data=context, safe=False)
 
+class CreateChatView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated, ]
+    serializer_class = ChatSerializer
+
+    def get_queryset(self):
+        return Chat.objects.all()
 
 @csrf_exempt
 def send_message(request, user, other_user, channel_url):

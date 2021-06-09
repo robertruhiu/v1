@@ -103,6 +103,7 @@ urlpatterns = [
                 path('get/<int:project>', views.PaymentGet.as_view()),
             ])),
             path('chat/', include([
+                path('createChat/', views.CreateChatView.as_view()),
                 path('all/<str:user>', views.ChatGet.as_view()),
                 # path('all/<str:user>', views.chats, name='chats'),
                 path('with/<str:user>/<str:other_user>', views.chat_with, name='with'),
