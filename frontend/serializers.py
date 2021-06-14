@@ -190,3 +190,13 @@ class ResourceSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'link', 'subject', 'created', 'provider', 'likes', 'tags', 'verified', 'dislikes')
 
 
+class ClideAssesmentSerializer(serializers.ModelSerializer):
+    candidate = ProfileSerializer()
+    project = MainProjectSerializer()
+    # test_center = TestCenterSerializer()
+    # portfolio = ProjectSerializer()
+
+    class Meta:
+        model = Assessment
+        fields = (
+        'id', 'candidate', 'project', 'stage', 'projectstarttime', 'frameworktested',)

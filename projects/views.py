@@ -1,3 +1,7 @@
+import datetime
+import json
+
+import pytz
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -5,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from marketplace.models import Job
 from projects.forms import FrameworkForm
 from projects.models import Project,Projecttype,Devtype,Framework
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import Projectserializer,FrameworkSerializer
 from rest_framework import generics
 import random
@@ -279,4 +283,40 @@ def project(request, id):
     frameworks =Framework.objects.all()
     project = Project.objects.get(id=id)
     framework_form = FrameworkForm()
-    return render(request, 'projects/project.html', {'project': project,'frameworks':frameworks,'framework_form':framework_form,})
+    return render(request, 'projects/project.html', {'project': project,'frameworks':frameworks,
+                                                     'framework_form':framework_form})
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def clidext(request, email):
+    dev = Profile.objects.get(user__email=email)
+    tests = Assessment.objects.filter(candidate=dev, projectstarttime__date=datetime.datetime.now(tz=pytz.UTC).date(),
+                                      completed=False)
+    serializer = ClideAssesmentSerializer(tests, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+def clidextupdate(request, email,id):
+    dev = Profile.objects.get(user__email=email)
+    tests = Assessment.objects.get(id=id, candidate=dev)
+    if request.data != None:
+        if request.data.get('livesharelink'):
+          link = request.data.get('livesharelink')['livesharelink']
+          tests.workspace_link = link
+          tests.save()
+          return Response('Live Share link updated')
+        elif request.data.get('repolink'):
+            link = request.data.get('repolink')['repolink']
+            tests.repo_link = link
+            tests.save()
+            return Response('Repo saved!')
+        elif request.data.get('completed'):
+            tests.completed = True
+            tests.save()
+            return Response('Project Completed')
+        else:
+            return Response('Not a valid entry')
+    else:
+        return Response('No data submitted!')
+

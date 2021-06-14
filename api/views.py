@@ -4,6 +4,7 @@ import json
 import pytz
 import requests
 from decouple import config
+from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from rest_framework import generics, permissions
@@ -294,6 +295,7 @@ class AllReports(generics.ListAPIView):
 
 
 # create a report function for demo purposes
+@login_required
 def create_report(slug):
     enterprisedev = EnterpriseDeveloper.objects.get(slug=slug)
     # requirements = request.data.get('requirements')
@@ -439,7 +441,7 @@ def enterprise_report_ready(request, slug):
     print(r.status_code)
     return Response('Report ready')
 
-
+@login_required
 def create_ide_user(request):
     from accounts.models import IdeTemporalUser
     IdeTemporalUser.objects.create(username='jerry', email='philisiah@codeln.com', password='Password007')

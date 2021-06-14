@@ -15,13 +15,13 @@ Including another URLconf
 """
 
 from django.urls import path
-from projects.views import project_list, project,categories,devtypes,Projects\
-    ,ProjectDetails,Allprojects,RecentProjects,MyRecentProjects,RecommendedProjects,\
-    DeveloperProjects, developerprojectreport,Frameworks,SelfverifyProject,BasicProject
+from projects.views import project_list, project, categories, devtypes, Projects \
+    , ProjectDetails, Allprojects, RecentProjects, MyRecentProjects, RecommendedProjects, \
+    DeveloperProjects, developerprojectreport, Frameworks, SelfverifyProject, BasicProject, clidext, clidextupdate
 
 app_name = 'projects'
 urlpatterns = [
-    #path('', project_categories, name='categories'y),
+    # path('', project_categories, name='categories'y),
     path('all-projects/<int:type_id>/', project_list, name='all-projects'),
     path('devtypes/<int:dev_id>/', devtypes, name='devtypes'),
     path('categories/', categories, name='categories'),
@@ -44,3 +44,15 @@ urlpatterns += [
          developerprojectreport, name='developerprojectreport'),
     path('frameworks', Frameworks.as_view()),
 ]
+# developer api views
+urlpatterns += [
+    path('clidext/<str:email>/', clidext, name='clidext'),
+    path('clideupdate/<str:email>/<int:id>/', clidextupdate, name='clideupdate'),
+]
+#
+# from django.views.generic import TemplateView
+#
+# urlpatterns += [
+#     path('testgame/', TemplateView.as_view(template_name="projects/testgame.html"),
+#          name='testgame'),
+# ]

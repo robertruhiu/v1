@@ -1109,16 +1109,16 @@ def storegrades(request, candidate_id, transaction_id):
     if request.method == 'POST':
         form = GradingForm(request.POST)
 
-        requirement1 = request.POST.get('requirement1', False);
-        requirement2 = request.POST.get('requirement2', False);
-        requirement3 = request.POST.get('requirement3', False);
-        requirement4 = request.POST.get('requirement4', False);
-        requirement5 = request.POST.get('requirement5', False);
-        requirement6 = request.POST.get('requirement6', False);
-        requirement7 = request.POST.get('requirement7', False);
-        requirement8 = request.POST.get('requirement8', False);
-        requirement9 = request.POST.get('requirement9', False);
-        requirement10 = request.POST.get('requirement10', False);
+        requirement1 = request.POST.get('requirement1', False)
+        requirement2 = request.POST.get('requirement2', False)
+        requirement3 = request.POST.get('requirement3', False)
+        requirement4 = request.POST.get('requirement4', False)
+        requirement5 = request.POST.get('requirement5', False)
+        requirement6 = request.POST.get('requirement6', False)
+        requirement7 = request.POST.get('requirement7', False)
+        requirement8 = request.POST.get('requirement8', False)
+        requirement9 = request.POST.get('requirement9', False)
+        requirement10 = request.POST.get('requirement10', False)
 
         requirements.insert(0, requirement1)
         requirements.insert(1, requirement2)
@@ -1131,27 +1131,27 @@ def storegrades(request, candidate_id, transaction_id):
         requirements.insert(8, requirement9)
         requirements.insert(9, requirement10)
 
-        deliverables = request.POST.get('deliverables', False);
-        errors = request.POST.get('errors', False);
-        security = request.POST.get('security', False);
-        readability = request.POST.get('readability', False);
+        deliverables = request.POST.get('deliverables', False)
+        errors = request.POST.get('errors', False)
+        security = request.POST.get('security', False)
+        readability = request.POST.get('readability', False)
 
         keycompitency.insert(0, deliverables)
         keycompitency.insert(1, errors)
         keycompitency.insert(2, security)
         keycompitency.insert(3, readability)
 
-        passed = request.POST.get('passed', False);
-        failed = request.POST.get('failed', False);
-        vulnerable = request.POST.get('vulnerable', False);
-        errors = request.POST.get('errors', False);
-        lines = request.POST.get('lines', False);
-        duplications = request.POST.get('duplications', False);
-        classes = request.POST.get('classes', False);
-        comments = request.POST.get('comments', False);
-        depedencies = request.POST.get('depedencies', False);
-        debt = request.POST.get('debt', False);
-        gates = request.POST.get('gates', False);
+        passed = request.POST.get('passed', False)
+        failed = request.POST.get('failed', False)
+        vulnerable = request.POST.get('vulnerable', False)
+        errors = request.POST.get('errors', False)
+        lines = request.POST.get('lines', False)
+        duplications = request.POST.get('duplications', False)
+        classes = request.POST.get('classes', False)
+        comments = request.POST.get('comments', False)
+        depedencies = request.POST.get('depedencies', False)
+        debt = request.POST.get('debt', False)
+        gates = request.POST.get('gates', False)
 
         grading.insert(0, passed)
         grading.insert(1, failed)
@@ -1164,8 +1164,8 @@ def storegrades(request, candidate_id, transaction_id):
         grading.insert(8, depedencies)
         grading.insert(9, debt)
         grading.insert(10, gates)
-        github = request.POST.get('github', False);
-        score = request.POST.get('score', False);
+        github = request.POST.get('github', False)
+        score = request.POST.get('score', False)
         print(score)
         obj = Report(candidate=candidate, transaction=transaction, requirements=requirements,
                      keycompitency=keycompitency, grading=grading, score=score, github=github)

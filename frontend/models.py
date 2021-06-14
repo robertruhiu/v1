@@ -127,6 +127,9 @@ class Assessment(models.Model):
     test_center = models.ForeignKey(TestCenter, on_delete=models.CASCADE, blank=True, null=True )
     csa =models.BooleanField(default=False)
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, blank=True, null=True )
+    workspace_link = models.URLField(blank=True, null=True)
+    repo_link = models.URLField(blank=True, null=True)
+    completed = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.candidate.user.first_name} - {self.test_choice}'
