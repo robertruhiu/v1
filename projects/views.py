@@ -180,7 +180,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 
 from frontend.models import AssessmentReport
-from  frontend.serializers import AssesmentReportSerializer
+from frontend.serializers import AssesmentReportSerializer, ClideAssesmentSerializer
+
 
 class DeveloperProjects(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -293,6 +294,7 @@ def clidext(request, email):
     tests = Assessment.objects.filter(candidate=dev, projectstarttime__date=datetime.datetime.now(tz=pytz.UTC).date(),
                                       completed=False)
     serializer = ClideAssesmentSerializer(tests, many=True)
+    serializer
     return Response(serializer.data)
 
 @api_view(['POST'])

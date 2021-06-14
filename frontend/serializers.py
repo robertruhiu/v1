@@ -198,5 +198,4 @@ class ClideAssesmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Assessment
-        fields = (
-        'id', 'candidate', 'project', 'stage', 'projectstarttime', 'frameworktested',)
+        fields = ('id', 'candidate', 'project', 'stage', 'projectstarttime', 'frameworktested',)
