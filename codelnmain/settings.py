@@ -179,6 +179,7 @@ CORS_ORIGIN_WHITELIST = (
     'https://www.codeln.com',
     'http://remote.codeln.com',
     'https://remote.codeln.com',
+'vscode-webview://webviewview-clidext-sidebar'
 )
 
 AUTHENTICATION_BACKENDS = (
