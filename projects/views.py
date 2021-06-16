@@ -302,18 +302,19 @@ def clidext(request, email):
 def clidextupdate(request, email,id):
     dev = Profile.objects.get(user__email=email)
     tests = Assessment.objects.get(id=id, candidate=dev)
+    request
     if request.data != None:
-        if request.data.get('livesharelink'):
-          link = request.data.get('livesharelink')['livesharelink']
+        if request.data['livesharelink']:
+          link = request.data['livesharelink']
           tests.workspace_link = link
           tests.save()
           return Response('Live Share link updated')
-        elif request.data.get('repolink'):
-            link = request.data.get('repolink')['repolink']
+        elif request.data['repolink']:
+            link = request.data['repolink']
             tests.repo_link = link
             tests.save()
             return Response('Repo saved!')
-        elif request.data.get('completed'):
+        elif request.data['completed']:
             tests.completed = True
             tests.save()
             return Response('Project Completed')

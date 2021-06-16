@@ -62,11 +62,11 @@ INSTALLED_APPS = [
     'remote_codeln',
     'api',
     'account_manager',
+
     # third party libs
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-
     'cloudinary_storage',
     'cloudinary',
     'crispy_forms',
@@ -179,7 +179,6 @@ CORS_ORIGIN_WHITELIST = (
     'https://www.codeln.com',
     'http://remote.codeln.com',
     'https://remote.codeln.com',
-'vscode-webview://webviewview-clidext-sidebar'
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -414,3 +413,7 @@ if ENVIRONMENT != 'local':
         integrations=[DjangoIntegration(), CeleryIntegration(), RedisIntegration()],
         environment=ENVIRONMENT,
     )
+
+
+
+
