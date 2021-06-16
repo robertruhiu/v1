@@ -89,6 +89,9 @@ class Report(models.Model):
     score = models.IntegerField(null=True)
     github = models.CharField(null=True, max_length=300)
 
+    def __str__(self):
+        return self.candidate
+
 
 # temporary data model for demo
 class TestCenter(models.Model):

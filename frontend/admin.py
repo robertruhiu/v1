@@ -9,7 +9,9 @@ class AssessmentReportAdmin(admin.ModelAdmin):
 
 @admin.register(Assessment)
 class AssessmentAdmin(admin.ModelAdmin):
-    pass
+    list_select_related = ('candidate', 'project')
+    readonly_fields = ('portfolio',)
+
 
 @admin.register(TestCenter)
 class TestCenterAdmin(admin.ModelAdmin):
@@ -26,5 +28,7 @@ class SubmissionsAdmin(admin.ModelAdmin):
 @admin.register(Portfolio)
 class Portfolio(admin.ModelAdmin):
     pass
+
+
 
 
