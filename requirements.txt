@@ -62,7 +62,7 @@ idna==2.7
 importlib-metadata==3.7.3
 ipaddress==1.0.17
 jeepney==0.4.2
-jmespath==0.9.3
+jmespath==0.9.5
 jsonpickle==1.0
 keyring==23.0.1
 keyrings.alt==4.0.2
