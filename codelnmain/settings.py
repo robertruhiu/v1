@@ -179,6 +179,7 @@ CORS_ORIGIN_WHITELIST = (
     'https://www.codeln.com',
     'http://remote.codeln.com',
     'https://remote.codeln.com',
+    'https://clideapiv2.herokuapp.com',
 )
 
 AUTHENTICATION_BACKENDS = (
