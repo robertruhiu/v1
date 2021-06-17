@@ -5,7 +5,7 @@ from accounts.models import Profile, ReferralCode, Referral, IdeTemporalUser
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    pass
+    raw_id_fields = ['user']
 
 
 admin.site.register(Profile, ProfileAdmin)
