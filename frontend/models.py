@@ -89,8 +89,7 @@ class Report(models.Model):
     score = models.IntegerField(null=True)
     github = models.CharField(null=True, max_length=300)
 
-    def __str__(self):
-        return self.candidate
+
 
 
 # temporary data model for demo
@@ -128,7 +127,7 @@ class Assessment(models.Model):
     frameworktested = models.CharField(blank=True,null=True,max_length=500)
     demolink = models.CharField(blank=True,null=True,max_length=100)
     test_center = models.ForeignKey(TestCenter, on_delete=models.CASCADE, blank=True, null=True )
-    csa =models.BooleanField(default=False)
+    csa = models.BooleanField(default=False)
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, blank=True, null=True )
     workspace_link = models.URLField(blank=True, null=True)
     repo_link = models.URLField(blank=True, null=True)

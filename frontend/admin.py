@@ -9,8 +9,7 @@ class AssessmentReportAdmin(admin.ModelAdmin):
 
 @admin.register(Assessment)
 class AssessmentAdmin(admin.ModelAdmin):
-    list_select_related = ('candidate', 'project')
-    readonly_fields = ('portfolio',)
+    raw_id_fields = ['portfolio', 'test_center', 'candidate', 'project', 'report']
 
 
 @admin.register(TestCenter)

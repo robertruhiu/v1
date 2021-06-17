@@ -294,7 +294,6 @@ def clidext(request, email):
     tests = Assessment.objects.filter(candidate=dev, projectstarttime__date=datetime.datetime.now(tz=pytz.UTC).date(),
                                       completed=False)
     serializer = ClideAssesmentSerializer(tests, many=True)
-    serializer
     return Response(serializer.data)
 
 @api_view(['POST'])
@@ -302,7 +301,6 @@ def clidext(request, email):
 def clidextupdate(request, email,id):
     dev = Profile.objects.get(user__email=email)
     tests = Assessment.objects.get(id=id, candidate=dev)
-    request
     if request.data != None:
         if request.data['livesharelink']:
           link = request.data['livesharelink']
