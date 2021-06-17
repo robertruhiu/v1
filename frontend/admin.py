@@ -11,6 +11,9 @@ class AssessmentReportAdmin(admin.ModelAdmin):
 class AssessmentAdmin(admin.ModelAdmin):
     raw_id_fields = ['portfolio', 'test_center', 'candidate', 'project', 'report']
 
+    def get_ordering(self, request):
+        return ['-projectstarttime']
+
 
 @admin.register(TestCenter)
 class TestCenterAdmin(admin.ModelAdmin):

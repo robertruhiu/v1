@@ -21,7 +21,7 @@ cryptography==3.3.2
 cssselect2==0.4.1
 defusedxml==0.5.0
 dj-database-url==0.5.0
-Django==2.2.24
+Django==2.2.21
 django-allauth==0.36.0
 django-appconf==1.0.2
 django-bootstrap-forms==0.1
@@ -88,7 +88,7 @@ python-bidi==0.4.2
 python-crontab==2.4.0
 python-dateutil==2.7.5
 python-decouple==3.1
-python-digitalocean==1.14.0
+python-digitalocean==1.16.0
 python3-openid==3.1.0
 pytz==2018.4
 pywin32-ctypes==0.2.0
