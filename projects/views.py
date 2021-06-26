@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 from marketplace.models import Job
+from marketplace.serializers import ClideJobAssessmentSerializer
 from projects.forms import FrameworkForm
 from projects.models import Project,Projecttype,Devtype,Framework
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -291,29 +292,35 @@ def project(request, id):
 @permission_classes((AllowAny,))
 def clidext(request, email):
     dev = Profile.objects.get(user__email=email)
-    tests = Assessment.objects.filter(candidate=dev, projectstarttime__date=datetime.datetime.now(tz=pytz.UTC).date(),
-                                      completed=False)
-    serializer = ClideAssesmentSerializer(tests, many=True)
-    return Response(serializer.data)
+    tests = JobApplication.objects.filter(candidate=dev, projectstarttime__date=datetime.datetime.now(tz=pytz.UTC).date(),
+                                      test_stage='timeset')
+    # tests = Assessment.objects.filter(candidate=dev, projectstarttime__date=datetime.datetime.now(tz=pytz.UTC).date(),
+    #                                   completed=False)
+    serializer = ClideJobAssessmentSerializer(tests, many=True)
+    # serializer = ClideAssesmentSerializer(tests, many=True)
+    if serializer.data != []:
+        return Response(serializer.data)
+    else:
+        return Response('No projects are scheduled today, visit Codeln.com to schedule an assessment')
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 def clidextupdate(request, email,id):
     dev = Profile.objects.get(user__email=email)
-    tests = Assessment.objects.get(id=id, candidate=dev)
+    tests = JobApplication.objects.get(id=id, candidate=dev)
     if request.data != None:
-        if request.data['livesharelink']:
-          link = request.data['livesharelink']
-          tests.workspace_link = link
+        if request.data.get('liveshare'):
+          link = request.data.get('liveshare')
+          tests.demolink = link
           tests.save()
           return Response('Live Share link updated')
-        elif request.data['repolink']:
-            link = request.data['repolink']
-            tests.repo_link = link
+        elif request.data.get('repolink'):
+            link = request.data.get('repolink')
+            tests.repo = link
             tests.save()
             return Response('Repo saved!')
-        elif request.data['completed']:
-            tests.completed = True
+        elif request.data.get('completed'):
+            tests.test_stage = 'complete'
             tests.save()
             return Response('Project Completed')
         else:

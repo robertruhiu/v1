@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
-from marketplace.models import DevRequest,Job,JobApplication,Job,DeveloperReport
+from marketplace.models import DevRequest, Job, JobApplication, Job, DeveloperReport
 from rest_framework import serializers
-from frontend.serializers import ProfileSerializer,ReportSerializer
+from frontend.serializers import ProfileSerializer, ReportSerializer
 from projects.serializers import Projectserializer
 from projects.models import Project
 
@@ -11,43 +11,56 @@ class DeveloperReportSerilizer(serializers.ModelSerializer):
         model = DeveloperReport
         fields = '__all__'
 
+
 class DeveloperReportCreatorSerilizer(serializers.ModelSerializer):
     class Meta:
         model = DeveloperReport
-        fields = ['id','score']
+        fields = ['id', 'score']
+
+
 class DevRequestSerializer(serializers.ModelSerializer):
     developer = ProfileSerializer()
     owner = ProfileSerializer()
     project = Projectserializer()
     report = DeveloperReportSerilizer()
+
     class Meta:
         model = DevRequest
-        fields = ['id','developer', 'paid', 'stage', 'interviewstarttime', 'interviewendtime', 'notes',
+        fields = ['id', 'developer', 'paid', 'stage', 'interviewstarttime', 'interviewendtime', 'notes',
                   'owner', 'test_stage', 'project',
-                  'report', 'interviewstatus', 'eventcolor','projectstarttime','offerstatus','offerletter','demolink','notes' ]
+                  'report', 'interviewstatus', 'eventcolor', 'projectstarttime', 'offerstatus', 'offerletter',
+                  'demolink', 'notes']
+
+
 class DevRequestSerializersimple(serializers.ModelSerializer):
     developer = ProfileSerializer
     owner = ProfileSerializer
     project = Projectserializer
     report = DeveloperReportSerilizer
+
     class Meta:
         model = DevRequest
-        fields = ['id','developer', 'paid', 'stage', 'interviewstarttime', 'interviewendtime', 'notes',
+        fields = ['id', 'developer', 'paid', 'stage', 'interviewstarttime', 'interviewendtime', 'notes',
                   'owner', 'test_stage', 'project',
-                  'report', 'interviewstatus', 'eventcolor','projectstarttime','offerstatus','offerletter','demolink','notes' ]
+                  'report', 'interviewstatus', 'eventcolor', 'projectstarttime', 'offerstatus', 'offerletter',
+                  'demolink', 'notes']
+
+
 class DevRequestUpdaterSerializer(serializers.ModelSerializer):
     developer = ProfileSerializer
     owner = ProfileSerializer
     project = Projectserializer
     report = DeveloperReportSerilizer
+
     class Meta:
         model = DevRequest
-        fields = ['id','developer', 'paid', 'stage', 'interviewstarttime', 'interviewendtime', 'notes',
+        fields = ['id', 'developer', 'paid', 'stage', 'interviewstarttime', 'interviewendtime', 'notes',
                   'owner', 'test_stage', 'project',
-                  'report', 'interviewstatus', 'eventcolor','projectstarttime','offerstatus','offerletter','demolink','notes' ]
+                  'report', 'interviewstatus', 'eventcolor', 'projectstarttime', 'offerstatus', 'offerletter',
+                  'demolink', 'notes']
+
 
 class JobRequestSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Job
         fields = '__all__'
@@ -62,10 +75,13 @@ class JobApplicationsRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobApplication
-        fields = ['id','job','candidate','selected','stage','interviewstarttime','interviewendtime',
-                  'notes','recruiter','test_stage','project',
-                  'report','interviewstatus','eventcolor','projectstarttime','offerstatus','offerletter',
-                  'demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','relevance']
+        fields = ['id', 'job', 'candidate', 'selected', 'stage', 'interviewstarttime', 'interviewendtime',
+                  'notes', 'recruiter', 'test_stage', 'project',
+                  'report', 'interviewstatus', 'eventcolor', 'projectstarttime', 'offerstatus', 'offerletter',
+                  'demolink', 'carted', 'type', 'framework', 'teststarttime', 'testendtime', 'notes', 'rejectionreason',
+                  'rejectioncomment', 'relevance']
+
+
 class JobApplicationsRequestSerializerspecific(serializers.ModelSerializer):
     job = JobRequestSerializer
     candidate = ProfileSerializer()
@@ -75,10 +91,12 @@ class JobApplicationsRequestSerializerspecific(serializers.ModelSerializer):
 
     class Meta:
         model = JobApplication
-        fields = ['id','job','candidate','selected','stage','interviewstarttime','interviewendtime',
-                  'notes','recruiter','test_stage','project',
-                  'report','interviewstatus','eventcolor','projectstarttime','offerstatus',
-                  'offerletter','demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','created','relevance']
+        fields = ['id', 'job', 'candidate', 'selected', 'stage', 'interviewstarttime', 'interviewendtime',
+                  'notes', 'recruiter', 'test_stage', 'project',
+                  'report', 'interviewstatus', 'eventcolor', 'projectstarttime', 'offerstatus',
+                  'offerletter', 'demolink', 'carted', 'type', 'framework', 'teststarttime', 'testendtime', 'notes',
+                  'rejectionreason', 'rejectioncomment', 'created', 'relevance']
+
 
 class MyapplicantsRequestSerializer(serializers.ModelSerializer):
     job = JobRequestSerializer
@@ -89,10 +107,13 @@ class MyapplicantsRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobApplication
-        fields = ['id','job','candidate','selected','stage','interviewstarttime','interviewendtime',
-                  'notes','recruiter','test_stage','project',
-                  'report','interviewstatus','eventcolor','projectstarttime','offerstatus',
-                  'offerletter','demolink','carted','type','framework','teststarttime','testendtime','rejectionreason','rejectioncomment','relevance']
+        fields = ['id', 'job', 'candidate', 'selected', 'stage', 'interviewstarttime', 'interviewendtime',
+                  'notes', 'recruiter', 'test_stage', 'project',
+                  'report', 'interviewstatus', 'eventcolor', 'projectstarttime', 'offerstatus',
+                  'offerletter', 'demolink', 'carted', 'type', 'framework', 'teststarttime', 'testendtime',
+                  'rejectionreason', 'rejectioncomment', 'relevance']
+
+
 class MyapplicantsRequestSerializersliced(serializers.ModelSerializer):
     job = JobRequestSerializer
     candidate = ProfileSerializer
@@ -102,10 +123,12 @@ class MyapplicantsRequestSerializersliced(serializers.ModelSerializer):
 
     class Meta:
         model = JobApplication
-        fields = ['id','job','candidate','selected','stage','interviewstarttime','interviewendtime',
-                  'notes','recruiter','test_stage','project',
-                  'report','interviewstatus','eventcolor','projectstarttime','offerstatus','offerletter','demolink',
-                  'carted','type''framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','relevance']
+        fields = ['id', 'job', 'candidate', 'selected', 'stage', 'interviewstarttime', 'interviewendtime',
+                  'notes', 'recruiter', 'test_stage', 'project',
+                  'report', 'interviewstatus', 'eventcolor', 'projectstarttime', 'offerstatus', 'offerletter',
+                  'demolink',
+                  'carted', 'type''framework', 'teststarttime', 'testendtime', 'notes', 'rejectionreason',
+                  'rejectioncomment', 'relevance']
 
 
 class JobApplicationsUpdaterSerializer(serializers.ModelSerializer):
@@ -115,13 +138,24 @@ class JobApplicationsUpdaterSerializer(serializers.ModelSerializer):
     project = Projectserializer
     report = DeveloperReportSerilizer
 
-
     class Meta:
         model = JobApplication
         fields = ['id', 'job', 'candidate', 'selected', 'stage', 'interviewstarttime', 'interviewendtime',
                   'notes', 'recruiter', 'test_stage', 'project',
-                  'report', 'interviewstatus', 'eventcolor','projectstarttime','offerstatus',
-                  'offerletter','demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','relevance']
+                  'report', 'interviewstatus', 'eventcolor', 'projectstarttime', 'offerstatus',
+                  'offerletter', 'demolink', 'carted', 'type', 'framework', 'teststarttime', 'testendtime', 'notes',
+                  'rejectionreason', 'rejectioncomment', 'relevance']
 
 
+class ClideJobAssessmentSerializer(serializers.ModelSerializer):
+    # job = JobRequestSerializer
+    candidate = ProfileSerializer()
+    # recruiter = ProfileSerializer
+    project = Projectserializer()
 
+    # report = DeveloperReportSerilizer
+
+    class Meta:
+        model = JobApplication
+        fields = ['id', 'candidate', 'stage', 'test_stage', 'project', 'teststarttime', 'testendtime',
+                  'framework', 'projectstarttime', ]
