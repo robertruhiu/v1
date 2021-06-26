@@ -95,22 +95,20 @@ class DeveloperReport(models.Model):
 class JobApplication(models.Model):
     job = models.ForeignKey(Job, related_name='job_applications', on_delete=models.CASCADE)
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='devs')
-    selected = models.BooleanField(default=False)
+    recruiter = models.ForeignKey(Profile, related_name='jobrecruiter', on_delete=models.CASCADE,null=True,blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    report = models.ForeignKey(DeveloperReport, on_delete=models.CASCADE, null=True, blank=True)
     stage = models.CharField(max_length=500, null=True)
     interviewstarttime = models.DateTimeField(null=True,blank=True)
     interviewendtime = models.DateTimeField(null=True, blank=True)
     notes =  models.TextField(null=True, blank=True)
-    recruiter = models.ForeignKey(Profile, related_name='jobrecruiter', on_delete=models.CASCADE,null=True,blank=True)
     test_stage = models.CharField(max_length=500, null=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE,null=True)
-    report = models.ForeignKey(DeveloperReport, on_delete=models.CASCADE,null=True, blank=True)
     interviewstatus = models.CharField(max_length=500, null=True)
     eventcolor = models.CharField(max_length=100, null=True,default='blue')
     projectstarttime = models.DateTimeField(null=True, blank=True)
     offerstatus = models.CharField(max_length=500, null=True)
     offerletter = models.CharField(max_length=500, null=True)
     demolink = models.CharField(blank=True, null=True, max_length=100)
-    carted = models.BooleanField(default=False)
     type=models.CharField(max_length=500, null=True,default='applied')
     created = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     framework = models.CharField(max_length=500, null=True)
@@ -119,6 +117,11 @@ class JobApplication(models.Model):
     rejectionreason=models.CharField(max_length=1500,null=True,blank=True)
     rejectioncomment=models.CharField(max_length=1500,null=True, blank=True)
     relevance = models.IntegerField(default=0)
+    selected = models.BooleanField(default=False)
+    carted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.candidate} - {self.job}'
 
 
 

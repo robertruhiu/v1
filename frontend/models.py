@@ -134,7 +134,7 @@ class Assessment(models.Model):
     completed = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.candidate.user.first_name} - {self.test_choice}'
+        return f'{self.candidate} - {self.test_choice}'
 
 class AssessmentReport(models.Model):
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)

@@ -10,7 +10,11 @@ class JobAdmin(admin.ModelAdmin):
 
 @admin.register(JobApplication)
 class JobApplicationAdmin(admin.ModelAdmin):
-    pass
+    raw_id_fields = ['candidate', 'job', 'recruiter', 'project', 'report']
+    list_filter = ('stage', 'test_stage',)
+
+    def get_ordering(self, request):
+        return ['-created']
 
 
 @admin.register(DevRequest)

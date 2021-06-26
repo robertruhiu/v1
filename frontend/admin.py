@@ -10,6 +10,7 @@ class AssessmentReportAdmin(admin.ModelAdmin):
 @admin.register(Assessment)
 class AssessmentAdmin(admin.ModelAdmin):
     raw_id_fields = ['portfolio', 'test_center', 'candidate', 'project', 'report']
+    list_filter = ('stage', 'test_choice', 'completed',)
 
     def get_ordering(self, request):
         return ['-projectstarttime']

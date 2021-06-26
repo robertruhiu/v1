@@ -6,4 +6,4 @@ from account_manager.models import Shortlist
 
 @admin.register(Shortlist)
 class ShortlistAdmin(admin.ModelAdmin):
-    readonly_fields = ['developers']
+    raw_id_fields = ['developers']
