@@ -309,8 +309,8 @@ def clidextupdate(request, email,id):
     dev = Profile.objects.get(user__email=email)
     tests = JobApplication.objects.get(id=id, candidate=dev)
     if request.data != None:
-        if request.data.get('liveshare'):
-          link = request.data.get('liveshare')
+        if request.data.get('livesharelink'):
+          link = request.data.get('livesharelink')
           tests.demolink = link
           tests.save()
           return Response('Live Share link updated')
