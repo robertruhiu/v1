@@ -294,11 +294,12 @@ def clidext(request, email):
     dev = Profile.objects.get(user__email=email)
     tests = JobApplication.objects.filter(candidate=dev, projectstarttime__date=datetime.datetime.now(tz=pytz.UTC).date(),
                                       test_stage='timeset')
+
     # tests = Assessment.objects.filter(candidate=dev, projectstarttime__date=datetime.datetime.now(tz=pytz.UTC).date(),
     #                                   completed=False)
-    serializer = ClideJobAssessmentSerializer(tests, many=True)
     # serializer = ClideAssesmentSerializer(tests, many=True)
-    if serializer.data != []:
+    if tests:
+        serializer = ClideJobAssessmentSerializer(tests, many=True)
         return Response(serializer.data)
     else:
         return Response('No projects are scheduled today, visit Codeln.com to schedule an assessment')
@@ -314,15 +315,28 @@ def clidextupdate(request, email,id):
           tests.demolink = link
           tests.save()
           return Response('Live Share link updated')
+
         elif request.data.get('repolink'):
             link = request.data.get('repolink')
             tests.repo = link
             tests.save()
             return Response('Repo saved!')
+
+        elif request.data.get('teststarttime'):
+            time = request.data.get('teststarttime')
+            starttime = datetime.datetime.fromtimestamp(int(time) / 1000.0)
+            timezone = pytz.timezone("UTC")
+            tests.teststarttime = timezone.localize(starttime)
+            end = starttime + tests.project.duration
+            tests.testendtime = timezone.localize(end)
+            tests.save()
+            return Response(end.timestamp()*1000.0)
+
         elif request.data.get('completed'):
             tests.test_stage = 'complete'
             tests.save()
             return Response('Project Completed')
+
         else:
             return Response('Not a valid entry')
     else:

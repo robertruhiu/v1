@@ -152,10 +152,19 @@ class ClideJobAssessmentSerializer(serializers.ModelSerializer):
     candidate = ProfileSerializer()
     # recruiter = ProfileSerializer
     project = Projectserializer()
+    teststarttime  = serializers.SerializerMethodField()
+    testendtime =  serializers.SerializerMethodField()
 
-    # report = DeveloperReportSerilizer
+    def get_teststarttime(self, obj):
+        if obj.teststarttime:
+            return obj.teststarttime.timestamp()*1000.0
+
+
+    def get_testendtime(self, obj):
+        if obj.testendtime:
+            return obj.testendtime.timestamp()*1000.0
 
     class Meta:
         model = JobApplication
         fields = ['id', 'candidate', 'stage', 'test_stage', 'project', 'teststarttime', 'testendtime',
-                  'framework', 'projectstarttime', ]
+                  'framework', 'projectstarttime', 'demolink', ]
