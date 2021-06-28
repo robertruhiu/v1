@@ -320,7 +320,7 @@ def clidextupdate(request, email,id):
             link = request.data.get('repolink')
             tests.repo = link
             tests.save()
-            return Response('Repo saved!')
+            return Response(tests.repo)
 
         elif request.data.get('teststarttime'):
             time = request.data.get('teststarttime')
