@@ -167,4 +167,4 @@ class ClideJobAssessmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobApplication
         fields = ['id', 'candidate', 'stage', 'test_stage', 'project', 'teststarttime', 'testendtime',
-                  'framework', 'projectstarttime', 'demolink', ]
+                  'framework', 'projectstarttime', 'demolink', 'repo', ]
