@@ -16,7 +16,7 @@ from frontend.views import home, activity, tracker, update_candidateprojects, \
     UserListsliced, DevList, CsaList, StudentList, RecruiterList, Alldevs, Allrecruiters, Mytestcenters, Talentorder, Timesetemail, Newuser, \
     unsubscribe, Resourcecreate, Subjectresources, Resourceslikeupdate, Portfoliolikeupdate, RemoteDevList, Wote, \
     Wotelist \
-    , AllProfiles
+    , AllProfiles,PortfoliogetLight
 
 from accounts.views import update_profile
 
@@ -97,6 +97,7 @@ urlpatterns = [
     path('getprofile/<int:pk>', Profileget.as_view()),
     path('gettalent/<int:pk>', Talentget.as_view()),
     path('getexperience/<int:candidate_id>', Experienceget.as_view()),
+    path('getportofoliolight/<int:candidate_id>', PortfoliogetLight.as_view()),
     path('getportofolio/<int:candidate_id>', Portfolioget.as_view()),
     path('updateportfolio/<int:pk>', Portfolioupdate.as_view()),
     path('newportfolio', Portfoliocreate.as_view()),

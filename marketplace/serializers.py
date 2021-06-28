@@ -66,6 +66,25 @@ class JobRequestSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class IsappliedLookUpRequestSerializer(serializers.ModelSerializer):
+    job = JobRequestSerializer()
+
+    class Meta:
+        model = JobApplication
+        fields = ['id','job','candidate','selected','stage','interviewstarttime','interviewendtime',
+                  'notes','recruiter','test_stage','project',
+                  'report','interviewstatus','eventcolor','projectstarttime','offerstatus','offerletter',
+                  'demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','relevance']
+class ManageApplicationsDeveloperRequestSerializer(serializers.ModelSerializer):
+    job = JobRequestSerializer()
+    project = Projectserializer()
+
+    class Meta:
+        model = JobApplication
+        fields = ['id','job','candidate','selected','stage','interviewstarttime','interviewendtime',
+                  'notes','recruiter','test_stage','project',
+                  'report','interviewstatus','eventcolor','projectstarttime','offerstatus','offerletter',
+                  'demolink','carted','type','framework','teststarttime','testendtime','notes','rejectionreason','rejectioncomment','relevance']
 class JobApplicationsRequestSerializer(serializers.ModelSerializer):
     job = JobRequestSerializer()
     candidate = ProfileSerializer()
@@ -152,17 +171,16 @@ class ClideJobAssessmentSerializer(serializers.ModelSerializer):
     candidate = ProfileSerializer()
     # recruiter = ProfileSerializer
     project = Projectserializer()
-    teststarttime  = serializers.SerializerMethodField()
-    testendtime =  serializers.SerializerMethodField()
+    teststarttime = serializers.SerializerMethodField()
+    testendtime = serializers.SerializerMethodField()
 
     def get_teststarttime(self, obj):
         if obj.teststarttime:
-            return obj.teststarttime.timestamp()*1000.0
-
+            return obj.teststarttime.timestamp() * 1000.0
 
     def get_testendtime(self, obj):
         if obj.testendtime:
-            return obj.testendtime.timestamp()*1000.0
+            return obj.testendtime.timestamp() * 1000.0
 
     class Meta:
         model = JobApplication

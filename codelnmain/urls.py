@@ -19,6 +19,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import handler404, handler500
+from organizations.backends import invitation_backend
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 from accounts.views import profile
 
@@ -36,7 +37,7 @@ urlpatterns = [
     path('payments/', include('payments.urls', namespace='payments')),
     path('', include('frontend.urls', namespace='frontend')),
     path('', include('classroom.urls')),
-    path('invitations/', include('invitations.urls', namespace='invitations')),
+    # path('invitations/', include('invitations.urls', namespace='invitations')),
     path('servermanagement/', include('servermanagement.urls', namespace='servermanagement')),
     path('marketplace/', include('marketplace.urls', namespace='marketplace')),
     # path('blog/',include('blog.urls',namespace='blog')),
@@ -57,6 +58,11 @@ urlpatterns = [
 from django.views.generic import TemplateView
 urlpatterns += [
     path('robots.txt', TemplateView.as_view(template_name="frontend/robots.txt", content_type='text/plain')),
+]
+
+urlpatterns += [
+    path('organizations/', include('organizations.urls')),
+    path('invitations/', include(invitation_backend().get_urls()))
 ]
 
 

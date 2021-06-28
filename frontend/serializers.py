@@ -79,6 +79,13 @@ class ExperienceSerializerupdater(serializers.ModelSerializer):
         model = Experience
         fields = ['id', 'candidate', 'title', 'description', 'company', 'location', 'tech_tags', 'duration']
 
+class ProjectSerializerLight(serializers.ModelSerializer):
+    images =serializers.JSONField()
+
+    class Meta:
+        model = Portfolio
+        fields = ['id', 'candidate', 'title', 'description', 'repository_link', 'demo_link', 'tech_tags', 'csa',
+                  'project', 'likes', 'dislikes','project_role','images','personal_company','company_name','company_url','project_start_month','project_end_month']
 
 class ProjectSerializer(serializers.ModelSerializer):
     candidate = ProfileSerializer()
@@ -87,16 +94,17 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Portfolio
         fields = ['id', 'candidate', 'title', 'description', 'repository_link', 'demo_link', 'tech_tags', 'csa',
-                  'project', 'likes', 'dislikes']
+                  'project', 'likes', 'dislikes','project_role','images','personal_company','company_name','company_url','project_start_month','project_end_month']
 
 
 class ProjectSerializerupdater(serializers.ModelSerializer):
     candidate = ProfileSerializer
+    images = serializers.JSONField()
 
     class Meta:
         model = Portfolio
         fields = ['id', 'candidate', 'title', 'description', 'repository_link', 'demo_link', 'tech_tags', 'csa',
-                  'project', 'likes', 'dislikes']
+                  'project', 'likes', 'dislikes','project_role','images','personal_company','company_name','company_url','project_start_month','project_end_month']
 
 
 class ProjectAsign(serializers.ModelSerializer):

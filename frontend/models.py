@@ -6,10 +6,11 @@ from django.db import models
 from accounts.models import Profile
 from marketplace.models import Job
 from django_countries.fields import CountryField
-from projects.models import Language, Framework ,Project
+from projects.models import Language, Framework, Project
 from transactions.models import Transaction
 from separatedvaluesfield.models import SeparatedValuesField
 from classroom.models import Subject
+from django.contrib.postgres.fields import JSONField
 # Create your models here.
 
 class candidatesprojects(models.Model):
@@ -25,13 +26,11 @@ class candidatesprojects(models.Model):
         ('analysis_complete', 'Analysis Complete'),
     )
     stage = models.CharField(max_length=100, default='awaiting_candidate', choices=TYPE_CHOICES)
-    candidate = models.ForeignKey(User, on_delete=models.CASCADE,null=True,)
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE,null=True,)
+    candidate = models.ForeignKey(User, on_delete=models.CASCADE, null=True, )
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, null=True, )
 
     def __str__(self):
         return f'{self.candidate} - {self.stage}'
-
-
 
 
 class submissions(models.Model):
@@ -43,8 +42,9 @@ class submissions(models.Model):
     def __str__(self):
         return f'{self.candidate}'
 
+
 class Portfolio(models.Model):
-    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE,related_name='candidateportfolio')
+    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='candidateportfolio')
     title = models.CharField(null=True, max_length=200)
     description = models.CharField(null=True, max_length=400)
     repository_link = models.CharField(null=True, max_length=400)
@@ -56,6 +56,14 @@ class Portfolio(models.Model):
     likes = models.CharField(max_length=900, null=True, blank=True)
     dislikes = models.CharField(max_length=900, null=True, blank=True)
     search_vector = SearchVectorField(null=True)
+    project_role = JSONField(null=True)
+    images = SeparatedValuesField(null=True, blank=True, token=',', max_length=1000)
+    personal_company = models.BooleanField(default=False)
+    company_name = models.CharField(null=True, blank=True, max_length=200)
+    company_url = models.CharField(null=True, blank=True, max_length=400)
+    project_start_month = models.DateTimeField(null=True, blank=True)
+    project_end_month = models.DateTimeField(null=True, blank=True)
+
 
     class Meta(object):
         indexes = [GinIndex(fields=['search_vector'])]
@@ -83,9 +91,9 @@ class Experience(models.Model):
 class Report(models.Model):
     candidate = models.ForeignKey(User, on_delete=models.CASCADE)
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    requirements= SeparatedValuesField(null=True,max_length=150,token=',')
-    keycompitency = SeparatedValuesField(null=True,max_length=150,token=',')
-    grading = SeparatedValuesField(null=True,max_length=150,token=',')
+    requirements = SeparatedValuesField(null=True, max_length=150, token=',')
+    keycompitency = SeparatedValuesField(null=True, max_length=150, token=',')
+    grading = SeparatedValuesField(null=True, max_length=150, token=',')
     score = models.IntegerField(null=True)
     github = models.CharField(null=True, max_length=300)
 
@@ -94,14 +102,15 @@ class Report(models.Model):
 
 # temporary data model for demo
 class TestCenter(models.Model):
-    venue = models.CharField(blank=True,null=True,max_length=100)
-    country = models.CharField(blank=True,null=True,max_length=100)
+    venue = models.CharField(blank=True, null=True, max_length=100)
+    country = models.CharField(blank=True, null=True, max_length=100)
     end_time = models.DateTimeField(null=True, blank=True)
     start_time = models.DateTimeField(null=True, blank=True)
     location = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.venue} - {self.country} '
+
 
 class Assessment(models.Model):
     STAGE_CHOICES = (
@@ -118,17 +127,17 @@ class Assessment(models.Model):
         ('on_site_test', 'On Site Test'),
         ('automated_test', 'Automated Test'),
     )
-    stage = models.CharField(choices=STAGE_CHOICES, default='invite_accepted', max_length=100, blank=True, null=True )
+    stage = models.CharField(choices=STAGE_CHOICES, default='invite_accepted', max_length=100, blank=True, null=True)
     test_choice = models.CharField(choices=TEST_CHOICES, default='automated_test', max_length=100)
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
-    report = models.ForeignKey(Report, on_delete=models.CASCADE,null=True, blank=True)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE, null=True, blank=True)
     projectstarttime = models.DateTimeField(null=True, blank=True)
-    frameworktested = models.CharField(blank=True,null=True,max_length=500)
-    demolink = models.CharField(blank=True,null=True,max_length=100)
-    test_center = models.ForeignKey(TestCenter, on_delete=models.CASCADE, blank=True, null=True )
+    frameworktested = models.CharField(blank=True, null=True, max_length=500)
+    demolink = models.CharField(blank=True, null=True, max_length=100)
+    test_center = models.ForeignKey(TestCenter, on_delete=models.CASCADE, blank=True, null=True)
     csa = models.BooleanField(default=False)
-    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, blank=True, null=True )
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, blank=True, null=True)
     workspace_link = models.URLField(blank=True, null=True)
     repo_link = models.URLField(blank=True, null=True)
     completed = models.BooleanField(default=False)
@@ -136,14 +145,16 @@ class Assessment(models.Model):
     def __str__(self):
         return f'{self.candidate} - {self.test_choice}'
 
+
 class AssessmentReport(models.Model):
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     score = models.IntegerField(null=True)
-    skill = models.CharField(blank=True,null=True,max_length=100)
+    skill = models.CharField(blank=True, null=True, max_length=100)
 
     def __str__(self):
         return f'{self.candidate.user.first_name}: {self.project.name}'
+
 
 class Cohort(models.Model):
     name = models.CharField(null=True, max_length=300)
@@ -151,14 +162,15 @@ class Cohort(models.Model):
     members = models.CharField(null=True, max_length=800)
     created = models.DateTimeField(auto_now_add=True)
 
+
 class Resources(models.Model):
     title = models.CharField(null=True, max_length=300)
     link = models.CharField(null=True, max_length=300)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE,null=True, blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    provider= models.CharField(max_length=300, null=True, blank=True)
+    provider = models.CharField(max_length=300, null=True, blank=True)
     likes = models.CharField(max_length=900, null=True, blank=True)
     dislikes = models.CharField(max_length=900, null=True, blank=True)
     tags = models.CharField(max_length=300, null=True, blank=True)
-    verified =models.BooleanField(default=False)
+    verified = models.BooleanField(default=False)

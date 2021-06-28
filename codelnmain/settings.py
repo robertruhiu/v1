@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_celery_beat',
     'bulma',
+    'organizations',
 ]
 
 SITE_ID = 1
@@ -180,6 +181,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://remote.codeln.com',
     'https://remote.codeln.com',
     'https://clideapiv2.herokuapp.com',
+
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -334,13 +336,16 @@ SOCIALACCOUNT_PROVIDERS = {
         ]
     }
 }
+ORGS_SLUGFIELD = 'django_extensions.db.fields.AutoSlugField'
 
-ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
-INVITATIONS_INVITATION_EXPIRY = 7
-INVITATIONS_CONFIRM_INVITE_ON_GET = True
-INVITATIONS_ALLOW_JSON_INVITES = True
-INVITATIONS_ADAPTER = ACCOUNT_ADAPTER
-INVITATIONS_EMAIL_SUBJECT_PREFIX = 'Codeln'
+# INVITATION_BACKEND = 'organizations.backends.InvitationBackend'
+
+# ACCOUNT_ADAPTER = 'invitations.models.InvitationsAdapter'
+# INVITATIONS_INVITATION_EXPIRY = 7
+# INVITATIONS_CONFIRM_INVITE_ON_GET = True
+# INVITATIONS_ALLOW_JSON_INVITES = True
+# INVITATIONS_ADAPTER = ACCOUNT_ADAPTER
+# INVITATIONS_EMAIL_SUBJECT_PREFIX = 'Codeln'
 
 # TODO: delete unused aws configs
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='AWS_ACCESS_KEY_ID')

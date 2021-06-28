@@ -23,7 +23,7 @@ from classroom.models import TakenQuiz
 from frontend.form import Portfolio_form, Experience_Form, CvForm
 from frontend.models import Experience, Portfolio, Assessment
 from rest_framework.decorators import api_view
-from .models import Job, JobApplication, DevRequest,DeveloperReport
+from .models import Job, JobApplication, DevRequest, DeveloperReport
 from .forms import JobForm
 from accounts.models import Profile
 from django.utils.safestring import mark_safe
@@ -32,7 +32,8 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import DevRequestSerializer, JobRequestSerializer, JobApplicationsRequestSerializer, \
     JobApplicationsUpdaterSerializer, \
     DevRequestUpdaterSerializer, MyapplicantsRequestSerializer, MyapplicantsRequestSerializersliced, \
-    JobApplicationsRequestSerializerspecific, DevRequestSerializersimple,DeveloperReportSerilizer,DeveloperReportCreatorSerilizer
+    JobApplicationsRequestSerializerspecific, DevRequestSerializersimple, DeveloperReportSerilizer, \
+    DeveloperReportCreatorSerilizer, ManageApplicationsDeveloperRequestSerializer, IsappliedLookUpRequestSerializer
 from frontend.serializers import ProfileSerializer
 from rest_framework import generics
 from frontend.serializers import AssesmentSerializer
@@ -40,6 +41,8 @@ from marketplace.tasks import send_email
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 import datetime
+
+
 class DevRequestpick(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = DevRequest.objects.all()
@@ -129,6 +132,15 @@ class Myjobsrequests(generics.ListAPIView):
             return Job.objects.filter(posted_by=user).order_by('-created')
 
 
+class MyOrganizationjobsrequests(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = JobRequestSerializer
+
+    def get_queryset(self):
+        organization_id = self.kwargs['organization_id']
+        return Job.objects.filter(team=organization_id).order_by('-created')
+
+
 class Myjobsrequestssliced(generics.ListAPIView):
     serializer_class = JobRequestSerializer
 
@@ -146,10 +158,12 @@ class Jobsapplicants(generics.ListAPIView):
         job = Job.objects.get(id=job_id)
         return JobApplication.objects.select_related('job').filter(job=job)
 
+
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 100
     page_size_query_param = 'page_size'
     max_page_size = 1000
+
 
 class JobsapplicantsAdmin(generics.ListAPIView):
     # todo: perm
@@ -158,6 +172,7 @@ class JobsapplicantsAdmin(generics.ListAPIView):
 
     def get_queryset(self):
         return JobApplication.objects.select_related('job').all()
+
 
 class Specificjob(generics.RetrieveAPIView):
     # todo: perm
@@ -186,10 +201,12 @@ class JobUnpublish(generics.RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
     serializer_class = JobRequestSerializer
 
+
 class JobGetIncomplete(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = JobRequestSerializer
     lookup_field = 'posted_by'
+
     def get_queryset(self):
         owner_id = self.kwargs['posted_by']
         return Job.objects.filter(posted_by=owner_id).exclude(published=True).exclude(verified=True)
@@ -201,6 +218,7 @@ class JobCreate(generics.CreateAPIView):
 
     def get_queryset(self):
         return Job.objects.all()
+
 
 class ReportCreate(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -214,6 +232,7 @@ class ReportGet(generics.RetrieveAPIView):
     # todo: perm
     queryset = DeveloperReport.objects.all()
     serializer_class = DeveloperReportSerilizer
+
 
 class newonsite(generics.RetrieveAPIView):
     # todo: perm
@@ -346,7 +365,6 @@ class newjob(generics.RetrieveAPIView):
 
 
 class recruiterpublished(generics.RetrieveAPIView):
-
     serializer_class = JobRequestSerializer
 
     def get_queryset(self):
@@ -383,6 +401,7 @@ class rejectionemail(generics.RetrieveAPIView):
 
         return Job.objects.all()
 
+
 class pickedcandidateemail(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
 
@@ -398,6 +417,7 @@ class pickedcandidateemail(generics.RetrieveAPIView):
         to = [application.candidate.user.email]
         mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
         return Job.objects.all()
+
 
 class projectemail(generics.RetrieveAPIView):
     serializer_class = JobApplicationsRequestSerializer
@@ -482,6 +502,26 @@ class JobApply(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = JobApplication.objects.all()
     serializer_class = JobApplicationsUpdaterSerializer
+
+
+class isppliedLookupJobboard(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = IsappliedLookUpRequestSerializer
+
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate']
+        user = Profile.objects.get(id=candidate_id)
+        return JobApplication.objects.filter(candidate=user)
+
+
+class ManageApplicationBoard(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ManageApplicationsDeveloperRequestSerializer
+
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate']
+
+        return JobApplication.objects.filter(candidate__pk=candidate_id)
 
 
 class CandidateJobs(generics.ListAPIView):

@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from separatedvaluesfield.models import SeparatedValuesField
 import uuid
 from projects.models import Project
+from organizations.models import Organization
 from django.contrib.postgres.fields import JSONField
 
 
@@ -69,6 +70,7 @@ class Job(models.Model):
     years_experience= models.CharField(max_length=30, choices=YEARS_ACTIVE_CHOICES, default='1-3')
     transaction_id = models.CharField(max_length=900, null=True, blank=True)
     search_vector = SearchVectorField(null=True, blank=True)
+    team = models.ForeignKey(Organization, on_delete=models.CASCADE,null=True, blank=True)
 
     objects = JobManager()
 

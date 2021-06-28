@@ -35,7 +35,7 @@ from transactions.models import Transaction, Candidate, OpenCall, Applications
 from .serializers import UserSerializer, ProfileSerializer, ExperienceSerializer, ProjectSerializer, \
     ProjectAsign, AssesmentSerializer, AssesmentSerializerUpdater, ProfileSerializerUpdater, ProjectSerializerupdater, \
     ExperienceSerializerupdater, AssesmentSerializermini, ResourceSerializer, \
-    ResourceSerializercreater, ResourceSerializerupdater, ReferralCodeSerializer
+    ResourceSerializercreater, ResourceSerializerupdater, ReferralCodeSerializer,ProjectSerializerLight
 
 CharField.register_lookup(Length, 'length')
 
@@ -207,6 +207,13 @@ class Talentget(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
+class PortfoliogetLight(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProjectSerializerLight
+
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate_id']
+        return Portfolio.objects.select_related('candidate').filter(candidate__pk=candidate_id)
 
 class Portfolioget(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
@@ -214,8 +221,7 @@ class Portfolioget(generics.ListAPIView):
 
     def get_queryset(self):
         candidate_id = self.kwargs['candidate_id']
-        user = Profile.objects.get(id=candidate_id)
-        return Portfolio.objects.select_related('candidate').filter(candidate_id=user)
+        return Portfolio.objects.select_related('candidate').filter(candidate__pk=candidate_id)
 
 
 class Portfoliocreate(generics.CreateAPIView):

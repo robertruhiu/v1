@@ -10,7 +10,7 @@ from marketplace.views import job_list, job_details, apply_for_job, manage_poste
     Myjobsrequestssliced, \
     JobsListverified, DevRequestssimple, newjobapplication, newjob, newonsite, newpick, acceptreject, publishedemails,\
     Alljobsdeadlinefilter,recruiterpublished,rejectionemail,projectemail,timesetemail,pickedcandidateemail,ReportCreate,ReportGet,\
-    JobGetIncomplete,JobsapplicantsAdmin
+    JobGetIncomplete,JobsapplicantsAdmin,ManageApplicationBoard,isppliedLookupJobboard,MyOrganizationjobsrequests
 
 app_name = 'marketplace'
 
@@ -38,6 +38,7 @@ urlpatterns = [
     path('myapplicants/<int:owner>', MyApplicants.as_view()),
     path('pickdev', DevRequestpick.as_view()),
     path('myjobs/<int:posted_by>', Myjobsrequests.as_view()),
+    path('myorganizationjobs/<int:organization_id>', MyOrganizationjobsrequests.as_view()),
     path('myjobssliced/<int:posted_by>', Myjobsrequestssliced.as_view()),
     path('jobapplicants/<int:job>', Jobsapplicants.as_view()),
     path('allapplicantsadmin', JobsapplicantsAdmin.as_view()),
@@ -58,6 +59,8 @@ urlpatterns = [
     path('jobdetails/<int:pk>', Jobdetails.as_view()),
     path('applyjob', JobApply.as_view()),
     path('candidatejobs/<int:candidate>', CandidateJobs.as_view()),
+    path('manageapplicationboard/<int:candidate>', ManageApplicationBoard.as_view()),
+    path('isppliedLookupJobboard/<int:candidate>', isppliedLookupJobboard.as_view()),
     path('pickedapplications/<int:candidate>', TalentPoolapplications.as_view()),
     path('jobmanagerview/<int:pk>', JobManagerView.as_view()),
     path('talentpickedmanagerview/<int:pk>', TalentPickedManagerView.as_view()),
