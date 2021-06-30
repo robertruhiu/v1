@@ -314,7 +314,7 @@ def clidextupdate(request, email,id):
           link = request.data.get('livesharelink')
           tests.demolink = link
           tests.save()
-          return Response('Live Share link updated')
+          return Response(tests.demolink)
 
         elif request.data.get('repolink'):
             link = request.data.get('repolink')
