@@ -28,14 +28,14 @@ from accounts.models import Referral, ReferralCode
 from classroom.models import TakenQuiz, Quiz
 from frontend.form import Projectinvite, EditProjectForm, Submissions, Portfolio_form, Experience_Form, About, \
     GradingForm
-from frontend.models import candidatesprojects, submissions, Portfolio, Experience, Report, Assessment, Resources
+from frontend.models import candidatesprojects, submissions, Portfolio, Experience, Report, Assessment, Resources,Education
 from marketplace.models import Job, DeveloperReport
 from projects.models import Project
 from transactions.models import Transaction, Candidate, OpenCall, Applications
 from .serializers import UserSerializer, ProfileSerializer, ExperienceSerializer, ProjectSerializer, \
     ProjectAsign, AssesmentSerializer, AssesmentSerializerUpdater, ProfileSerializerUpdater, ProjectSerializerupdater, \
     ExperienceSerializerupdater, AssesmentSerializermini, ResourceSerializer, \
-    ResourceSerializercreater, ResourceSerializerupdater, ReferralCodeSerializer,ProjectSerializerLight
+    ResourceSerializercreater, ResourceSerializerupdater, ReferralCodeSerializer,ProjectSerializerLight,EducationSerializer
 
 CharField.register_lookup(Length, 'length')
 
@@ -229,6 +229,24 @@ class Portfoliocreate(generics.CreateAPIView):
     queryset = Portfolio.objects.all()
     serializer_class = ProjectSerializerupdater
 
+class Educationget(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = EducationSerializer
+
+    def get_queryset(self):
+        candidate_id = self.kwargs['candidate_id']
+        user = Profile.objects.get(id=candidate_id)
+        return Education.objects.select_related('candidate').filter(candidate=user)
+
+class Educationcreate(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Education.objects.all()
+    serializer_class = EducationSerializer
+
+class Educationupdate(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Education.objects.all()
+    serializer_class = EducationSerializer
 
 class Portfolioupdate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)

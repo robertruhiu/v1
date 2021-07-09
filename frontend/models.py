@@ -47,8 +47,8 @@ class Portfolio(models.Model):
     candidate = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='candidateportfolio')
     title = models.CharField(null=True, max_length=200)
     description = models.CharField(null=True, max_length=400)
-    repository_link = models.CharField(null=True, max_length=400)
-    demo_link = models.CharField(null=True, max_length=400)
+    repository_link = models.CharField(blank=True,null=True, max_length=400)
+    demo_link = models.CharField(blank=True,null=True, max_length=400)
     verified = models.BooleanField(default=False)
     tech_tags = models.CharField(max_length=500, blank=True, null=True, )
     csa = models.BooleanField(default=False)
@@ -57,6 +57,7 @@ class Portfolio(models.Model):
     dislikes = models.CharField(max_length=900, null=True, blank=True)
     search_vector = SearchVectorField(null=True)
     project_role = JSONField(null=True)
+    location = CountryField(null=True, max_length=30,blank=True)
     images = SeparatedValuesField(null=True, blank=True, token=',', max_length=1000)
     personal_company = models.BooleanField(default=False)
     company_name = models.CharField(null=True, blank=True, max_length=200)
@@ -84,9 +85,21 @@ class Experience(models.Model):
     location = CountryField(null=True, max_length=30)
     duration = models.IntegerField(null=True)
     tech_tags = models.CharField(max_length=500, blank=True, null=True, )
+    work_start_month = models.DateTimeField(null=True, blank=True)
+    work_end_month = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.candidate} - {self.title}'
+
+class Education(models.Model):
+    candidate = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='candidateeducation')
+    school = models.CharField(null=True, max_length=100)
+    course = models.CharField(null=True, max_length=100)
+    start_month = models.DateTimeField(null=True, blank=True)
+    end_month = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.candidate} - {self.course}'
 
 class Report(models.Model):
     candidate = models.ForeignKey(User, on_delete=models.CASCADE)

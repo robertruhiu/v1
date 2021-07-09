@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from accounts.models import Profile, Referral, ReferralCode
 from frontend.models import Experience, Portfolio, candidatesprojects, AssessmentReport, Assessment, Report, TestCenter, \
-    Resources, Cohort
+    Resources, Cohort,Education
 from projects.serializers import Projectserializer as MainProjectSerializer
 
 
@@ -68,7 +68,7 @@ class ExperienceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Experience
-        fields = ['id', 'candidate', 'title', 'description', 'company', 'location', 'tech_tags', 'duration']
+        fields = ['id', 'candidate', 'title', 'description', 'company', 'location', 'tech_tags', 'duration','work_start_month','work_end_month']
 
 
 class ExperienceSerializerupdater(serializers.ModelSerializer):
@@ -77,35 +77,43 @@ class ExperienceSerializerupdater(serializers.ModelSerializer):
 
     class Meta:
         model = Experience
-        fields = ['id', 'candidate', 'title', 'description', 'company', 'location', 'tech_tags', 'duration']
+        fields = ['id', 'candidate', 'title', 'description', 'company', 'location', 'tech_tags', 'duration','work_start_month','work_end_month']
 
 class ProjectSerializerLight(serializers.ModelSerializer):
     images =serializers.JSONField()
+    location = SerializableCountryField(allow_blank=True)
+
 
     class Meta:
         model = Portfolio
         fields = ['id', 'candidate', 'title', 'description', 'repository_link', 'demo_link', 'tech_tags', 'csa',
-                  'project', 'likes', 'dislikes','project_role','images','personal_company','company_name','company_url','project_start_month','project_end_month']
+                  'project', 'likes', 'dislikes','project_role','images','personal_company','company_name','company_url','project_start_month','project_end_month','location']
 
 class ProjectSerializer(serializers.ModelSerializer):
     candidate = ProfileSerializer()
     project = MainProjectSerializer()
+    location = SerializableCountryField(allow_blank=True)
 
     class Meta:
         model = Portfolio
         fields = ['id', 'candidate', 'title', 'description', 'repository_link', 'demo_link', 'tech_tags', 'csa',
-                  'project', 'likes', 'dislikes','project_role','images','personal_company','company_name','company_url','project_start_month','project_end_month']
+                  'project', 'likes', 'dislikes','project_role','images','personal_company','company_name','company_url','project_start_month','project_end_month','location']
 
 
 class ProjectSerializerupdater(serializers.ModelSerializer):
     candidate = ProfileSerializer
     images = serializers.JSONField()
+    location = SerializableCountryField(allow_blank=True)
 
     class Meta:
         model = Portfolio
         fields = ['id', 'candidate', 'title', 'description', 'repository_link', 'demo_link', 'tech_tags', 'csa',
-                  'project', 'likes', 'dislikes','project_role','images','personal_company','company_name','company_url','project_start_month','project_end_month']
+                  'project', 'likes', 'dislikes','project_role','images','personal_company','company_name','company_url','project_start_month','project_end_month','location']
 
+class EducationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Education
+        fields = '__all__'
 
 class ProjectAsign(serializers.ModelSerializer):
     class Meta:
