@@ -236,7 +236,7 @@ class Educationget(generics.ListAPIView):
     def get_queryset(self):
         candidate_id = self.kwargs['candidate_id']
         user = Profile.objects.get(id=candidate_id)
-        return Education.objects.select_related('candidate').filter(candidate=user)
+        return Education.objects.select_related('candidate').filter(candidate=user).order_by('start_month')
 
 class Educationcreate(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -261,7 +261,7 @@ class Experienceget(generics.ListAPIView):
     def get_queryset(self):
         candidate_id = self.kwargs['candidate_id']
         user = Profile.objects.get(id=candidate_id)
-        return Experience.objects.select_related('candidate').filter(candidate=user)
+        return Experience.objects.select_related('candidate').filter(candidate=user).order_by('work_end_month')
 
 
 class Experiencecreate(generics.CreateAPIView):

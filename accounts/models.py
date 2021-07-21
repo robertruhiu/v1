@@ -31,7 +31,7 @@ class Profile(models.Model):
     )
     STAGE_CHOICES = (
         ('profile_type_selection', 'profile_type_selection'),
-        ('recuiter_filling_details', 'recuiter_filling_details'),
+        ('recruiter_filling_details', 'recruiter_filling_details'),
         ('developer_filling_details', 'developer_filling_details'),
         ('complete', 'complete'),
     )

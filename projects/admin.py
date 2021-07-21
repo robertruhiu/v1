@@ -5,7 +5,7 @@ from projects.models import Project, Framework, Language,Projecttype,Devtype
 
 # Register your models here.
 class ProjectAdmin(admin.ModelAdmin):
-    pass
+    raw_id_fields = ['owner']
 
 
 admin.site.register(Project, ProjectAdmin)
