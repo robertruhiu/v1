@@ -49,7 +49,7 @@ class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     user_type = models.CharField(choices=USER_TYPE_CHOICES, null=True, blank=True, max_length=30)
     stage = models.CharField(choices=STAGE_CHOICES, default='profile_type_selection', max_length=100)
-    profile_photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True, null=True)
+    profile_photo = models.CharField(blank=True,null=True, max_length=400)
     csa = models.BooleanField(default=False)
     available = models.BooleanField(default=True)
     student = models.BooleanField(default=False)
@@ -103,10 +103,7 @@ class Profile(models.Model):
         else:
             return False
 
-    def photo(self, default_path="default_user_photo.png"):
-        if self.profile_photo:
-            return self.profile_photo
-        return default_path
+
 
     def get_absolute_url(self):
         return '/accounts/profile/'
